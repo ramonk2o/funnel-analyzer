@@ -6,24 +6,34 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
 
 ## Funil
 
-### Cálculo e editor do funil
+### Editor do funil e modo orçamento
 - **Status:** Ideia
-- **Motivação:** Profissionais de marketing precisam planejar campanhas sabendo o que um investimento rende ao longo do funil e, ao contrário, quanto investir para atingir uma meta. Hoje isso é feito em planilhas improvisadas.
-- **Descrição:** Num painel lateral, a pessoa monta o funil: cria, nomeia, remove e reordena etapas (arrastando ou com setas) e informa os valores de cada uma. Um seletor no topo alterna entre dois modos. "Tenho um orçamento": digita a verba de mídia e vê volumes, custos e resultados. "Tenho uma meta": escolhe a meta e vê a verba necessária em destaque. Tudo recalcula a cada tecla.
+- **Motivação:** Profissionais de marketing precisam planejar campanhas sabendo o que um investimento rende ao longo do funil. Hoje isso é feito em planilhas improvisadas.
+- **Descrição:** Num painel lateral, a pessoa monta o funil: cria, nomeia, remove e reordena etapas (arrastando ou com setas) e informa os valores de cada uma. Digita a verba de mídia e vê volumes, custos e resultados. Tudo recalcula a cada tecla.
 - **Decisões:**
   - A primeira etapa recebe o custo unitário de mídia, numa destas unidades: CPM, CPC ou custo por unidade genérico. As etapas seguintes recebem a taxa de conversão sobre a etapa anterior.
   - O custo por resultado de cada etapa é calculado, nunca digitado.
   - Cada etapa pode ter um custo extra opcional por unidade (ex.: ferramenta por lead, comissão por venda), somado por cima da mídia.
-  - O investimento, digitado ou calculado, é a verba de mídia. O app mostra mídia, custos extras e custo total separados.
+  - O investimento é a verba de mídia. O app mostra mídia, custos extras e custo total separados.
   - Ticket médio opcional na última etapa. Com ele aparecem receita, ROAS (receita ÷ mídia) e ROI (lucro ÷ custo total).
-  - Modo meta: a meta é a quantidade em qualquer etapa ou a receita. Taxas e custos ficam fixos, e só a verba muda.
-  - Os cálculos usam as casas decimais completas. A tela mostra volumes inteiros e R$ com 2 casas. No modo meta, a verba é arredondada para cima, para garantir a meta.
+  - Os cálculos usam as casas decimais completas. A tela mostra volumes inteiros e R$ com 2 casas.
   - Validação: conversão de 0% a 100%; custos, verba e ticket ≥ 0; de 2 a 10 etapas. Campo inválido fica em vermelho, e o funil mantém o último cálculo válido.
-  - Meta impossível (conversão 0% antes da etapa-alvo, ou meta de receita sem ticket médio): aparece "meta impossível com estes valores", sem número.
   - Só PT-BR e R$, com os textos centralizados para facilitar traduzir depois.
   - Feito para desktop. No celular deve funcionar de forma aceitável, com o painel embaixo do funil.
   - Stack: React + TypeScript (modo estrito) + Vite, com Vitest para cálculo e componentes e Playwright para testes no navegador.
-- **Fora do escopo:** contas, login e nuvem; desfazer; outros idiomas e moedas; publicação.
+- **Fora do escopo:** contas, login e nuvem; desfazer; outros idiomas e moedas; publicação; modo meta (entrada própria).
+
+### Modo meta
+- **Status:** Ideia
+- **Motivação:** Responder o caminho inverso do planejamento: quanto investir para atingir uma meta.
+- **Descrição:** Um seletor no topo alterna entre "Tenho um orçamento" e "Tenho uma meta". No modo meta, a pessoa escolhe a meta e vê a verba necessária em destaque. Tudo recalcula a cada tecla.
+- **Decisões:**
+  - Vem depois de "Editor do funil e modo orçamento" e usa o mesmo funil e o mesmo cálculo.
+  - A meta é a quantidade em qualquer etapa ou a receita. Taxas e custos ficam fixos, e só a verba muda.
+  - A verba calculada é arredondada para cima, para garantir a meta.
+  - Meta impossível (conversão 0% antes da etapa-alvo, ou meta de receita sem ticket médio): aparece "meta impossível com estes valores", sem número.
+- **Perguntas em aberto:**
+  - Que valores de meta são válidos (zero? fracionária?) e como o campo da meta se comporta quando é inválido.
 
 ### Desenho proporcional do funil
 - **Status:** Ideia
