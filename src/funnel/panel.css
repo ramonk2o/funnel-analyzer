@@ -1,0 +1,60 @@
+.stages-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.stage-dragging {
+  opacity: 0.5;
+  border-color: var(--accent);
+}
+
+.stage-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.stage-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  letter-spacing: -0.2em;
+  user-select: none;
+}
+
+.stage-title {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.stage-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stage-confirm {
+  font-size: 13px;
+  margin-right: 4px;
+}

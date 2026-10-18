@@ -21,8 +21,39 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 ### Tela principal
 - O cabeçalho mostra o nome "Simulador de Funil" e o botão de tema.
 - Abaixo ficam o painel das etapas e a área do funil. Em telas estreitas (até 800 px), o painel vai para baixo do funil.
-- O painel ainda não edita nada: avisa que a edição das etapas chega em breve.
-- A área do funil mostra um funil de exemplo fixo, marcado como "Exemplo": Impressões → Cliques → Leads → Vendas, cada faixa com nome, volume e custo por resultado, e a taxa de conversão entre as faixas. As larguras são fixas, não proporcionais.
+- O app abre com um funil de exemplo já editável: Impressões → Cliques → Leads → Vendas, CPM R$ 20, conversões de 2,5%, 12% e 15%, verba de R$ 2.000. Recarregar a página volta a esse funil (nada do funil é salvo).
+
+### Editor do funil
+- O painel tem a verba de mídia e, abaixo, uma caixa por etapa ("Etapa 1", "Etapa 2"…), com nome e custo extra por unidade (opcional).
+- A primeira etapa recebe a unidade de custo (CPM, CPC ou custo por unidade) e o custo de mídia nessa unidade. Cada etapa seguinte recebe a conversão sobre a etapa anterior.
+- O ticket médio (opcional) fica na etapa que estiver por último; ele é do funil, não da etapa.
+- O funil tem de 2 a 10 etapas. Com 10, adicionar fica desabilitado; com 2, remover fica desabilitado.
+- Etapa nova entra no fim, com conversão de 10% e o nome "Etapa N", sendo N a quantidade de etapas mais 1 ou, se esse nome já existir, o próximo número livre.
+- Remover pede confirmação na própria etapa ("Remover?" com "Sim" e "Não"), sem janela. Se o funil cair para 2 etapas, uma confirmação aberta fecha sozinha.
+- As etapas são reordenadas pelas setas (para cima / para baixo) ou arrastando. O custo de mídia e a unidade ficam com a primeira posição. A conversão de quem está em 1º lugar não é usada nem validada; uma etapa que sai do 1º lugar mostra a conversão que tinha antes, ou 10% se nunca teve.
+- Tudo recalcula a cada tecla.
+
+### Números digitados e validação
+- Vírgula é o separador decimal ("1,50"). Pode faltar dígito de um lado da vírgula (",5" = 0,5; "1," = 1), e espaços nas pontas são ignorados. Separador de milhar não é aceito: qualquer ponto ("2.000", "1.5") deixa o campo inválido, assim como sinal, expoente ou texto.
+- Conversão: de 0% a 100%. Verba, custos extras e ticket: ≥ 0. Custo de mídia da primeira etapa: > 0.
+- Verba, custo de mídia e conversão são obrigatórios; vazios são inválidos. Custo extra e ticket vazios significam "não informado".
+- Campo inválido fica marcado em vermelho. Enquanto houver algum, o funil inteiro (números, nomes e lista de etapas) fica congelado no último cálculo válido.
+- O nome da etapa é livre; vazio, a faixa mostra "Etapa N (sem nome definido)", com N a posição.
+
+### Cálculo (modo orçamento)
+- Volume da primeira etapa: CPM → verba ÷ CPM × 1000; CPC → verba ÷ CPC; custo por unidade → verba ÷ custo.
+- Volume de cada etapa seguinte = volume anterior × conversão.
+- Custo extra de uma etapa = volume × custo extra por unidade. Custo total = mídia (a verba) + soma dos custos extras.
+- Custo por resultado de cada etapa = (mídia + custos extras de todas as etapas até ela) ÷ volume da etapa.
+- Com ticket médio: receita = volume da última etapa × ticket; ROAS = receita ÷ mídia; lucro = receita − custo total; ROI = lucro ÷ custo total.
+- Os cálculos usam as casas decimais completas; o arredondamento é só na tela.
+
+### Funil e resultados
+- Cada faixa mostra nome, volume e custo; entre as faixas aparece a conversão como foi digitada. As larguras são fixas (estreitam de cima para baixo), não proporcionais ao volume.
+- A faixa da primeira etapa mostra o custo de mídia como digitado ("R$ 20,00 CPM", "R$ 0,80 CPC", "R$ 1,00 por unidade"); as outras, o custo por resultado ("R$ 0,80 por resultado").
+- Abaixo do funil aparecem mídia, custos extras e custo total, separados. Receita, ROAS e ROI só aparecem com ticket médio.
+- Volumes aparecem inteiros e valores em R$ com 2 casas, com separador de milhar. ROAS aparece como multiplicador ("3,20x"); ROI em porcentagem com 1 casa ("45,0%"), podendo ser negativo.
+- Sem valor possível, aparece "—": custo por resultado com volume 0, ROAS com mídia 0, ROI com custo total 0.
 
 ## Dados guardados
 
@@ -40,9 +71,12 @@ Tudo fica no `localStorage` do navegador.
 - **Tokens de tema em CSS** (`src/styles/tokens.css`), um bloco por tema em `[data-theme]` no `<html>`. Um teste lê esse arquivo e verifica contraste e cor de destaque, então as cores de texto e de fundo ali precisam estar em `#rrggbb`.
 - **Script no `index.html`** aplica o tema salvo antes do React carregar, para não piscar. Ele repete a chave de armazenamento, e um teste confere que ela é a mesma do código.
 - **Fontes do Google Fonts**, com fontes do sistema como reserva.
+- **Funil em módulos puros** (`src/funnel/`): `numbers.ts` lê e formata números, `form.ts` guarda o que foi digitado como texto e o valida (e faz as operações nas etapas), `calc.ts` calcula. Os componentes só mostram e repassam as mudanças, para que comparação e exportação reusem o mesmo cálculo.
+- **O formulário guarda texto, não números:** um campo inválido continua na tela como foi digitado, e o funil usa o último formulário válido.
 
 ## Limitações conhecidas
 
 - Só em português e em reais.
 - Os dados ficam presos ao navegador em que foram criados.
+- O funil ainda não é salvo: recarregar a página volta ao funil de exemplo.
 - Sem internet, as fontes do produto não carregam e a aparência usa as fontes do sistema.

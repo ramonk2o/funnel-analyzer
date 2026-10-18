@@ -1,3 +1,5 @@
+import type { CostUnit } from './funnel/calc'
+
 // Every user-facing text lives here (PT-BR only for now).
 export const texts = {
   appName: 'Simulador de Funil',
@@ -8,18 +10,43 @@ export const texts = {
   panel: {
     label: 'Painel do funil',
     title: 'Etapas',
-    placeholder: 'A edição das etapas chega em breve. Por enquanto, o funil mostrado é só um exemplo.',
+    budget: 'Verba de mídia (R$)',
+    stageGroup: (n: number) => `Etapa ${n}`,
+    name: 'Nome',
+    costUnit: 'Unidade de custo',
+    costUnits: { cpm: 'CPM', cpc: 'CPC', unit: 'Custo por unidade' } as Record<CostUnit, string>,
+    unitCost: 'Custo de mídia (R$)',
+    conversion: 'Conversão (%)',
+    extraCost: 'Custo extra por unidade (R$)',
+    ticket: 'Ticket médio (R$)',
+    moveUp: 'Mover para cima',
+    moveDown: 'Mover para baixo',
+    drag: 'Arrastar para reordenar',
+    remove: 'Remover etapa',
+    confirmRemove: 'Remover?',
+    yes: 'Sim',
+    no: 'Não',
+    addStage: 'Adicionar etapa',
+    newStageName: (n: number) => `Etapa ${n}`,
+    sampleStageNames: ['Impressões', 'Cliques', 'Leads', 'Vendas'],
+    icons: { drag: '⋮⋮', moveUp: '↑', moveDown: '↓', remove: '×', add: '+' },
   },
   funnel: {
     label: 'Funil',
     title: 'Funil',
-    sampleBadge: 'Exemplo',
-    sampleLabel: 'Funil de exemplo',
-    sampleStages: [
-      { name: 'Impressões', volume: '100.000', cost: 'R$ 20,00 CPM' },
-      { name: 'Cliques', volume: '2.500', cost: 'R$ 0,80 por clique', conversion: '2,5%' },
-      { name: 'Leads', volume: '300', cost: 'R$ 6,67 por lead', conversion: '12%' },
-      { name: 'Vendas', volume: '45', cost: 'R$ 44,44 por venda', conversion: '15%' },
-    ] as { name: string; volume: string; cost: string; conversion?: string }[],
+    listLabel: 'Etapas do funil',
+    firstStageCost: { cpm: 'CPM', cpc: 'CPC', unit: 'por unidade' } as Record<CostUnit, string>,
+    perResult: 'por resultado',
+    unnamedStage: (n: number) => `Etapa ${n} (sem nome definido)`,
+    noValue: '—',
+    totals: {
+      label: 'Resultados',
+      media: 'Mídia',
+      extraCosts: 'Custos extras',
+      totalCost: 'Custo total',
+      revenue: 'Receita',
+      roas: 'ROAS',
+      roi: 'ROI',
+    },
   },
 }

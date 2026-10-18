@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { texts } from './texts'
@@ -65,22 +65,4 @@ test('sem armazenamento, abre no escuro e o botão continua funcionando', async 
 
   await user.click(screen.getByRole('button', { name: texts.theme.switchToLight }))
   expect(document.documentElement.dataset.theme).toBe('light')
-})
-
-test('mostra o funil de exemplo: uma faixa por etapa e a conversão entre elas', () => {
-  render(<App />)
-  const funnel = screen.getByRole('list', { name: texts.funnel.sampleLabel })
-  const bands = within(funnel).getAllByRole('listitem')
-  const stages = texts.funnel.sampleStages
-  expect(bands).toHaveLength(stages.length)
-
-  bands.forEach((band, i) => {
-    expect(within(band).getByText(stages[i].name)).toBeInTheDocument()
-    expect(within(band).getByText(stages[i].volume)).toBeInTheDocument()
-    if (i === 0) {
-      expect(within(band).queryByText(/%$/)).toBeNull()
-    } else {
-      expect(within(band).getByText(stages[i].conversion!)).toBeInTheDocument()
-    }
-  })
 })

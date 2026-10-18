@@ -22,13 +22,12 @@ test('fontes: Space Grotesk nos textos e JetBrains Mono nos números, com fontes
   expect(baseCss).toMatch(/\.num\s*\{[^}]*font-family:\s*var\(--font-mono\)/)
 })
 
-test('os números do funil de exemplo usam a fonte monoespaçada', () => {
+test('os números do funil usam a fonte monoespaçada', () => {
   render(<App />)
-  const funnel = screen.getByRole('list', { name: texts.funnel.sampleLabel })
-  for (const stage of texts.funnel.sampleStages) {
-    expect(within(funnel).getByText(stage.volume)).toHaveClass('num')
-    if (stage.conversion) expect(within(funnel).getByText(stage.conversion)).toHaveClass('num')
-  }
+  const funnel = screen.getByRole('list', { name: texts.funnel.listLabel })
+  const numbers = funnel.querySelectorAll('.funnel-band-volume, .funnel-band-cost, .funnel-conversion > span:last-child')
+  expect(numbers.length).toBeGreaterThan(0)
+  numbers.forEach((n) => expect(n).toHaveClass('num'))
 })
 
 test('existem estilos de base para botão, campo e cartão', () => {

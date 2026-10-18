@@ -1,11 +1,14 @@
 import './App.css'
-import { SampleFunnel } from './funnel/SampleFunnel'
+import { Funnel } from './funnel/Funnel'
+import { StagesPanel } from './funnel/StagesPanel'
+import { useFunnelEditor } from './funnel/useFunnelEditor'
 import { texts } from './texts'
 import { ThemeToggle } from './theme/ThemeToggle'
 import { useTheme } from './theme/useTheme'
 
 function App() {
   const [theme, toggleTheme] = useTheme()
+  const { form, invalid, calculated, update } = useFunnelEditor()
 
   return (
     <div className="app">
@@ -19,14 +22,13 @@ function App() {
       <main className="app-main">
         <aside className="card app-panel" aria-label={texts.panel.label}>
           <h2 className="card-title">{texts.panel.title}</h2>
-          <p className="muted">{texts.panel.placeholder}</p>
+          <StagesPanel form={form} invalid={invalid} update={update} />
         </aside>
         <section className="card app-funnel" aria-label={texts.funnel.label}>
           <div className="card-header">
             <h2 className="card-title">{texts.funnel.title}</h2>
-            <span className="badge">{texts.funnel.sampleBadge}</span>
           </div>
-          <SampleFunnel />
+          <Funnel calculated={calculated} />
         </section>
       </main>
     </div>

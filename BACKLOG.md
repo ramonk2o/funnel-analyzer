@@ -6,23 +6,6 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
 
 ## Funil
 
-### Editor do funil e modo orçamento
-- **Status:** Ideia
-- **Motivação:** Profissionais de marketing precisam planejar campanhas sabendo o que um investimento rende ao longo do funil. Hoje isso é feito em planilhas improvisadas.
-- **Descrição:** Num painel lateral, a pessoa monta o funil: cria, nomeia, remove e reordena etapas (arrastando ou com setas) e informa os valores de cada uma. Digita a verba de mídia e vê volumes, custos e resultados. Tudo recalcula a cada tecla.
-- **Decisões:**
-  - A primeira etapa recebe o custo unitário de mídia, numa destas unidades: CPM, CPC ou custo por unidade genérico. As etapas seguintes recebem a taxa de conversão sobre a etapa anterior.
-  - O custo por resultado de cada etapa é calculado, nunca digitado.
-  - Cada etapa pode ter um custo extra opcional por unidade (ex.: ferramenta por lead, comissão por venda), somado por cima da mídia.
-  - O investimento é a verba de mídia. O app mostra mídia, custos extras e custo total separados.
-  - Ticket médio opcional na última etapa. Com ele aparecem receita, ROAS (receita ÷ mídia) e ROI (lucro ÷ custo total).
-  - Os cálculos usam as casas decimais completas. A tela mostra volumes inteiros e R$ com 2 casas.
-  - Validação: conversão de 0% a 100%; custos, verba e ticket ≥ 0; de 2 a 10 etapas. Campo inválido fica em vermelho, e o funil mantém o último cálculo válido.
-  - Só PT-BR e R$, com os textos centralizados para facilitar traduzir depois.
-  - Feito para desktop. No celular deve funcionar de forma aceitável, com o painel embaixo do funil.
-  - Stack: React + TypeScript (modo estrito) + Vite, com Vitest para cálculo e componentes e Playwright para testes no navegador.
-- **Fora do escopo:** contas, login e nuvem; desfazer; outros idiomas e moedas; publicação; modo meta (entrada própria).
-
 ### Modo meta
 - **Status:** Ideia
 - **Motivação:** Responder o caminho inverso do planejamento: quanto investir para atingir uma meta.
