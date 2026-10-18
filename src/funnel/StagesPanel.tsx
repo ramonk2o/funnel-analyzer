@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { texts } from '../texts'
 import { COST_UNITS, type CostUnit } from './calc'
 import { formatConversion, formatMoney, parseDecimal } from './numbers'
@@ -15,6 +15,7 @@ import {
   type StageForm,
 } from './form'
 import { Collapse } from './Collapse'
+import { useStageDrag } from './useStageDrag'
 import './panel.css'
 
 const t = texts.panel
@@ -37,7 +38,6 @@ export interface EditRequest {
 }
 
 export function StagesPanel({ form, invalid, update, onEditingChange, editRequest }: Props) {
-  const [dragging, setDragging] = useState<number | null>(null)
   // Accordion: at most one stage open at a time (null = all collapsed).
   const [openId, setOpenId] = useState<string | null>(form.stages[0].id)
   const [knownIds, setKnownIds] = useState(() => form.stages.map((s) => s.id))
@@ -68,6 +68,22 @@ export function StagesPanel({ form, invalid, update, onEditingChange, editReques
     input.closest('.stage')?.scrollIntoView?.({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' })
   }, [editRequest])
 
+  const listRef = useRef<HTMLDivElement>(null)
+  const { drag, start: startDrag } = useStageDrag(listRef, ids, (id, to) => {
+    update((f) =>
+      moveStage(
+        f,
+        f.stages.findIndex((s) => s.id === id),
+        to,
+      ),
+    )
+    setOpenId(id)
+  })
+  // While dragging, the list shows the order it will have on drop, with every stage collapsed.
+  const view = drag
+    ? { ...form, stages: drag.order.map((id) => form.stages.find((s) => s.id === id)).filter((s) => s !== undefined) }
+    : form
+
   const setField = (changes: Partial<FunnelForm>) => update((f) => ({ ...f, ...changes }))
   const setStage = (id: string, changes: Partial<StageForm>) => update((f) => updateStage(f, id, changes))
 
@@ -81,26 +97,18 @@ export function StagesPanel({ form, invalid, update, onEditingChange, editReques
         onChange={(budget) => setField({ budget })}
       />
 
-      <div className="stages">
-        {form.stages.map((stage, i) => {
-          const open = openId === stage.id
-          const { hasInvalid, summary } = collapsedView(form, invalid, i)
+      <div className="stages" ref={listRef}>
+        {view.stages.map((stage, i) => {
+          const open = !drag && openId === stage.id
+          const { hasInvalid, summary } = collapsedView(view, invalid, i)
 
           return (
             <div
               key={stage.id}
               role="group"
               aria-labelledby={`${stage.id}-title`}
-              className={`stage${open ? ' stage-open' : ''}${!open && hasInvalid ? ' stage-has-invalid' : ''}${dragging === i ? ' stage-dragging' : ''}`}
-              onDragOver={(e) => dragging !== null && e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault()
-                if (dragging !== null) {
-                  update((f) => moveStage(f, dragging, i))
-                  setOpenId(form.stages[dragging].id)
-                }
-                setDragging(null)
-              }}
+              data-stage-id={stage.id}
+              className={`stage${open ? ' stage-open' : ''}${!open && hasInvalid ? ' stage-has-invalid' : ''}${drag?.id === stage.id ? ' stage-placeholder' : ''}`}
             >
               <StageHeader
                 titleId={`${stage.id}-title`}
@@ -120,11 +128,10 @@ export function StagesPanel({ form, invalid, update, onEditingChange, editReques
                   setOpenId(stage.id)
                 }}
                 onRemove={() => update((f) => removeStage(f, stage.id))}
-                onDragStart={() => setDragging(i)}
-                onDragEnd={() => setDragging(null)}
+                onDragStart={(e) => startDrag(e, stage.id)}
               />
 
-              <Collapse id={`${stage.id}-body`} open={open}>
+              <Collapse id={`${stage.id}-body`} open={open} animate={!drag}>
                 <div
                   className="stage-body"
                   onFocus={() => onEditingChange(stage.id)}
@@ -197,6 +204,8 @@ export function StagesPanel({ form, invalid, update, onEditingChange, editReques
         })}
       </div>
 
+      {drag && <DragGhost view={view} invalid={invalid} id={drag.id} position={drag.ghost} />}
+
       <button type="button" className="btn" disabled={count >= MAX_STAGES} onClick={() => update(addStage)}>
         <span aria-hidden="true">{t.icons.add}</span>
         {t.addStage}
@@ -242,6 +251,34 @@ function collapsedView(form: FunnelForm, invalid: Set<string>, i: number) {
   return { hasInvalid, summary }
 }
 
+interface GhostProps {
+  view: FunnelForm
+  invalid: Set<string>
+  id: string
+  position: { top: number; left: number; width: number }
+}
+
+// The copy of the dragged stage's header that follows the pointer.
+function DragGhost({ view, invalid, id, position }: GhostProps) {
+  const i = view.stages.findIndex((s) => s.id === id)
+  const { summary } = collapsedView(view, invalid, i)
+  return (
+    <div className="stage stage-ghost" aria-hidden="true" style={position}>
+      <div className="stage-header">
+        <span className="stage-handle">{t.icons.drag}</span>
+        <div className="stage-toggle">
+          <span className="stage-chevron">{t.icons.expand}</span>
+          <span className="stage-title">{t.stageGroup(i + 1)}</span>
+          <span className="stage-summary">
+            <span className="stage-name">{stageDisplayName(view.stages[i], i)}</span>
+            <span className="stage-value num">{summary}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 interface HeaderProps {
   titleId: string
   bodyId: string
@@ -254,30 +291,19 @@ interface HeaderProps {
   onToggle: (header: HTMLElement) => void
   onMove: (to: number) => void
   onRemove: () => void
-  onDragStart: () => void
-  onDragEnd: () => void
+  onDragStart: (e: ReactPointerEvent<HTMLElement>) => void
 }
 
 function StageHeader(props: HeaderProps) {
   const { titleId, bodyId, index, count, open, name, summary, invalid, onToggle } = props
-  const { onMove, onRemove, onDragStart, onDragEnd } = props
+  const { onMove, onRemove, onDragStart } = props
   const [confirming, setConfirming] = useState(false)
   // Down to the minimum while open (another stage was removed): close it.
   if (confirming && count <= MIN_STAGES) setConfirming(false)
 
   return (
     <div className="stage-header">
-      <span
-        className="stage-handle"
-        draggable
-        title={t.drag}
-        aria-hidden="true"
-        onDragStart={(e) => {
-          e.dataTransfer.effectAllowed = 'move'
-          onDragStart()
-        }}
-        onDragEnd={onDragEnd}
-      >
+      <span className="stage-handle" title={t.drag} aria-hidden="true" onPointerDown={onDragStart}>
         {t.icons.drag}
       </span>
       <button

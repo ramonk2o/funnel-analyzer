@@ -23,9 +23,30 @@
   border-color: var(--danger);
 }
 
-.stage-dragging {
-  opacity: 0.5;
+/* Dragging: the dragged stage leaves a dashed gap where it will land, and a copy of its header
+   follows the pointer. */
+.stage-placeholder {
+  background: none;
+  border: 1px dashed var(--accent);
+}
+
+.stage-placeholder > * {
+  visibility: hidden;
+}
+
+.stage-ghost {
+  position: fixed;
+  z-index: 50;
+  margin: 0;
+  pointer-events: none;
   border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 16px var(--glow);
+}
+
+:root.dragging-stage,
+:root.dragging-stage * {
+  cursor: grabbing !important;
+  user-select: none;
 }
 
 .stage-header {
@@ -41,6 +62,8 @@
   grid-area: 1 / 1;
   line-height: 28px;
   cursor: grab;
+  /* Touch: dragging the handle moves the stage instead of scrolling the page. */
+  touch-action: none;
   color: var(--text-muted);
   letter-spacing: -0.2em;
   user-select: none;

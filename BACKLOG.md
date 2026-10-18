@@ -27,19 +27,6 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - Os valores 10% e 60% são pontos de partida, para ajustar vendo na tela.
   - Quando um valor muda, os números rolam até o valor novo, numa animação discreta.
 
-### Arrastar etapas com pré-visualização
-- **Status:** Ideia
-- **Motivação:** Ao arrastar uma etapa para reordenar, não dá para ver como a lista vai ficar antes de soltar.
-- **Descrição:** Durante o arraste, todas as etapas ficam recolhidas, e a lista se reorganiza na hora para mostrar a ordem que vai ter ao soltar.
-- **Decisões:**
-  - Vem depois de "Etapas colapsáveis".
-  - As outras etapas abrem espaço na hora, e a arrastada deixa um espaço reservado (contorno tracejado) na posição nova.
-  - Só a lista muda durante o arraste. O desenho do funil e os números recalculam ao soltar.
-  - Todas as etapas ficam recolhidas enquanto o arraste dura. Ao soltar, abre a etapa arrastada.
-  - Esc ou soltar fora da lista cancela: a ordem original volta, e a etapa que estava aberta antes volta a abrir.
-  - Funciona com mouse e com toque (segurar e arrastar pelo ícone). Pelo teclado, a reordenação continua só pelas setas.
-  - Muda o SPEC.md (Editor do funil, regra da reordenação): passa a descrever o arraste com pré-visualização, o cancelamento e o toque.
-
 ## Configurações
 
 ### Tela de configurações

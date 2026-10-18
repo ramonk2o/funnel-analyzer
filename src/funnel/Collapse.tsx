@@ -3,12 +3,14 @@ import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 interface Props {
   id: string
   open: boolean
+  /** False closes at once, without the animation (e.g. when a drag starts). */
+  animate?: boolean
   children: ReactNode
 }
 
 // Animates the height when opening and closing. The content is only in the page while open
 // or closing; while closing it is inert, so it can't be reached by keyboard or screen readers.
-export function Collapse({ id, open, children }: Props) {
+export function Collapse({ id, open, animate = true, children }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const [rendered, setRendered] = useState(open)
   const [expanded, setExpanded] = useState(open)
@@ -27,14 +29,14 @@ export function Collapse({ id, open, children }: Props) {
       // oxlint-disable-next-line react/set-state-in-effect
       setExpanded(true)
       setSettled(!hasTransition(el))
-    } else if (hasTransition(el)) {
+    } else if (animate && hasTransition(el)) {
       setExpanded(false)
       setSettled(false)
     } else {
       setExpanded(false)
       setRendered(false)
     }
-  }, [open, rendered, expanded])
+  }, [open, rendered, expanded, animate])
 
   if (!rendered) return null
 

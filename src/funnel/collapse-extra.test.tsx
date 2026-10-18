@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
 import { texts } from '../texts'
@@ -61,7 +61,7 @@ test('etapa recolhida mantém setas, arrastar e remover no cabeçalho', () => {
   expect(within(s).getByRole('button', { name: t.moveUp })).toBeEnabled()
   expect(within(s).getByRole('button', { name: t.moveDown })).toBeEnabled()
   expect(within(s).getByRole('button', { name: t.remove })).toBeEnabled()
-  expect(s.querySelector('[draggable="true"]')).not.toBeNull()
+  expect(s.querySelector('.stage-handle')).not.toBeNull()
 })
 
 test('reordenar para baixo pelas setas abre a etapa movida', async () => {
@@ -95,14 +95,6 @@ test('remover e depois cancelar ("Não") não abre nem recolhe nada', async () =
   await user.click(within(stage(3)).getByRole('button', { name: t.remove }))
   await user.click(within(stage(3)).getByRole('button', { name: t.no }))
   expect(stageCount()).toBe(4)
-  expect(openStages()).toEqual([1])
-})
-
-test('arrastar (dragstart/dragend) no cabeçalho não abre nem recolhe', () => {
-  render(<App />)
-  const handle = stage(3).querySelector('[draggable="true"]') as HTMLElement
-  fireEvent.dragStart(handle, { dataTransfer: { effectAllowed: '' } })
-  fireEvent.dragEnd(handle)
   expect(openStages()).toEqual([1])
 })
 
@@ -239,16 +231,4 @@ test('não há etapa aberta marcada, mesmo com campo inválido', async () => {
   await replace(within(stage(1)).getByLabelText(t.unitCost), '0')
   expect(marked(1)).toBe(false)
   expect(stage(1)).not.toHaveClass('stage-has-invalid')
-})
-
-// ASSUMPTION (not decided by the entry): reordering by drag keeps the open stage as it was
-// (the entry only says reordering by the arrows opens the moved stage).
-test('arrastar e soltar uma etapa abre a etapa arrastada', () => {
-  render(<App />)
-  const handle = stage(3).querySelector('[draggable="true"]') as HTMLElement
-  fireEvent.dragStart(handle, { dataTransfer: { effectAllowed: '' } })
-  fireEvent.dragOver(stage(1))
-  fireEvent.drop(stage(1))
-  expect(openStages()).toEqual([1])
-  expect(within(stage(1)).getByLabelText(t.name)).toHaveValue('Leads')
 })

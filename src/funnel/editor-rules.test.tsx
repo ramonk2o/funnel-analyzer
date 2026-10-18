@@ -206,20 +206,5 @@ test('formatos inválidos de número', () => {
   }
 })
 
-test('arrastar e soltar uma etapa muda a ordem (lógica de soltar)', () => {
-  render(<App />)
-  const handle = stage(4).querySelector('.stage-handle')!
-  fireEvent.dragStart(handle, { dataTransfer: { effectAllowed: '' } })
-  fireEvent.dragOver(stage(2))
-  fireEvent.drop(stage(2))
-  expect(bandNames()).toEqual(['Impressões', 'Vendas', 'Cliques', 'Leads'])
-})
-
-test('soltar sem ter arrastado uma etapa não muda nada', () => {
-  render(<App />)
-  fireEvent.drop(stage(2))
-  expect(bandNames()).toEqual(['Impressões', 'Cliques', 'Leads', 'Vendas'])
-})
-
 // ASSUMPTION (not decided by the entry): while a field is invalid, the funnel also keeps
 // the old names and stage list, not only the old numbers.
