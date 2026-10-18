@@ -14,6 +14,7 @@ import {
   type FunnelForm,
   type StageForm,
 } from './form'
+import { Collapse } from './Collapse'
 import './panel.css'
 
 const t = texts.panel
@@ -81,7 +82,10 @@ export function StagesPanel({ form, invalid, update }: Props) {
                 name={stageDisplayName(stage, i)}
                 summary={summary}
                 invalid={hasInvalid}
-                onToggle={() => setOpenId(open ? null : stage.id)}
+                onToggle={(header) => {
+                  keepInPlace(header)
+                  setOpenId(open ? null : stage.id)
+                }}
                 onMove={(to) => {
                   update((f) => moveStage(f, i, to))
                   setOpenId(stage.id)
@@ -91,8 +95,8 @@ export function StagesPanel({ form, invalid, update }: Props) {
                 onDragEnd={() => setDragging(null)}
               />
 
-              {open && (
-                <div id={`${stage.id}-body`} className="stage-body">
+              <Collapse id={`${stage.id}-body`} open={open}>
+                <div className="stage-body">
                   <label className="field">
                     <span className="field-label">{t.name}</span>
                     <input
@@ -150,7 +154,7 @@ export function StagesPanel({ form, invalid, update }: Props) {
                     />
                   )}
                 </div>
-              )}
+              </Collapse>
             </div>
           )
         })}
@@ -162,6 +166,19 @@ export function StagesPanel({ form, invalid, update }: Props) {
       </button>
     </div>
   )
+}
+
+// While the stages open and close, scrolls the page so the clicked header stays under the pointer
+// (when the page can scroll that far).
+function keepInPlace(el: HTMLElement) {
+  const top = el.getBoundingClientRect().top
+  const start = performance.now()
+  const step = () => {
+    const shift = el.getBoundingClientRect().top - top
+    if (shift !== 0) window.scrollBy(0, shift)
+    if (el.isConnected && performance.now() - start < 400) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
 }
 
 // What a collapsed stage shows: its main value, and whether any of its fields is invalid.
@@ -195,7 +212,7 @@ interface HeaderProps {
   name: string
   summary: string
   invalid: boolean
-  onToggle: () => void
+  onToggle: (header: HTMLElement) => void
   onMove: (to: number) => void
   onRemove: () => void
   onDragStart: () => void
@@ -229,7 +246,7 @@ function StageHeader(props: HeaderProps) {
         className="stage-toggle"
         aria-expanded={open}
         aria-controls={open ? bodyId : undefined}
-        onClick={onToggle}
+        onClick={(e) => onToggle(e.currentTarget)}
       >
         <span className="stage-chevron" aria-hidden="true">
           {t.icons.expand}

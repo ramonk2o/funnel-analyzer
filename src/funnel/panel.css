@@ -13,7 +13,6 @@
 .stage {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   padding: 12px;
   background: var(--surface-2);
   border: 1px solid var(--border);
@@ -63,10 +62,38 @@
   margin-right: 4px;
 }
 
+.collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease;
+}
+
+.collapse-open {
+  grid-template-rows: 1fr;
+}
+
+.collapse-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.collapse-settled .collapse-inner {
+  overflow: visible;
+}
+
+/* The gap to the header is padding inside the clipped area, so it collapses with the content. */
 .stage-body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapse,
+  .stage-chevron {
+    transition: none;
+  }
 }
 
 .stage-toggle {
