@@ -27,6 +27,25 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - Os valores 10% e 60% são pontos de partida, para ajustar vendo na tela.
   - Quando um valor muda, os números rolam até o valor novo, numa animação discreta.
 
+### Edição em barra lateral recolhível
+- **Status:** Ideia
+- **Motivação:** O painel de edição ocupa espaço fixo ao lado do funil o tempo todo. Quem quer olhar o funil e os resultados não consegue tirá-lo do caminho.
+- **Descrição:** A edição (verba, etapas e "Adicionar etapa") vai para uma barra lateral à esquerda, que abre e fecha por um botão no cabeçalho ou ao clicar numa faixa do funil.
+- **Decisões:**
+  - A barra recebe o painel inteiro de hoje. O funil e os resultados ficam na área principal.
+  - Botão fixo no topo esquerdo do cabeçalho, sempre no mesmo lugar, com o nome acessível "Abrir edição" ou "Fechar edição".
+  - Tela larga: a barra aberta empurra o funil, que fica mais estreito. Fechada, o funil ocupa a largura toda. A barra tem a altura da janela abaixo do cabeçalho e rola por conta própria, e o clique numa faixa rola a barra até a etapa.
+  - Tela estreita (até 800 px): a barra desliza por cima do funil, deixando uma faixa de ~15% à direita com fundo escurecido. Tocar no fundo também fecha. O foco fica preso dentro da barra enquanto ela está aberta. Ao carregar, a barra vem sempre fechada.
+  - Fecha pelo botão ou com Esc (com o foco dentro da barra), e o foco volta ao botão. Em tela larga, clicar fora não fecha.
+  - Abrir pelo botão põe o foco na verba. Clicar numa faixa ou conversão abre a barra, se estiver fechada, e põe o foco no campo da etapa, como hoje.
+  - Na primeira visita a barra vem aberta (em tela larga). Depois, o app lembra se ela ficou aberta ou fechada, salvo no navegador como o tema. Se não der para salvar, vem aberta.
+  - Fechada, nada da barra é alcançável por Tab ou leitor de tela. Se o foco estava num campo, ele vai para o botão e o destaque da faixa some.
+  - Abrir e fechar desliza em ~200 ms, com o funil se reajustando. Com "reduzir movimento", a troca é imediata.
+  - Muda o SPEC.md:
+    - Tela principal: a regra "em telas estreitas o painel vai para baixo do funil" sai, e entram as regras da barra.
+    - Funil e resultados: o clique na faixa passa a abrir a barra.
+    - Dados guardados: entra o estado aberto/fechado da barra.
+
 ### Arrastar etapas com pré-visualização
 - **Status:** Ideia
 - **Motivação:** Ao arrastar uma etapa para reordenar, não dá para ver como a lista vai ficar antes de soltar.
