@@ -19,8 +19,16 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Textos em Space Grotesk e números em JetBrains Mono, carregadas do Google Fonts. Sem internet, a página funciona com as fontes do sistema.
 
 ### Tela principal
-- O cabeçalho mostra o nome "Simulador de Funil" e o botão de tema.
-- Abaixo ficam o painel das etapas e a área do funil. Em telas estreitas (até 800 px), o painel vai para baixo do funil.
+- O cabeçalho ocupa a largura toda da janela: à esquerda, o botão da barra de edição e o nome "Simulador de Funil"; à direita, o botão de tema. Abaixo, o funil e os resultados ficam centralizados (até 1280 px).
+
+### Barra de edição
+- O painel de edição (verba, etapas e "Adicionar etapa") fica numa barra lateral colada à esquerda, abaixo do cabeçalho, que cobre o funil sem mudar a largura dele. O fundo da barra é levemente translúcido (90%), e ela rola por conta própria.
+- O botão do cabeçalho ("Abrir edição" / "Fechar edição") abre e fecha a barra. Abrir pelo botão põe o foco na verba. Esc com o foco dentro da barra também fecha. Ao fechar, o foco vai para o botão.
+- Enquanto a barra está aberta, o cabeçalho fica fixo no topo. Fechada, nada da barra é alcançável por Tab ou leitor de tela.
+- Tela larga: sem fundo escurecido nem foco preso; clicar fora não fecha.
+- Tela estreita (até 800 px): a barra ocupa ~85% da largura, e o resto fica escurecido; tocar nele fecha. O Tab fica entre o botão do cabeçalho e a barra, e Esc com o foco no botão também fecha.
+- Abrir e fechar desliza em ~200 ms (imediato com "reduzir movimento").
+- Na primeira visita (tela larga) a barra vem aberta; depois, o app lembra se ela ficou aberta ou fechada. Em tela estreita ela sempre começa fechada, e abrir ou fechar ali não muda o que fica lembrado.
 - O app abre com um funil de exemplo já editável: Impressões → Cliques → Leads → Vendas, CPM R$ 20, conversões de 2,5%, 12% e 15%, verba de R$ 2.000. Recarregar a página volta a esse funil (nada do funil é salvo).
 
 ### Editor do funil
@@ -55,7 +63,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Cada faixa mostra nome, volume e custo; entre as faixas aparece a conversão como foi digitada. As larguras são fixas (estreitam de cima para baixo), não proporcionais ao volume.
 - A faixa da primeira etapa mostra o custo de mídia como digitado ("R$ 20,00 CPM", "R$ 0,80 CPC", "R$ 1,00 por unidade"); as outras, o custo por resultado ("R$ 0,80 por resultado").
 - Com o foco em algum campo de uma etapa (nome, unidade, custo de mídia, conversão, custo extra ou ticket), a faixa dela, com a conversão acima, fica destacada e as outras esmaecem. Os botões do cabeçalho da etapa e a verba não destacam nada. O destaque some quando o foco sai dos campos da etapa. Com o funil congelado, o destaque segue a etapa na faixa do último cálculo válido; uma etapa que não está nele não destaca nada.
-- Clicar numa faixa abre a etapa dela no painel (recolhendo a aberta), com o foco no Nome; clicar na conversão entre duas faixas abre a etapa de baixo, com o foco na Conversão (ou no Nome, se a etapa estiver em 1º lugar no painel). Faixas e conversões são botões ("Editar etapa <nome>", "Editar conversão de <nome>"). Se a etapa está fora da área visível, a página rola suavemente até ela (sem animação com "reduzir movimento"). Com o funil congelado, o clique segue a etapa pela identidade, e a faixa de uma etapa já removida não faz nada.
+- Clicar numa faixa abre a barra de edição (se estiver fechada) e a etapa dela no painel (recolhendo a aberta), com o foco no Nome; clicar na conversão entre duas faixas abre a etapa de baixo, com o foco na Conversão (ou no Nome, se a etapa estiver em 1º lugar no painel). Faixas e conversões são botões ("Editar etapa <nome>", "Editar conversão de <nome>"). Se a etapa está fora da área visível, a barra rola suavemente até ela (sem animação com "reduzir movimento"). Com o funil congelado, o clique segue a etapa pela identidade, e a faixa de uma etapa já removida não faz nada.
 - Abaixo do funil aparecem mídia, custos extras e custo total, separados. Receita, ROAS e ROI só aparecem com ticket médio.
 - Volumes aparecem inteiros e valores em R$ com 2 casas, com separador de milhar. ROAS aparece como multiplicador ("3,20x"); ROI em porcentagem com 1 casa ("45,0%"), podendo ser negativo.
 - Sem valor possível, aparece "—": custo por resultado com volume 0, ROAS com mídia 0, ROI com custo total 0.
@@ -67,6 +75,7 @@ Tudo fica no `localStorage` do navegador.
 | Chave | Valores | Uso |
 |---|---|---|
 | `simulador-de-funil:tema` | `dark` ou `light` | Tema escolhido. Ausente ou inválido equivale a `dark`. |
+| `simulador-de-funil:edicao` | `aberta` ou `fechada` | Barra de edição aberta ou fechada (só em tela larga). Ausente ou inválido equivale a `aberta`. |
 
 ## Decisões técnicas
 

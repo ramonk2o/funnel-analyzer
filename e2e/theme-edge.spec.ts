@@ -45,11 +45,3 @@ test('sem internet para as fontes: a página carrega e usa fonte de reserva', as
   expect(family).toMatch(/Space Grotesk.*sans-serif/)
   expect(errors).toEqual([])
 })
-
-test('no celular, o painel fica embaixo do funil', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto('/')
-  const funnel = await page.getByRole('region', { name: 'Funil' }).boundingBox()
-  const panel = await page.getByRole('complementary', { name: 'Painel do funil' }).boundingBox()
-  expect(panel!.y).toBeGreaterThan(funnel!.y + funnel!.height - 1)
-})

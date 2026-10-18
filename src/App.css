@@ -1,16 +1,25 @@
 .app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px 32px;
+  --header-height: 64px;
+  --gutter: 24px;
 }
 
+/* The header spans the whole window; the content below stays centered. */
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: var(--header-height);
   margin-bottom: 24px;
+  padding: 0 var(--gutter);
   border-bottom: 1px solid var(--border);
+}
+
+/* While the sidebar is open the header stays at the top, so its button can always close it. */
+.app:not(.app-sidebar-closed) .app-header {
+  position: sticky;
+  z-index: 30;
+  top: 0;
+  background: var(--bg);
 }
 
 .app-brand {
@@ -32,23 +41,73 @@
 }
 
 .app-main {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 24px;
-  align-items: start;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--gutter) 32px;
 }
 
+/* Editing sidebar: against the left edge, below the header, over the funnel (which keeps its
+   full width). Slightly see-through. Closed, it slides out and is hidden once the slide ends. */
+.sidebar {
+  position: fixed;
+  z-index: 20;
+  top: var(--header-height);
+  bottom: 0;
+  left: 0;
+  width: 340px;
+  overflow-y: auto;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  border-right: 1px solid var(--border);
+  /* Visible as soon as it starts opening (so it can take focus), hidden only after closing. */
+  transition: transform 0.2s ease;
+}
+
+.app-sidebar-closed .sidebar {
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition:
+    transform 0.2s ease,
+    visibility 0s 0.2s;
+}
+
+.sidebar .app-panel {
+  min-height: 100%;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+/* Narrow screens: the sidebar takes most of the width, leaving a dimmed strip that closes it. */
 @media (max-width: 800px) {
   .app {
-    padding: 0 16px 24px;
+    --gutter: 16px;
   }
 
   .app-main {
-    grid-template-columns: 1fr;
+    padding-bottom: 24px;
   }
 
-  .app-panel {
-    order: 2;
+  .sidebar {
+    width: 85vw;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    z-index: 10;
+    inset: var(--header-height) 0 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .app-sidebar-closed .sidebar {
+    transition: none;
   }
 }
 

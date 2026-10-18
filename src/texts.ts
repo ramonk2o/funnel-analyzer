@@ -7,6 +7,12 @@ export const texts = {
     switchToLight: 'Mudar para tema claro',
     switchToDark: 'Mudar para tema escuro',
   },
+  sidebar: {
+    open: 'Abrir edição',
+    close: 'Fechar edição',
+    // Where the open/closed choice is remembered in the browser.
+    storageKey: 'simulador-de-funil:edicao',
+  },
   panel: {
     label: 'Painel do funil',
     title: 'Etapas',

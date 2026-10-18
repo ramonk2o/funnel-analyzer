@@ -29,6 +29,8 @@ interface Props {
   editRequest: EditRequest | null
 }
 
+export const BUDGET_FIELD_ID = 'budget'
+
 export interface EditRequest {
   stageId: string
   field: 'name' | 'conversion'
@@ -72,6 +74,7 @@ export function StagesPanel({ form, invalid, update, onEditingChange, editReques
   return (
     <div className="stages-panel">
       <NumberField
+        id={BUDGET_FIELD_ID}
         label={t.budget}
         value={form.budget}
         invalid={invalid.has('budget')}
