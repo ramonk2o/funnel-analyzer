@@ -27,19 +27,6 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - Os valores 10% e 60% são pontos de partida, para ajustar vendo na tela.
   - Quando um valor muda, os números rolam até o valor novo, numa animação discreta.
 
-### Clicar na faixa para editar a etapa
-- **Status:** Ideia
-- **Motivação:** Partir do desenho do funil para mudar uma etapa hoje exige achá-la no painel e abri-la à mão.
-- **Descrição:** Clicar numa faixa do funil abre a etapa no painel, com o foco no primeiro campo.
-- **Decisões:**
-  - Vem depois de "Destaque da etapa em edição": com o foco no campo, a faixa fica destacada.
-  - Clicar na faixa abre a etapa (recolhendo a que estava aberta) e põe o foco no Nome.
-  - Clicar na conversão entre duas faixas abre a etapa de baixo, com o foco na Conversão.
-  - Faixas e conversões também são acionadas pelo teclado (Tab, depois Enter ou Espaço). O leitor de tela anuncia a faixa como "Editar etapa <nome>".
-  - Se a etapa está fora da área visível (por exemplo, em tela estreita, onde o painel fica embaixo do funil), a página rola suavemente até ela, sem animação com "reduzir movimento".
-  - Com o funil congelado, clicar na faixa de uma etapa já removida não faz nada. As outras funcionam, mesmo que a etapa tenha mudado de posição.
-  - Muda o SPEC.md (Funil e resultados): entra a regra do clique.
-
 ### Arrastar etapas com pré-visualização
 - **Status:** Ideia
 - **Motivação:** Ao arrastar uma etapa para reordenar, não dá para ver como a lista vai ficar antes de soltar.

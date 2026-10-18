@@ -105,6 +105,36 @@
   color: var(--text);
 }
 
+/* Bands and conversions are buttons: clicking one opens that stage in the panel. */
+.funnel-band {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Size and color come from .funnel-conversion above. */
+.funnel-conversion {
+  font-family: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.funnel-band:hover {
+  border-color: var(--accent);
+}
+
+.funnel-conversion:hover .num {
+  text-decoration: underline;
+}
+
+.funnel-band:focus-visible,
+.funnel-conversion:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* Highlight of the stage being edited: its band stands out and the others fade. */
 .funnel-step,
 .funnel-band {

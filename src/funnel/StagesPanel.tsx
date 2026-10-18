@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { texts } from '../texts'
 import { COST_UNITS, type CostUnit } from './calc'
 import { formatConversion, formatMoney, parseDecimal } from './numbers'
@@ -25,9 +25,16 @@ interface Props {
   update: (change: (form: FunnelForm) => FunnelForm) => void
   /** Called with the stage whose fields get focus, and null when focus leaves them. */
   onEditingChange: (stageId: string | null) => void
+  /** A request (from the funnel) to open a stage and focus one of its fields; each new object is handled once. */
+  editRequest: EditRequest | null
 }
 
-export function StagesPanel({ form, invalid, update, onEditingChange }: Props) {
+export interface EditRequest {
+  stageId: string
+  field: 'name' | 'conversion'
+}
+
+export function StagesPanel({ form, invalid, update, onEditingChange, editRequest }: Props) {
   const [dragging, setDragging] = useState<number | null>(null)
   // Accordion: at most one stage open at a time (null = all collapsed).
   const [openId, setOpenId] = useState<string | null>(form.stages[0].id)
@@ -41,6 +48,23 @@ export function StagesPanel({ form, invalid, update, onEditingChange }: Props) {
     setKnownIds(ids)
     if (added) setOpenId(added)
   }
+
+  const [handledRequest, setHandledRequest] = useState(editRequest)
+  if (editRequest !== handledRequest) {
+    setHandledRequest(editRequest)
+    if (editRequest) setOpenId(editRequest.stageId)
+  }
+
+  // Once the requested stage is open, focus the field and bring the stage into view if needed.
+  useEffect(() => {
+    if (!editRequest) return
+    const { stageId, field } = editRequest
+    const input = document.getElementById(fieldId(stageId, field)) ?? document.getElementById(fieldId(stageId, 'name'))
+    if (!input) return
+    input.focus({ preventScroll: true })
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    input.closest('.stage')?.scrollIntoView?.({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' })
+  }, [editRequest])
 
   const setField = (changes: Partial<FunnelForm>) => update((f) => ({ ...f, ...changes }))
   const setStage = (id: string, changes: Partial<StageForm>) => update((f) => updateStage(f, id, changes))
@@ -108,6 +132,7 @@ export function StagesPanel({ form, invalid, update, onEditingChange }: Props) {
                   <label className="field">
                     <span className="field-label">{t.name}</span>
                     <input
+                      id={fieldId(stage.id, 'name')}
                       className="input"
                       value={stage.name}
                       onChange={(e) => setStage(stage.id, { name: e.target.value })}
@@ -139,6 +164,7 @@ export function StagesPanel({ form, invalid, update, onEditingChange }: Props) {
                     </div>
                   ) : (
                     <NumberField
+                      id={fieldId(stage.id, 'conversion')}
                       label={t.conversion}
                       value={stage.conversion}
                       invalid={invalid.has(stageField(stage.id, 'conversion'))}
@@ -175,6 +201,8 @@ export function StagesPanel({ form, invalid, update, onEditingChange }: Props) {
     </div>
   )
 }
+
+const fieldId = (stageId: string, field: EditRequest['field']) => `${stageId}-${field}`
 
 // While the stages open and close, scrolls the page so the clicked header stays under the pointer
 // (when the page can scroll that far).
@@ -323,17 +351,19 @@ function StageHeader(props: HeaderProps) {
 }
 
 interface NumberFieldProps {
+  id?: string
   label: string
   value: string
   invalid: boolean
   onChange: (value: string) => void
 }
 
-function NumberField({ label, value, invalid, onChange }: NumberFieldProps) {
+function NumberField({ id, label, value, invalid, onChange }: NumberFieldProps) {
   return (
     <label className="field">
       <span className="field-label">{label}</span>
       <input
+        id={id}
         className="input"
         inputMode="decimal"
         value={value}

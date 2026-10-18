@@ -39,6 +39,8 @@ export const texts = {
     firstStageCost: { cpm: 'CPM', cpc: 'CPC', unit: 'por unidade' } as Record<CostUnit, string>,
     perResult: 'por resultado',
     unnamedStage: (n: number) => `Etapa ${n} (sem nome definido)`,
+    editStage: (name: string) => `Editar etapa ${name}`,
+    editConversion: (name: string) => `Editar conversão de ${name}`,
     noValue: '—',
     totals: {
       label: 'Resultados',
