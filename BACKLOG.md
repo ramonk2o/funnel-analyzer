@@ -44,6 +44,15 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - Os valores 10% e 60% são pontos de partida, para ajustar vendo na tela.
   - Quando um valor muda, os números rolam até o valor novo, numa animação discreta.
 
+## Configurações
+
+### Tela de configurações
+- **Status:** Ideia
+- **Motivação:** Cada pessoa digita números de um jeito; hoje o separador decimal é fixo na vírgula.
+- **Descrição:** Uma tela de configurações reúne as preferências do app. A primeira é o separador decimal: vírgula ou ponto.
+- **Decisões:**
+  - O padrão é a vírgula.
+
 ## Funis salvos
 
 ### Lista de funis, modelos e arquivo
