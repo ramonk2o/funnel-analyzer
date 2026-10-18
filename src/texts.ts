@@ -13,10 +13,19 @@ export const texts = {
     // Where the open/closed choice is remembered in the browser.
     storageKey: 'simulador-de-funil:edicao',
   },
+  mode: {
+    label: 'Modo',
+    budget: 'Tenho um orçamento',
+    goal: 'Tenho uma meta',
+  },
   panel: {
     label: 'Painel do funil',
     title: 'Etapas',
     budget: 'Verba de mídia (R$)',
+    goalTarget: 'Meta em',
+    revenueTarget: 'Receita',
+    goalQuantity: 'Meta (quantidade)',
+    goalRevenue: 'Meta (R$)',
     stageGroup: (n: number) => `Etapa ${n}`,
     name: 'Nome',
     costUnit: 'Unidade de custo',
@@ -46,6 +55,11 @@ export const texts = {
     perResult: 'por resultado',
     unnamedStage: (n: number) => `Etapa ${n} (sem nome definido)`,
     editStage: (name: string) => `Editar etapa ${name}`,
+    investment: 'Investimento necessário',
+    investmentTotal: 'Investimento total',
+    investmentDetail: (media: string, extras: string) => `mídia ${media} + custos extras ${extras}`,
+    impossible: 'Meta impossível com estes valores',
+    goalTag: 'Meta',
     editConversion: (name: string) => `Editar conversão de ${name}`,
     noValue: '—',
     totals: {

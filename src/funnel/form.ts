@@ -1,4 +1,4 @@
-import type { CostUnit, FunnelInput } from './calc'
+import type { CostUnit, FunnelInput, GoalTarget } from './calc'
 import { parseDecimal } from './numbers'
 import { texts } from '../texts'
 
@@ -10,8 +10,14 @@ export interface StageForm {
   extraCost: string
 }
 
+export type Mode = 'budget' | 'goal'
+
 export interface FunnelForm {
+  mode: Mode
   budget: string
+  /** Goal mode: the target stage's id, or 'revenue'; '' until goal mode is first entered. */
+  goalTarget: string
+  goal: string
   costUnit: CostUnit
   unitCost: string
   ticket: string
@@ -28,7 +34,10 @@ export function newStage(name: string, conversion = '10'): StageForm {
 
 export function initialForm(): FunnelForm {
   return {
+    mode: 'budget',
     budget: '2000',
+    goalTarget: '',
+    goal: '',
     costUnit: 'cpm',
     unitCost: '20',
     ticket: '',
@@ -48,7 +57,23 @@ export function addStage(form: FunnelForm): FunnelForm {
 
 export function removeStage(form: FunnelForm, id: string): FunnelForm {
   if (form.stages.length <= MIN_STAGES) return form
-  return { ...form, stages: form.stages.filter((s) => s.id !== id) }
+  const stages = form.stages.filter((s) => s.id !== id)
+  // A goal on the removed stage moves to the last stage, keeping its value.
+  const goalTarget = form.goalTarget === id ? stages[stages.length - 1].id : form.goalTarget
+  return { ...form, stages, goalTarget }
+}
+
+/**
+ * Switches mode. The first time goal mode is entered, the goal starts at the last stage with the
+ * volume the funnel shows now (`lastVolume`), rounded up, so the funnel stays the same (or 1, if it's 0).
+ */
+export function setMode(form: FunnelForm, mode: Mode, lastVolume: number): FunnelForm {
+  if (mode === 'goal' && form.goalTarget === '') {
+    // A goal must be above zero: with no volume yet, it starts at 1.
+    const goal = String(Math.max(1, Math.ceil(Math.round(lastVolume * 1e6) / 1e6)))
+    return { ...form, mode, goalTarget: form.stages[form.stages.length - 1].id, goal }
+  }
+  return { ...form, mode }
 }
 
 export function updateStage(form: FunnelForm, id: string, changes: Partial<StageForm>): FunnelForm {
@@ -71,9 +96,11 @@ export function moveStage(form: FunnelForm, from: number, to: number): FunnelFor
 export const stageField = (stageId: string, field: 'conversion' | 'extraCost') => `${stageId}.${field}`
 
 export interface ReadResult {
-  /** The funnel ready to calculate, or null while any field is invalid. */
+  /** The funnel ready to calculate, or null while any field is invalid. In goal mode its budget is unused. */
   input: FunnelInput | null
-  /** Keys of the invalid fields: 'budget', 'unitCost', 'ticket' or a stageField(). */
+  /** Goal mode: what to reach (null in budget mode or while invalid). */
+  goal: { target: GoalTarget; value: number } | null
+  /** Keys of the invalid fields: 'budget', 'goal', 'unitCost', 'ticket' or a stageField(). */
   invalid: Set<string>
 }
 
@@ -93,7 +120,10 @@ export function readForm(form: FunnelForm): ReadResult {
     text.trim() === '' ? undefined : read(key, text, ok)
 
   const atLeastZero = (n: number) => n >= 0
-  const budget = read('budget', form.budget, atLeastZero)
+  const goalMode = form.mode === 'goal'
+  // Only the current mode's value counts: the other one is kept but not used.
+  const budget = goalMode ? 0 : read('budget', form.budget, atLeastZero)
+  const goalValue = goalMode ? read('goal', form.goal, (n) => n > 0) : 0
   const unitCost = read('unitCost', form.unitCost, (n) => n > 0)
   const ticket = readOptional('ticket', form.ticket, atLeastZero)
   const stages = form.stages.map((stage, i) => ({
@@ -102,5 +132,12 @@ export function readForm(form: FunnelForm): ReadResult {
   }))
 
   const input = invalid.size === 0 ? { budget, costUnit: form.costUnit, unitCost, ticket, stages } : null
-  return { input, invalid }
+  const goal = input && goalMode ? { target: goalTargetIndex(form), value: goalValue } : null
+  return { input, goal, invalid }
+}
+
+function goalTargetIndex(form: FunnelForm): GoalTarget {
+  if (form.goalTarget === 'revenue') return 'revenue'
+  const i = form.stages.findIndex((s) => s.id === form.goalTarget)
+  return i === -1 ? form.stages.length - 1 : i
 }

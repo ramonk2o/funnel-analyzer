@@ -9,8 +9,7 @@ const t = texts.panel
 const panel = () => within(screen.getByRole('complementary', { name: t.label }))
 const stage = (n: number) => panel().getByRole('group', { name: t.stageGroup(n) })
 const isOpen = (n: number) => stage(n).querySelector('[aria-expanded]')!.getAttribute('aria-expanded') === 'true'
-const openStages = () =>
-  Array.from({ length: panel().getAllByRole('group').length }, (_, i) => i + 1).filter(isOpen)
+const openStages = () => Array.from({ length: panel().getAllByRole('group').length }, (_, i) => i + 1).filter(isOpen)
 const funnel = () => within(screen.getByRole('list', { name: texts.funnel.listLabel }))
 const bandButton = (name: string) => funnel().getByRole('button', { name: texts.funnel.editStage(name) })
 const conversionButton = (name: string) => funnel().getByRole('button', { name: texts.funnel.editConversion(name) })

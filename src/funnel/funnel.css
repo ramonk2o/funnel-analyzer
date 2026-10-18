@@ -45,9 +45,75 @@
   box-shadow: 0 0 8px var(--accent);
 }
 
-.funnel-band-name {
+.funnel-band-title {
   grid-area: name;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.funnel-band-name {
   font-weight: 500;
+}
+
+/* "Meta" tag on the goal's band (or on the revenue, in the results). */
+.goal-tag {
+  margin-left: 8px;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  vertical-align: middle;
+}
+
+.funnel-band-title .goal-tag {
+  margin-left: 0;
+}
+
+/* The investment above the funnel (total in budget mode, needed in goal mode). Centered, so the open sidebar (which covers
+   the left of the funnel) doesn't hide it. */
+.investment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.investment-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.investment-value {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.investment-detail {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.investment-impossible {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
 }
 
 .funnel-band-volume {

@@ -23,7 +23,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 
 ### Barra de edição
 - O painel de edição (verba, etapas e "Adicionar etapa") fica numa barra lateral colada à esquerda, abaixo do cabeçalho, que cobre o funil sem mudar a largura dele. O fundo da barra é levemente translúcido (90%), e ela rola por conta própria.
-- O botão do cabeçalho ("Abrir edição" / "Fechar edição") abre e fecha a barra. Abrir pelo botão põe o foco na verba. Esc com o foco dentro da barra também fecha. Ao fechar, o foco vai para o botão.
+- O botão do cabeçalho ("Abrir edição" / "Fechar edição") abre e fecha a barra. Abrir pelo botão põe o foco na verba (no modo meta, no valor da meta). Esc com o foco dentro da barra também fecha. Ao fechar, o foco vai para o botão.
 - Enquanto a barra está aberta, o cabeçalho fica fixo no topo. Fechada, nada da barra é alcançável por Tab ou leitor de tela.
 - Tela larga: sem fundo escurecido nem foco preso; clicar fora não fecha.
 - Tela estreita (até 800 px): a barra ocupa ~85% da largura, e o resto fica escurecido; tocar nele fecha. O Tab fica entre o botão do cabeçalho e a barra, e Esc com o foco no botão também fecha.
@@ -31,8 +31,14 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Na primeira visita (tela larga) a barra vem aberta; depois, o app lembra se ela ficou aberta ou fechada. Em tela estreita ela sempre começa fechada, e abrir ou fechar ali não muda o que fica lembrado.
 - O app abre com um funil de exemplo já editável: Impressões → Cliques → Leads → Vendas, CPM R$ 20, conversões de 2,5%, 12% e 15%, verba de R$ 2.000. Recarregar a página volta a esse funil (nada do funil é salvo).
 
+### Modos
+- No topo da barra, um seletor alterna entre "Tenho um orçamento" (padrão) e "Tenho uma meta". As etapas, taxas e custos são os mesmos nos dois modos; cada modo guarda o seu valor (a verba ou a meta) ao alternar. O modo não é salvo: recarregar volta ao modo orçamento.
+- No modo meta, a verba dá lugar a "Meta em" (as etapas na ordem do funil, mais "Receita") e ao valor da meta: "Meta (quantidade)" ou, para receita, "Meta (R$)".
+- Na primeira entrada no modo meta, a meta vem na última etapa, com o volume que o funil mostra arredondado para cima (ou 1, se for 0).
+- A meta segue a etapa pela identidade: vai junto ao reordenar e, se a etapa for removida, passa para a última etapa com o mesmo valor.
+
 ### Editor do funil
-- O painel tem a verba de mídia e, abaixo, uma caixa por etapa ("Etapa 1", "Etapa 2"…), com nome e custo extra por unidade (opcional).
+- O painel tem o seletor de modo, a verba de mídia (ou a meta) e, abaixo, uma caixa por etapa ("Etapa 1", "Etapa 2"…), com nome e custo extra por unidade (opcional).
 - A primeira etapa recebe a unidade de custo (CPM, CPC ou custo por unidade) e o custo de mídia nessa unidade. Cada etapa seguinte recebe a conversão sobre a etapa anterior.
 - O ticket médio (opcional) fica na etapa que estiver por último; ele é do funil, não da etapa.
 - O funil tem de 2 a 10 etapas. Com 10, adicionar fica desabilitado; com 2, remover fica desabilitado.
@@ -43,13 +49,15 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - A etapa recolhida mostra no cabeçalho o nome ("Etapa N (sem nome definido)" se vazio) e um resumo: a conversão ou, na 1ª etapa, o custo de mídia com a unidade, formatados como no funil; valor inválido aparece como "—". Se algum campo dela é inválido (incluindo o custo de mídia na 1ª e o ticket na última), o cabeçalho fica marcado em vermelho, sem abrir sozinho.
 - As etapas são reordenadas pelas setas (para cima / para baixo) ou arrastando pelo ícone; a etapa movida fica aberta.
 - Arrastar funciona com mouse e com toque e começa depois de o ponteiro andar ~5 px (um clique parado no ícone não faz nada). Durante o arraste, todas as etapas ficam recolhidas, a lista se reorganiza na hora para mostrar a ordem que vai ter ao soltar (a arrastada vira um espaço tracejado), e uma cópia do cabeçalho segue o ponteiro. Perto da borda de cima ou de baixo da barra, ela rola sozinha. O funil só muda ao soltar.
-- Soltar em qualquer ponto da barra aplica a ordem mostrada e abre a etapa arrastada. Esc ou soltar fora da barra cancela: volta a ordem original e a etapa que estava aberta. Esc durante o arraste não fecha a barra. Pelo teclado, a reordenação é só pelas setas. O custo de mídia e a unidade ficam com a primeira posição. A conversão de quem está em 1º lugar não é usada nem validada; uma etapa que sai do 1º lugar mostra a conversão que tinha antes, ou 10% se nunca teve.
+- Soltar em qualquer ponto da barra aplica a ordem mostrada e abre a etapa arrastada. Esc ou soltar fora da barra cancela: volta a ordem original e a etapa que estava aberta. Esc durante o arraste não fecha a barra. Pelo teclado, a reordenação é só pelas setas.
+- O custo de mídia e a unidade ficam com a primeira posição. A conversão de quem está em 1º lugar não é usada nem validada; uma etapa que sai do 1º lugar mostra a conversão que tinha antes, ou 10% se nunca teve.
 - Tudo recalcula a cada tecla.
 
 ### Números digitados e validação
 - Vírgula é o separador decimal ("1,50"). Pode faltar dígito de um lado da vírgula (",5" = 0,5; "1," = 1), e espaços nas pontas são ignorados. Separador de milhar não é aceito: qualquer ponto ("2.000", "1.5") deixa o campo inválido, assim como sinal, expoente ou texto.
 - Conversão: de 0% a 100%. Verba, custos extras e ticket: ≥ 0. Custo de mídia da primeira etapa: > 0.
-- Verba, custo de mídia e conversão são obrigatórios; vazios são inválidos. Custo extra e ticket vazios significam "não informado".
+- Meta: > 0, com as mesmas regras de escrita (fração aceita). Só o valor do modo atual é validado.
+- Verba, meta, custo de mídia e conversão são obrigatórios; vazios são inválidos. Custo extra e ticket vazios significam "não informado".
 - Campo inválido fica marcado em vermelho. Enquanto houver algum, o funil inteiro (números, nomes e lista de etapas) fica congelado no último cálculo válido.
 - O nome da etapa é livre; vazio, a faixa mostra "Etapa N (sem nome definido)", com N a posição.
 
@@ -59,13 +67,19 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Custo extra de uma etapa = volume × custo extra por unidade. Custo total = mídia (a verba) + soma dos custos extras.
 - Custo por resultado de cada etapa = (mídia + custos extras de todas as etapas até ela) ÷ volume da etapa.
 - Com ticket médio: receita = volume da última etapa × ticket; ROAS = receita ÷ mídia; lucro = receita − custo total; ROI = lucro ÷ custo total.
-- Os cálculos usam as casas decimais completas; o arredondamento é só na tela.
+- Os cálculos usam as casas decimais completas; o arredondamento é só na tela. A exceção é o investimento do modo meta, arredondado para cima no centavo.
+
+### Cálculo (modo meta)
+- O investimento necessário é a mídia mais os custos extras que fazem a etapa-alvo chegar à meta (ou a receita, para meta de receita), arredondado para cima no centavo. Como volumes e custos extras crescem na proporção da mídia, a mídia é a parte do investimento que, somada aos custos extras dela, dá o total.
+- Meta impossível: conversão 0% antes da etapa-alvo, ou meta de receita sem ticket médio (ou com ticket 0). Conversão 0% depois da etapa-alvo não impede a meta.
 
 ### Funil e resultados
 - Cada faixa mostra nome, volume e custo; entre as faixas aparece a conversão como foi digitada. As larguras são fixas (estreitam de cima para baixo), não proporcionais ao volume.
 - A faixa da primeira etapa mostra o custo de mídia como digitado ("R$ 20,00 CPM", "R$ 0,80 CPC", "R$ 1,00 por unidade"); as outras, o custo por resultado ("R$ 0,80 por resultado").
 - Com o foco em algum campo de uma etapa (nome, unidade, custo de mídia, conversão, custo extra ou ticket), a faixa dela, com a conversão acima, fica destacada e as outras esmaecem. Os botões do cabeçalho da etapa e a verba não destacam nada. O destaque some quando o foco sai dos campos da etapa. Com o funil congelado, o destaque segue a etapa na faixa do último cálculo válido; uma etapa que não está nele não destaca nada.
 - Clicar numa faixa abre a barra de edição (se estiver fechada) e a etapa dela no painel (recolhendo a aberta), com o foco no Nome; clicar na conversão entre duas faixas abre a etapa de baixo, com o foco na Conversão (ou no Nome, se a etapa estiver em 1º lugar no painel). Faixas e conversões são botões ("Editar etapa <nome>", "Editar conversão de <nome>"). Se a etapa está fora da área visível, a barra rola suavemente até ela (sem animação com "reduzir movimento"). Com o funil congelado, o clique segue a etapa pela identidade, e a faixa de uma etapa já removida não faz nada.
+- Acima do funil, um bloco em destaque mostra o investimento: no modo orçamento, "Investimento total" (o custo total); no modo meta, "Investimento necessário". Embaixo, o detalhamento "mídia R$ Y + custos extras R$ Z". Com a meta impossível, o bloco mostra "Meta impossível com estes valores", sem número, e o funil e os resultados ficam no último cálculo válido.
+- No modo meta, a faixa da etapa-alvo (ou a receita, nos resultados) ganha a etiqueta "Meta".
 - Abaixo do funil aparecem mídia, custos extras e custo total, separados. Receita, ROAS e ROI só aparecem com ticket médio.
 - Volumes aparecem inteiros e valores em R$ com 2 casas, com separador de milhar. ROAS aparece como multiplicador ("3,20x"); ROI em porcentagem com 1 casa ("45,0%"), podendo ser negativo.
 - Sem valor possível, aparece "—": custo por resultado com volume 0, ROAS com mídia 0, ROI com custo total 0.

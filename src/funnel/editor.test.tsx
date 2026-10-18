@@ -55,12 +55,7 @@ test('abre com o funil de exemplo editável e calculado a partir da verba', () =
 
   expect(bandNames()).toEqual(['Impressões', 'Cliques', 'Leads', 'Vendas'])
   expect(volumes()).toEqual(['100.000', '2.500', '300', '45'])
-  expect(costs()).toEqual([
-    'R$ 20,00 CPM',
-    'R$ 0,80 por resultado',
-    'R$ 6,67 por resultado',
-    'R$ 44,44 por resultado',
-  ])
+  expect(costs()).toEqual(['R$ 20,00 CPM', 'R$ 0,80 por resultado', 'R$ 6,67 por resultado', 'R$ 44,44 por resultado'])
   expect(bands()[1]).toHaveTextContent('2,5%')
   expect(bands()[2]).toHaveTextContent('12%')
   expect(bands()[3]).toHaveTextContent('15%')

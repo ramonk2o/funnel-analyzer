@@ -12,9 +12,12 @@ import {
   stageField,
   updateStage,
   type FunnelForm,
+  type Mode,
   type StageForm,
 } from './form'
 import { Collapse } from './Collapse'
+import { ModeFields } from './ModeFields'
+import { NumberField } from './NumberField'
 import { useStageDrag } from './useStageDrag'
 import './panel.css'
 
@@ -24,20 +27,19 @@ interface Props {
   form: FunnelForm
   invalid: Set<string>
   update: (change: (form: FunnelForm) => FunnelForm) => void
+  onModeChange: (mode: Mode) => void
   /** Called with the stage whose fields get focus, and null when focus leaves them. */
   onEditingChange: (stageId: string | null) => void
   /** A request (from the funnel) to open a stage and focus one of its fields; each new object is handled once. */
   editRequest: EditRequest | null
 }
 
-export const BUDGET_FIELD_ID = 'budget'
-
 export interface EditRequest {
   stageId: string
   field: 'name' | 'conversion'
 }
 
-export function StagesPanel({ form, invalid, update, onEditingChange, editRequest }: Props) {
+export function StagesPanel({ form, invalid, update, onModeChange, onEditingChange, editRequest }: Props) {
   // Accordion: at most one stage open at a time (null = all collapsed).
   const [openId, setOpenId] = useState<string | null>(form.stages[0].id)
   const [knownIds, setKnownIds] = useState(() => form.stages.map((s) => s.id))
@@ -89,13 +91,7 @@ export function StagesPanel({ form, invalid, update, onEditingChange, editReques
 
   return (
     <div className="stages-panel">
-      <NumberField
-        id={BUDGET_FIELD_ID}
-        label={t.budget}
-        value={form.budget}
-        invalid={invalid.has('budget')}
-        onChange={(budget) => setField({ budget })}
-      />
+      <ModeFields form={form} invalid={invalid} setField={setField} onModeChange={onModeChange} />
 
       <div className="stages" ref={listRef}>
         {view.stages.map((stage, i) => {
@@ -376,29 +372,5 @@ function StageHeader(props: HeaderProps) {
         </div>
       )}
     </div>
-  )
-}
-
-interface NumberFieldProps {
-  id?: string
-  label: string
-  value: string
-  invalid: boolean
-  onChange: (value: string) => void
-}
-
-function NumberField({ id, label, value, invalid, onChange }: NumberFieldProps) {
-  return (
-    <label className="field">
-      <span className="field-label">{label}</span>
-      <input
-        id={id}
-        className="input"
-        inputMode="decimal"
-        value={value}
-        aria-invalid={invalid || undefined}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </label>
   )
 }

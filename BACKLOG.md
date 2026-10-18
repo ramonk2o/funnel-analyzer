@@ -6,27 +6,6 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
 
 ## Funil
 
-### Modo meta
-- **Status:** Ideia
-- **Motivação:** Responder o caminho inverso do planejamento: quanto investir para atingir uma meta.
-- **Descrição:** Um seletor no topo da barra lateral alterna entre "Tenho um orçamento" e "Tenho uma meta". No modo meta, a pessoa escolhe a meta e vê em destaque o investimento necessário. Tudo recalcula a cada tecla.
-- **Decisões:**
-  - Usa o mesmo funil e o mesmo cálculo do modo orçamento. Taxas e custos ficam fixos; só o investimento muda.
-  - No modo meta, o campo da verba dá lugar a dois campos: "Meta em", uma lista com o nome de cada etapa na ordem do funil e, por último, "Receita"; e o valor da meta, que é a quantidade da etapa ou o valor em R$ se a meta for receita.
-  - Meta válida: maior que zero, com vírgula como nos outros campos, e fracionária aceita. Zero, vazio, ponto, sinal ou texto deixam o campo inválido (vermelho, funil congelado no último cálculo válido).
-  - O investimento necessário cobre a mídia e os custos extras e é arredondado para cima no centavo.
-  - Na área do funil, acima do desenho, um bloco em destaque mostra "Investimento necessário: R$ X" e embaixo o detalhamento "mídia R$ Y + custos extras R$ Z". Os resultados abaixo do funil seguem como hoje, e o custo total é igual ao total do bloco. O bloco só aparece no modo meta.
-  - A faixa da etapa-alvo ganha uma etiqueta discreta "Meta". Com meta de receita, a etiqueta vai na receita, nos resultados.
-  - Meta impossível (conversão 0% antes da etapa-alvo, ou meta de receita sem ticket médio): o bloco mostra "Meta impossível com estes valores", sem número, e o funil e os resultados ficam congelados no último cálculo válido.
-  - A meta segue a etapa pela identidade. Reordenada, a etapa leva a meta junto. Removida, a meta passa para a última etapa, com o mesmo valor.
-  - Cada modo guarda o seu valor: voltar ao orçamento traz a verba digitada, e voltar à meta traz a meta. Na primeira entrada no modo meta, a meta vem na última etapa, com o volume atual arredondado para cima (no exemplo, 45 vendas).
-  - O modo não é salvo: recarregar volta ao modo orçamento. O modo passa a ser salvo com o funil quando "Funis salvos" existir.
-  - Muda o SPEC.md:
-    - Barra de edição: entra o seletor de modo.
-    - Cálculo: entra o cálculo do modo meta.
-    - Funil e resultados: entram o bloco do investimento e a etiqueta "Meta".
-    - Números digitados e validação: entra a regra da meta.
-
 ### Desenho proporcional do funil
 - **Status:** Ideia
 - **Motivação:** Ver o funil reagir aos números torna o planejamento visual. Larguras proporcionais mostram de verdade onde o volume se perde.

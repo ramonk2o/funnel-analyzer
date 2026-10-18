@@ -13,19 +13,41 @@ function width(index: number, count: number) {
 
 interface Props {
   calculated: Calculated
+  /** Goal mode: the block shows the investment needed (or that the goal can't be reached), and the target is tagged. */
+  goalMode: boolean
+  impossible: boolean
   /** The stage being edited; its band (with the conversion above it) is highlighted. */
   highlightId: string | null
   /** Opens the stage in the panel, focusing its name or its conversion. */
   onEdit: (stageId: string, field: 'name' | 'conversion') => void
 }
 
-export function Funnel({ calculated, highlightId, onEdit }: Props) {
+export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }: Props) {
   const { form, input, result } = calculated
   const count = form.stages.length
   const highlighting = form.stages.some((s) => s.id === highlightId)
+  const target = goalMode ? calculated.goal?.target : undefined
 
   return (
     <>
+      <section className="investment" aria-label={goalMode ? t.investment : t.investmentTotal}>
+        <span className="investment-label">{goalMode ? t.investment : t.investmentTotal}</span>
+        {goalMode && impossible ? (
+          <span className="investment-impossible">{t.impossible}</span>
+        ) : goalMode && !calculated.goal ? (
+          <span className="investment-value num">{t.noValue}</span>
+        ) : (
+          <>
+            <span className="investment-value num">
+              {formatMoney(goalMode ? calculated.goal!.investment : result.totalCost)}
+            </span>
+            <span className="investment-detail num">
+              {t.investmentDetail(formatMoney(result.media), formatMoney(result.extraCosts))}
+            </span>
+          </>
+        )}
+      </section>
+
       <ol className={`funnel${highlighting ? ' funnel-highlighting' : ''}`} aria-label={t.listLabel}>
         {form.stages.map((stage, i) => {
           const { volume, costPerResult } = result.stages[i]
@@ -57,7 +79,10 @@ export function Funnel({ calculated, highlightId, onEdit }: Props) {
                 aria-describedby={`${stage.id}-band-volume ${stage.id}-band-cost`}
                 onClick={() => onEdit(stage.id, 'name')}
               >
-                <span className="funnel-band-name">{name}</span>
+                <span className="funnel-band-title">
+                  <span className="funnel-band-name">{name}</span>
+                  {target === i && <GoalTag />}
+                </span>
                 <span id={`${stage.id}-band-volume`} className="funnel-band-volume num">
                   {formatVolume(volume)}
                 </span>
@@ -76,7 +101,7 @@ export function Funnel({ calculated, highlightId, onEdit }: Props) {
         <Total label={t.totals.totalCost} value={formatMoney(result.totalCost)} />
         {result.revenue !== null && (
           <>
-            <Total label={t.totals.revenue} value={formatMoney(result.revenue)} />
+            <Total label={t.totals.revenue} value={formatMoney(result.revenue)} tagged={target === 'revenue'} />
             <Total label={t.totals.roas} value={result.roas === null ? t.noValue : formatRoas(result.roas)} />
             <Total label={t.totals.roi} value={result.roi === null ? t.noValue : formatRoi(result.roi)} />
           </>
@@ -86,11 +111,18 @@ export function Funnel({ calculated, highlightId, onEdit }: Props) {
   )
 }
 
-function Total({ label, value }: { label: string; value: string }) {
+function Total({ label, value, tagged = false }: { label: string; value: string; tagged?: boolean }) {
   return (
     <div className="total">
-      <dt>{label}</dt>
+      <dt>
+        {label}
+        {tagged && <GoalTag />}
+      </dt>
       <dd className="num">{value}</dd>
     </div>
   )
+}
+
+function GoalTag() {
+  return <span className="goal-tag">{t.goalTag}</span>
 }

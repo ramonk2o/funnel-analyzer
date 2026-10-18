@@ -6,6 +6,7 @@ Todas as mudanças relevantes deste projeto ficam registradas aqui. O formato se
 
 ### Adicionado
 - **Editor do funil e modo orçamento**: o painel monta o funil (criar, nomear, remover e reordenar etapas, com setas ou arrastando) e, a partir da verba de mídia, o app calcula volumes, custo por resultado, custos extras e custo total e, com ticket médio, receita, ROAS e ROI. Tudo recalcula a cada tecla.
+- **Modo meta**: além de partir de um orçamento, dá para partir de uma meta (quantidade numa etapa ou receita) e ver o investimento necessário, com mídia e custos extras. Um bloco acima do funil passa a mostrar o investimento nos dois modos.
 - **Arrastar etapas com pré-visualização**: ao arrastar uma etapa, a lista mostra na hora a ordem que vai ter ao soltar; funciona também por toque, e Esc ou soltar fora da barra cancela.
 - **Edição em barra lateral**: o painel de edição vira uma barra lateral recolhível à esquerda, sobre o funil, aberta pelo botão do cabeçalho ou ao clicar numa faixa; o app lembra se ela ficou aberta. O cabeçalho passa a ocupar a largura toda.
 - **Clicar na faixa para editar**: clicar numa faixa (ou na conversão) do funil abre a etapa no painel com o foco no campo certo.

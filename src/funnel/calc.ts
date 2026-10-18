@@ -63,3 +63,39 @@ export function calculateBudget(input: FunnelInput): BudgetResult {
     roi: revenue === null || totalCost === 0 ? null : (revenue - totalCost) / totalCost,
   }
 }
+
+/** A stage's index, or the revenue (which needs a ticket). */
+export type GoalTarget = number | 'revenue'
+
+export interface GoalInput extends Omit<FunnelInput, 'budget'> {
+  target: GoalTarget
+  /** Quantity at the target stage, or revenue in R$. */
+  goal: number
+}
+
+export interface GoalResult {
+  /** Media plus extra costs needed to reach the goal, rounded up to the cent. */
+  investment: number
+  /** The funnel calculated with the media part of that investment. */
+  budget: BudgetResult
+}
+
+/**
+ * The investment needed to reach a goal, or null when no investment can reach it (a 0% conversion
+ * before the target, or a revenue goal without a ticket). Volumes and extra costs grow in proportion
+ * to the media, so the funnel is worked out per real of media and scaled.
+ */
+export function calculateGoal(input: GoalInput): GoalResult | null {
+  const perReal = calculateBudget({ ...input, budget: 1 })
+  const reachedPerReal = input.target === 'revenue' ? (perReal.revenue ?? 0) : perReal.stages[input.target].volume
+  if (!(reachedPerReal > 0)) return null
+
+  const totalPerReal = 1 + perReal.extraCosts
+  const investment = ceilToCent((input.goal / reachedPerReal) * totalPerReal)
+  return { investment, budget: calculateBudget({ ...input, budget: investment / totalPerReal }) }
+}
+
+// Rounds up to the cent, ignoring floating-point noise (2000.0000000001 stays 2000).
+function ceilToCent(value: number): number {
+  return Math.ceil(Math.round(value * 1e6) / 1e4) / 100
+}

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import { Funnel } from './funnel/Funnel'
-import { BUDGET_FIELD_ID, StagesPanel, type EditRequest } from './funnel/StagesPanel'
+import { BUDGET_FIELD_ID, GOAL_FIELD_ID } from './funnel/ModeFields'
+import { StagesPanel, type EditRequest } from './funnel/StagesPanel'
 import { useFunnelEditor } from './funnel/useFunnelEditor'
 import { Sidebar } from './sidebar/Sidebar'
 import { SidebarToggle } from './sidebar/SidebarToggle'
@@ -12,12 +13,13 @@ import { useTheme } from './theme/useTheme'
 
 function App() {
   const [theme, toggleTheme] = useTheme()
-  const { form, invalid, calculated, update } = useFunnelEditor()
+  const { form, invalid, impossible, calculated, update, changeMode } = useFunnelEditor()
   // The stage whose fields have focus: its band is highlighted in the funnel.
   const [editingId, setEditingId] = useState<string | null>(null)
   // Clicking a band or conversion in the funnel opens that stage for editing.
   const [editRequest, setEditRequest] = useState<EditRequest | null>(null)
-  const sidebar = useSidebar(BUDGET_FIELD_ID)
+  // Opening the sidebar by its button focuses the value the current mode starts from.
+  const sidebar = useSidebar(form.mode === 'goal' ? GOAL_FIELD_ID : BUDGET_FIELD_ID)
   const { buttonRef: sidebarButtonRef } = sidebar
 
   function edit(stageId: string, field: EditRequest['field']) {
@@ -37,26 +39,33 @@ function App() {
         </div>
         <ThemeToggle theme={theme} onToggle={toggleTheme} />
       </header>
-        <Sidebar open={sidebar.open} onClose={sidebar.close} buttonRef={sidebarButtonRef}>
-          <aside className="card app-panel" aria-label={texts.panel.label}>
-            <h2 className="card-title">{texts.panel.title}</h2>
-            <StagesPanel
-              form={form}
-              invalid={invalid}
-              update={update}
-              onEditingChange={setEditingId}
-              editRequest={editRequest}
-            />
-          </aside>
-        </Sidebar>
-        <main className="app-main">
-          <section className="card app-funnel" aria-label={texts.funnel.label}>
-            <div className="card-header">
-              <h2 className="card-title">{texts.funnel.title}</h2>
-            </div>
-            <Funnel calculated={calculated} highlightId={editingId} onEdit={edit} />
-          </section>
-        </main>
+      <Sidebar open={sidebar.open} onClose={sidebar.close} buttonRef={sidebarButtonRef}>
+        <aside className="card app-panel" aria-label={texts.panel.label}>
+          <h2 className="card-title">{texts.panel.title}</h2>
+          <StagesPanel
+            form={form}
+            invalid={invalid}
+            update={update}
+            onModeChange={changeMode}
+            onEditingChange={setEditingId}
+            editRequest={editRequest}
+          />
+        </aside>
+      </Sidebar>
+      <main className="app-main">
+        <section className="card app-funnel" aria-label={texts.funnel.label}>
+          <div className="card-header">
+            <h2 className="card-title">{texts.funnel.title}</h2>
+          </div>
+          <Funnel
+            calculated={calculated}
+            goalMode={form.mode === 'goal'}
+            impossible={impossible}
+            highlightId={editingId}
+            onEdit={edit}
+          />
+        </section>
+      </main>
     </div>
   )
 }

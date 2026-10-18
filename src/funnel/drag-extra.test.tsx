@@ -5,8 +5,7 @@ import { texts } from '../texts'
 // Extra tests written by the tester for "Arrastar etapas com pré-visualização".
 
 const stage = (n: number) => screen.getByRole('group', { name: texts.panel.stageGroup(n) })
-const openStages = () =>
-  [1, 2, 3, 4].filter((n) => within(stage(n)).queryByRole('button', { expanded: true }) !== null)
+const openStages = () => [1, 2, 3, 4].filter((n) => within(stage(n)).queryByRole('button', { expanded: true }) !== null)
 
 test('extra: pressionar o ícone e soltar sem mover não abre, não recolhe nem reordena', () => {
   render(<App />)
