@@ -22,6 +22,7 @@ export const texts = {
     moveUp: 'Mover para cima',
     moveDown: 'Mover para baixo',
     drag: 'Arrastar para reordenar',
+    invalidStage: 'Campo inválido',
     remove: 'Remover etapa',
     confirmRemove: 'Remover?',
     yes: 'Sim',
@@ -29,7 +30,7 @@ export const texts = {
     addStage: 'Adicionar etapa',
     newStageName: (n: number) => `Etapa ${n}`,
     sampleStageNames: ['Impressões', 'Cliques', 'Leads', 'Vendas'],
-    icons: { drag: '⋮⋮', moveUp: '↑', moveDown: '↓', remove: '×', add: '+' },
+    icons: { drag: '⋮⋮', moveUp: '↑', moveDown: '↓', remove: '×', add: '+', expand: '›', invalid: '!' },
   },
   funnel: {
     label: 'Funil',

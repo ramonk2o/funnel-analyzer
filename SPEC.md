@@ -30,7 +30,10 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - O funil tem de 2 a 10 etapas. Com 10, adicionar fica desabilitado; com 2, remover fica desabilitado.
 - Etapa nova entra no fim, com conversão de 10% e o nome "Etapa N", sendo N a quantidade de etapas mais 1 ou, se esse nome já existir, o próximo número livre.
 - Remover pede confirmação na própria etapa ("Remover?" com "Sim" e "Não"), sem janela. Se o funil cair para 2 etapas, uma confirmação aberta fecha sozinha.
-- As etapas são reordenadas pelas setas (para cima / para baixo) ou arrastando. O custo de mídia e a unidade ficam com a primeira posição. A conversão de quem está em 1º lugar não é usada nem validada; uma etapa que sai do 1º lugar mostra a conversão que tinha antes, ou 10% se nunca teve.
+- As etapas funcionam como acordeão: no máximo uma fica aberta, com os campos; as outras ficam recolhidas. Abrir uma recolhe a que estava aberta, e clicar na aberta a recolhe, deixando nenhuma aberta. Abre e recolhe pelo cabeçalho (seta ou nome); setas, arrastar e remover funcionam com a etapa recolhida.
+- Ao carregar, a 1ª etapa vem aberta. Etapa nova entra aberta; remover a etapa aberta deixa nenhuma aberta. O estado aberto/recolhido não é salvo.
+- A etapa recolhida mostra no cabeçalho o nome ("Etapa N (sem nome definido)" se vazio) e um resumo: a conversão ou, na 1ª etapa, o custo de mídia com a unidade, formatados como no funil; valor inválido aparece como "—". Se algum campo dela é inválido (incluindo o custo de mídia na 1ª e o ticket na última), o cabeçalho fica marcado em vermelho, sem abrir sozinho.
+- As etapas são reordenadas pelas setas (para cima / para baixo) ou arrastando; a etapa movida fica aberta. O custo de mídia e a unidade ficam com a primeira posição. A conversão de quem está em 1º lugar não é usada nem validada; uma etapa que sai do 1º lugar mostra a conversão que tinha antes, ou 10% se nunca teve.
 - Tudo recalcula a cada tecla.
 
 ### Números digitados e validação

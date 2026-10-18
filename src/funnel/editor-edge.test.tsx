@@ -7,9 +7,13 @@ import { readForm, initialForm } from './form'
 
 const t = texts.panel
 
+// Opens the stage first (the stages are an accordion), so its fields can be reached.
 function stage(n: number) {
   const panel = screen.getByRole('complementary', { name: t.label })
-  return within(panel).getByRole('group', { name: t.stageGroup(n) })
+  const group = within(panel).getByRole('group', { name: t.stageGroup(n) })
+  const toggle = group.querySelector('[aria-expanded="false"]')
+  if (toggle) fireEvent.click(toggle)
+  return group
 }
 function stageCount() {
   const panel = screen.getByRole('complementary', { name: t.label })
