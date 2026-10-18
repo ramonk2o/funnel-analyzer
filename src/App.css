@@ -1,0 +1,57 @@
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px 32px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-brand h1 {
+  font-size: 18px;
+}
+
+.app-logo {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 65% 100%, 35% 100%);
+  filter: drop-shadow(0 0 6px var(--glow));
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .app {
+    padding: 0 16px 24px;
+  }
+
+  .app-main {
+    grid-template-columns: 1fr;
+  }
+
+  .app-panel {
+    order: 2;
+  }
+}
+
+.app-panel .card-title {
+  margin-bottom: 12px;
+}

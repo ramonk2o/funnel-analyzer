@@ -3,6 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <script>
+      // Applies the saved theme before the page paints, so it doesn't flash.
+      // The key must match THEME_STORAGE_KEY in src/theme/theme.ts.
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem('simulador-de-funil:tema') === 'light' ? 'light' : 'dark'
+      } catch {
+        document.documentElement.dataset.theme = 'dark'
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Simulador de Funil</title>
   </head>

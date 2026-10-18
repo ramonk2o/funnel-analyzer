@@ -1,0 +1,42 @@
+/* Theme tokens. Checked for contrast by src/theme/contrast.test.ts:
+   text colors (--accent, --accent-strong, --text, --text-muted) and backgrounds
+   (--bg, --surface, --surface-2) must be #rrggbb. */
+:root {
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --radius: 4px;
+  --radius-sm: 2px;
+}
+
+:root,
+[data-theme='dark'] {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface-2: #191924;
+  --border: #262636;
+  --border-strong: #3a3a52;
+  --text: #e8e8f0;
+  --text-muted: #9a9ab2;
+  --accent: #a78bfa;
+  --accent-strong: #c4b5fd;
+  --accent-soft: rgba(167, 139, 250, 0.14);
+  --glow: rgba(167, 139, 250, 0.35);
+  --grid: rgba(167, 139, 250, 0.055);
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --bg: #f5f5fa;
+  --surface: #ffffff;
+  --surface-2: #efeff6;
+  --border: #dcdce8;
+  --border-strong: #c2c2d6;
+  --text: #14141f;
+  --text-muted: #5a5a72;
+  --accent: #6d28d9;
+  --accent-strong: #5b21b6;
+  --accent-soft: rgba(109, 40, 217, 0.1);
+  --glow: rgba(109, 40, 217, 0.18);
+  --grid: rgba(109, 40, 217, 0.06);
+  color-scheme: light;
+}

@@ -10,5 +10,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    // Lets tests read the global stylesheets with ?raw; other CSS stays stubbed.
+    css: { include: [/styles\/(tokens|base)\.css/] },
   },
 })
