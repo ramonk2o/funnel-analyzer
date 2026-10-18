@@ -27,6 +27,36 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - Os valores 10% e 60% são pontos de partida, para ajustar vendo na tela.
   - Quando um valor muda, os números rolam até o valor novo, numa animação discreta.
 
+### Etapas colapsáveis
+- **Status:** Ideia
+- **Motivação:** Com várias etapas abertas, o editor fica longo, e é difícil ter uma visão do funil ou achar a etapa que se quer editar.
+- **Descrição:** As etapas funcionam como acordeão: só uma fica aberta por vez, e abrir uma recolhe as outras. A etapa recolhida mostra só o cabeçalho, com o nome e um resumo do valor principal.
+- **Decisões:**
+  - Ao carregar, a 1ª etapa vem aberta e as outras recolhidas. Etapa nova entra aberta e recolhe a que estava aberta.
+  - Clicar na etapa aberta a recolhe, e aí nenhuma fica aberta.
+  - Abre e recolhe por um botão com seta (chevron) no cabeçalho, ou clicando no nome. As setas, o arrastar e o remover continuam fazendo só a função deles.
+  - Etapa recolhida: o cabeçalho de sempre (posição, setas, arrastar, remover), mais o nome ("Etapa N (sem nome definido)" se vazio) e um resumo: a conversão ou, na 1ª etapa, o custo de mídia com a unidade.
+  - Se uma etapa recolhida tem campo inválido, o cabeçalho dela fica marcado em vermelho. Ela não abre sozinha.
+  - Remover a etapa aberta deixa nenhuma aberta. Reordenar pelas setas abre a etapa que foi movida.
+  - O estado aberto/recolhido não é salvo: recarregar volta à 1ª aberta.
+  - Muda o SPEC.md (Editor do funil): entram as regras do acordeão, e a reordenação pelas setas passa a abrir a etapa movida.
+- **Fora do escopo:** botão "recolher/expandir todas".
+- **Perguntas em aberto:**
+  - Rever se o estado aberto/recolhido deve ser salvo quando "Funis salvos" existir.
+
+### Arrastar etapas com pré-visualização
+- **Status:** Ideia
+- **Motivação:** Ao arrastar uma etapa para reordenar, não dá para ver como a lista vai ficar antes de soltar.
+- **Descrição:** Durante o arraste, todas as etapas ficam recolhidas, e a lista se reorganiza na hora para mostrar a ordem que vai ter ao soltar.
+- **Decisões:**
+  - Vem depois de "Etapas colapsáveis".
+  - As outras etapas abrem espaço na hora, e a arrastada deixa um espaço reservado (contorno tracejado) na posição nova.
+  - Só a lista muda durante o arraste. O desenho do funil e os números recalculam ao soltar.
+  - Todas as etapas ficam recolhidas enquanto o arraste dura. Ao soltar, abre a etapa arrastada.
+  - Esc ou soltar fora da lista cancela: a ordem original volta, e a etapa que estava aberta antes volta a abrir.
+  - Funciona com mouse e com toque (segurar e arrastar pelo ícone). Pelo teclado, a reordenação continua só pelas setas.
+  - Muda o SPEC.md (Editor do funil, regra da reordenação): passa a descrever o arraste com pré-visualização, o cancelamento e o toque.
+
 ## Configurações
 
 ### Tela de configurações
