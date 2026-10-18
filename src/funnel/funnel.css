@@ -104,3 +104,31 @@
   font-weight: 600;
   color: var(--text);
 }
+
+/* Highlight of the stage being edited: its band stands out and the others fade. */
+.funnel-step,
+.funnel-band {
+  transition:
+    opacity 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.funnel-highlighting .funnel-step:not([aria-current='true']) {
+  opacity: 0.4;
+}
+
+.funnel-step[aria-current='true'] .funnel-band {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 28px var(--glow),
+    inset 0 0 24px var(--accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .funnel-step,
+  .funnel-band {
+    transition: none;
+  }
+}

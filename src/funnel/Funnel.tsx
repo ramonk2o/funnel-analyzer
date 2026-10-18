@@ -11,13 +11,20 @@ function width(index: number, count: number) {
   return 100 - (60 * index) / (count - 1)
 }
 
-export function Funnel({ calculated }: { calculated: Calculated }) {
+interface Props {
+  calculated: Calculated
+  /** The stage being edited; its band (with the conversion above it) is highlighted. */
+  highlightId: string | null
+}
+
+export function Funnel({ calculated, highlightId }: Props) {
   const { form, input, result } = calculated
   const count = form.stages.length
+  const highlighting = form.stages.some((s) => s.id === highlightId)
 
   return (
     <>
-      <ol className="funnel" aria-label={t.listLabel}>
+      <ol className={`funnel${highlighting ? ' funnel-highlighting' : ''}`} aria-label={t.listLabel}>
         {form.stages.map((stage, i) => {
           const { volume, costPerResult } = result.stages[i]
           const cost =
@@ -27,7 +34,7 @@ export function Funnel({ calculated }: { calculated: Calculated }) {
                 ? t.noValue
                 : `${formatMoney(costPerResult)} ${t.perResult}`
           return (
-            <li key={stage.id} className="funnel-step">
+            <li key={stage.id} className="funnel-step" aria-current={stage.id === highlightId || undefined}>
               {i > 0 && (
                 <div className="funnel-conversion">
                   <span className="funnel-conversion-line" aria-hidden="true" />

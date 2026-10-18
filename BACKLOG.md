@@ -27,21 +27,6 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - Os valores 10% e 60% são pontos de partida, para ajustar vendo na tela.
   - Quando um valor muda, os números rolam até o valor novo, numa animação discreta.
 
-### Destaque da etapa em edição
-- **Status:** Ideia
-- **Motivação:** Enquanto se edita uma etapa no painel, não fica claro qual faixa do funil corresponde a ela, nem qual parte do desenho reage ao que se digita.
-- **Descrição:** Com o foco em algum campo de uma etapa, a faixa dela fica destacada no desenho do funil e as outras ficam esmaecidas.
-- **Decisões:**
-  - O destaque aparece com o foco em qualquer campo da etapa: nome, unidade, custo de mídia, conversão, custo extra ou ticket. Os botões do cabeçalho (abrir/recolher, setas, remover) não ativam o destaque. Etapa só aberta, sem foco, também não.
-  - A verba de mídia não é de nenhuma etapa e não destaca nada. O ticket destaca a última faixa, como os outros campos da etapa, e não destaca a receita.
-  - Fica destacada a faixa inteira, mais a conversão entre ela e a faixa de cima.
-  - A faixa destacada ganha borda e brilho na cor de destaque, e as outras ficam esmaecidas. A troca tem uma transição curta, imediata com "reduzir movimento".
-  - O destaque some quando o foco sai dos campos da etapa. Passar o foco direto para um campo de outra etapa move o destaque para a faixa dela.
-  - Com o funil congelado (campo inválido), o destaque segue a etapa pela identidade, na faixa do último cálculo válido. Uma etapa que ainda não está no funil congelado não destaca nada.
-  - Em tela estreita, a página não rola até a faixa.
-  - Muda o SPEC.md (Funil e resultados): entra a regra do destaque.
-- **Fora do escopo:** destacar ao passar o mouse.
-
 ### Clicar na faixa para editar a etapa
 - **Status:** Ideia
 - **Motivação:** Partir do desenho do funil para mudar uma etapa hoje exige achá-la no painel e abri-la à mão.

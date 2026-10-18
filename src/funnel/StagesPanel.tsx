@@ -23,9 +23,11 @@ interface Props {
   form: FunnelForm
   invalid: Set<string>
   update: (change: (form: FunnelForm) => FunnelForm) => void
+  /** Called with the stage whose fields get focus, and null when focus leaves them. */
+  onEditingChange: (stageId: string | null) => void
 }
 
-export function StagesPanel({ form, invalid, update }: Props) {
+export function StagesPanel({ form, invalid, update, onEditingChange }: Props) {
   const [dragging, setDragging] = useState<number | null>(null)
   // Accordion: at most one stage open at a time (null = all collapsed).
   const [openId, setOpenId] = useState<string | null>(form.stages[0].id)
@@ -96,7 +98,13 @@ export function StagesPanel({ form, invalid, update }: Props) {
               />
 
               <Collapse id={`${stage.id}-body`} open={open}>
-                <div className="stage-body">
+                <div
+                  className="stage-body"
+                  onFocus={() => onEditingChange(stage.id)}
+                  onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget)) onEditingChange(null)
+                  }}
+                >
                   <label className="field">
                     <span className="field-label">{t.name}</span>
                     <input
