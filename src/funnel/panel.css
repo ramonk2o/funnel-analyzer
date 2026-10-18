@@ -29,13 +29,17 @@
 }
 
 .stage-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 28px;
+  /* The toggle spans under the actions, so a collapsed stage's summary gets the full width
+     on a second line; the actions sit on top of the toggle's first line. */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 8px;
+  align-items: start;
 }
 
 .stage-handle {
+  grid-area: 1 / 1;
+  line-height: 28px;
   cursor: grab;
   color: var(--text-muted);
   letter-spacing: -0.2em;
@@ -52,9 +56,12 @@
 }
 
 .stage-actions {
+  grid-area: 1 / 3;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 4px;
+  min-height: 28px;
 }
 
 .stage-confirm {
@@ -97,12 +104,13 @@
 }
 
 .stage-toggle {
-  flex: 1;
-  display: flex;
+  grid-area: 1 / 2 / 2 / 4;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-auto-rows: minmax(28px, auto);
   align-items: center;
-  gap: 8px;
+  column-gap: 8px;
   min-width: 0;
-  min-height: 28px;
   padding: 0;
   background: none;
   border: 0;
@@ -127,12 +135,10 @@
   transform: rotate(90deg);
 }
 
-.stage-toggle .stage-title {
-  flex: none;
-}
 
 .stage-summary {
-  flex: 1;
+  grid-row: 2;
+  grid-column: 1 / -1;
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -153,6 +159,8 @@
 }
 
 .stage-invalid {
+  grid-area: 1 / 3;
+  justify-self: start;
   display: inline-grid;
   place-items: center;
   width: 18px;

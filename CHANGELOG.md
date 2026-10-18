@@ -12,4 +12,5 @@ Todas as mudanças relevantes deste projeto ficam registradas aqui. O formato se
 - **Visual e temas**: interface com cara de painel de controle, em tema escuro (padrão) e claro, com a escolha lembrada entre visitas. A tela já mostra um funil de exemplo.
 
 ### Corrigido
+- Na etapa recolhida, o nome e o resumo ficam numa segunda linha, inteiros; antes, no painel em tela larga, o nome sumia e o resumo invadia os botões.
 - Abrir e recolher etapas agora é animado, e a etapa clicada fica no lugar, em vez de pular quando uma etapa acima dela fecha.
