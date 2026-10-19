@@ -35,7 +35,7 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
 - **Decisões:**
   - Mesmas etapas: mesma quantidade e mesmos nomes na mesma ordem, sem diferenciar maiúsculas nem espaços sobrando. A unidade de custo da primeira etapa pode ser diferente.
   - Na escolha, depois do primeiro funil marcado, só os compatíveis ficam habilitados. Os outros ficam acinzentados, com o motivo. Se não houver nenhum compatível, aparece a dica para duplicar o funil.
-  - As faixas da mesma etapa ficam alinhadas na mesma altura. Cada funil usa a própria escala e as próprias quebras.
+  - Cada funil aparece como na tela principal, com faixas de largura fixa. As faixas da mesma etapa ficam alinhadas na mesma altura.
   - A tabela tem volume e custo por resultado de cada etapa, depois mídia, custo total, receita, ROAS e ROI. O melhor valor de cada linha fica destacado.
   - A opção "usar o mesmo orçamento (ou meta) para todos" vem ligada por padrão. Desligada, cada funil usa o seu valor.
 - **Fora do escopo:** comparar funis com etapas diferentes.
@@ -47,7 +47,7 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
 - **Motivação:** Levar o funil e a comparação para apresentações, mensagens e clientes.
 - **Descrição:** O funil e a comparação podem ser exportados em PNG e em PDF.
 - **Decisões:**
-  - PNG: o desenho com título e os números principais (mídia, resultado final, custo por resultado e, se houver, receita, ROAS e ROI).
+  - PNG: o funil, como aparece na tela, com título e os números principais (mídia, resultado final, custo por resultado e, se houver, receita, ROAS e ROI).
   - PDF de 1 página: a mesma imagem, a tabela das etapas (volume, conversão, custo por resultado, custo extra) e a data de geração.
   - Comparação: os funis lado a lado, mais a tabela.
   - A exportação segue o tema ativo (escuro ou claro).
