@@ -4,17 +4,6 @@ Ideias de funcionalidades e a funcionalidade em construção, gerenciadas com a 
 
 Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arquivo no commit que a implementa). Ideias descartadas vão para a última seção.
 
-## Funil
-
-### Desenho proporcional do funil
-- **Status:** Ideia
-- **Motivação:** Ver o funil reagir aos números torna o planejamento visual. Larguras proporcionais mostram de verdade onde o volume se perde.
-- **Descrição:** Funil clássico, com uma faixa por etapa. Em cada faixa aparecem nome, volume e custo por resultado; entre as faixas, a taxa de conversão. A largura das faixas é proporcional ao volume, e quedas grandes demais são mostradas com uma quebra de escala.
-- **Decisões:**
-  - Quebra de escala: quando a conversão entre duas etapas fica abaixo de 10%, aparece um corte em zigue-zague com o aviso "fora de escala". A faixa seguinte recomeça em 60% da largura da anterior, e a proporção volta a valer a partir dela.
-  - Os valores 10% e 60% são pontos de partida, para ajustar vendo na tela.
-  - Quando um valor muda, os números rolam até o valor novo, numa animação discreta.
-
 ## Configurações
 
 ### Tela de configurações
@@ -64,3 +53,9 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - A exportação segue o tema ativo (escuro ou claro).
   - Tudo é gerado no navegador.
 - **Fora do escopo:** logo ou marca própria.
+
+## Descartadas
+
+### Desenho proporcional do funil
+- **Descrição:** Uma barra por etapa, com largura proporcional ao volume, e quebra de escala em zigue-zague quando a conversão fica abaixo de 10%.
+- **Motivo do descarte:** Construído num branch (barras alinhadas pela direita, informações numa coluna à direita, números animados) e descartado pelo usuário depois de ver o resultado. O trabalho ficou guardado no branch `desenho-proporcional`. (2026-10-19)
