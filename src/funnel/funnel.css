@@ -228,3 +228,10 @@
     transition: none;
   }
 }
+
+/* A funnel opened with invalid fields: nothing calculated yet. */
+.funnel-empty {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--text-muted);
+}

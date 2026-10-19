@@ -12,7 +12,8 @@ function width(index: number, count: number) {
 }
 
 interface Props {
-  calculated: Calculated
+  /** Undefined when the funnel was opened with invalid fields: there is no valid result to show yet. */
+  calculated: Calculated | undefined
   /** Goal mode: the block shows the investment needed (or that the goal can't be reached), and the target is tagged. */
   goalMode: boolean
   impossible: boolean
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }: Props) {
+  if (!calculated) return <p className="funnel-empty">{goalMode && impossible ? t.impossible : t.fixFields}</p>
   const { form, input, result } = calculated
   const count = form.stages.length
   const highlighting = form.stages.some((s) => s.id === highlightId)

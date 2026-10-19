@@ -213,14 +213,14 @@ test('cada modo guarda o seu valor ao alternar, e o bloco muda com o modo', asyn
   expect(investment()).toHaveTextContent('R$ 4.000,00')
 })
 
-test('recarregar volta ao modo orçamento', async () => {
+test('recarregar abre o funil no modo em que ele estava', async () => {
   const first = render(<App />)
   await enterGoalMode()
   first.unmount()
   render(<App />)
-  expect(budgetMode()).toBeChecked()
-  expect(investment()).toBeNull()
-  expect(totalInvestment()).not.toBeNull()
+  expect(goalMode()).toBeChecked()
+  expect(investment()).not.toBeNull()
+  expect(totalInvestment()).toBeNull()
 })
 
 test('primeira entrada com volume final 0: a meta começa em 1', async () => {

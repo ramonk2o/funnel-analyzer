@@ -5,6 +5,7 @@ Todas as mudanças relevantes deste projeto ficam registradas aqui. O formato se
 ## [Unreleased]
 
 ### Adicionado
+- **Funis salvos**: os funis ficam salvos no navegador a cada alteração. Pelo nome do funil no cabeçalho dá para ter vários funis, trocar entre eles, criar um novo em branco ou de um modelo (Tráfego pago, E-commerce, B2B), renomear, duplicar, apagar, e exportar e importar como arquivo. Recarregar a página abre o último funil, no modo em que ele estava.
 - **Editor do funil e modo orçamento**: o painel monta o funil (criar, nomear, remover e reordenar etapas, com setas ou arrastando) e, a partir da verba de mídia, o app calcula volumes, custo por resultado, custos extras e custo total e, com ticket médio, receita, ROAS e ROI. Tudo recalcula a cada tecla.
 - **Modo meta**: além de partir de um orçamento, dá para partir de uma meta (quantidade numa etapa ou receita) e ver o investimento necessário, com mídia e custos extras. Um bloco acima do funil passa a mostrar o investimento nos dois modos.
 - **Arrastar etapas com pré-visualização**: ao arrastar uma etapa, a lista mostra na hora a ordem que vai ter ao soltar; funciona também por toque, e Esc ou soltar fora da barra cancela.

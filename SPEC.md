@@ -19,7 +19,28 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Textos em Space Grotesk e números em JetBrains Mono, carregadas do Google Fonts. Sem internet, a página funciona com as fontes do sistema.
 
 ### Tela principal
-- O cabeçalho ocupa a largura toda da janela: à esquerda, o botão da barra de edição e o nome "Simulador de Funil"; à direita, o botão de tema. Abaixo, o funil e os resultados ficam centralizados (até 1280 px).
+- O cabeçalho ocupa a largura toda da janela: à esquerda, o botão da barra de edição, o nome "Simulador de Funil" e o nome do funil ativo; à direita, o botão de tema. Abaixo, o funil e os resultados ficam centralizados (até 1280 px).
+
+### Funis salvos
+- Todos os funis ficam salvos no navegador, automaticamente a cada alteração, sem botão de salvar. Cada funil guarda o texto como foi digitado (inclusive campos inválidos), o modo, a verba, a meta e a etapa-alvo.
+- Na primeira visita, sem nada salvo, o funil de exemplo vira o primeiro funil salvo, "Meu funil". Ao recarregar, abre o último funil ativo; se ele não existir mais, o primeiro da lista. Um funil salvo que não pode ser lido fica de fora; os outros abrem normalmente.
+- O nome do funil ativo, no cabeçalho, é um botão que abre um menu. Clicar fora ou Esc fecha o menu, com o foco de volta no botão. O menu tem:
+  - a lista de funis, em ordem de criação, com o ativo marcado; clicar em outro troca para ele;
+  - "Novo funil", que mostra os modelos (e "Voltar");
+  - "Renomear", "Duplicar", "Apagar" e "Exportar", que valem para o funil ativo;
+  - "Importar", que abre a escolha de arquivo.
+- Criar, duplicar ou importar torna ativo o funil resultante, no fim da lista. Apagar torna ativo o primeiro da lista. Trocar de funil abre a 1ª etapa no painel e desfaz qualquer destaque.
+- Renomear transforma o nome no cabeçalho num campo de texto já selecionado: Enter ou clicar fora confirma, Esc cancela. Espaços nas pontas são removidos; vazio volta ao nome anterior. Dois funis podem ter o mesmo nome.
+- Nomes automáticos: funil novo em branco, "Funil N", com o menor número livre; funil de modelo, o nome do modelo, com "(2)", "(3)"… se já existir; cópia, "<nome> (cópia)", depois "(cópia 2)" e assim por diante; importado, o nome do arquivo de funil, com "(2)", "(3)"… se já existir.
+- Apagar pede confirmação no próprio menu ("Apagar “<nome>”?" com "Sim" e "Não"), sem janela. Sempre sobra pelo menos um funil: com um só, "Apagar" fica desabilitado.
+- Modelos, todos no modo orçamento e sem custos extras:
+  - *Em branco:* "Etapa 1" e "Etapa 2", unidade CPC, verba, custo de mídia e conversão vazios.
+  - *Tráfego pago → Lead → Venda:* Cliques (CPC R$ 1,50) → Leads 10% → Vendas 5%; verba R$ 3.000; ticket R$ 500.
+  - *E-commerce:* Impressões (CPM R$ 15) → Cliques 1,5% → Carrinho 8% → Compra 30%; verba R$ 5.000; ticket R$ 150.
+  - *B2B:* Leads (R$ 80 por unidade) → MQL 40% → SQL 30% → Venda 20%; verba R$ 10.000; ticket R$ 10.000.
+- Exportar baixa um JSON chamado "<nome do funil>.json" (caracteres que não podem ir num nome de arquivo viram "-"), com o funil como foi digitado, a marca do app e a versão do formato (1).
+- Importar sempre cria um funil novo, nunca sobrescreve. Um arquivo que não é JSON, que não vem do app, que tem campos faltando, que tem o nome vazio ou que é de uma versão mais nova do formato não importa nada, e aparece "Este arquivo não é um funil válido" abaixo do cabeçalho (some na próxima troca de funil ou importação que der certo).
+- Com o armazenamento bloqueado ou se salvar falhar (modo privado, espaço cheio), o app funciona na sessão e mostra abaixo do cabeçalho o aviso "Seus funis não estão sendo salvos neste navegador". O aviso some quando uma gravação seguinte dá certo.
 
 ### Barra de edição
 - O painel de edição (verba, etapas e "Adicionar etapa") fica numa barra lateral colada à esquerda, abaixo do cabeçalho, que cobre o funil sem mudar a largura dele. O fundo da barra é levemente translúcido (90%), e ela rola por conta própria.
@@ -29,10 +50,10 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Tela estreita (até 800 px): a barra ocupa ~85% da largura, e o resto fica escurecido; tocar nele fecha. O Tab fica entre o botão do cabeçalho e a barra, e Esc com o foco no botão também fecha.
 - Abrir e fechar desliza em ~200 ms (imediato com "reduzir movimento").
 - Na primeira visita (tela larga) a barra vem aberta; depois, o app lembra se ela ficou aberta ou fechada. Em tela estreita ela sempre começa fechada, e abrir ou fechar ali não muda o que fica lembrado.
-- O app abre com um funil de exemplo já editável: Impressões → Cliques → Leads → Vendas, CPM R$ 20, conversões de 2,5%, 12% e 15%, verba de R$ 2.000. Recarregar a página volta a esse funil (nada do funil é salvo).
+- Na primeira visita, o app abre com um funil de exemplo já editável, "Meu funil": Impressões → Cliques → Leads → Vendas, CPM R$ 20, conversões de 2,5%, 12% e 15%, verba de R$ 2.000. Depois, abre o último funil ativo (veja Funis salvos).
 
 ### Modos
-- No topo da barra, um seletor alterna entre "Tenho um orçamento" (padrão) e "Tenho uma meta". As etapas, taxas e custos são os mesmos nos dois modos; cada modo guarda o seu valor (a verba ou a meta) ao alternar. O modo não é salvo: recarregar volta ao modo orçamento.
+- No topo da barra, um seletor alterna entre "Tenho um orçamento" (padrão) e "Tenho uma meta". As etapas, taxas e custos são os mesmos nos dois modos; cada modo guarda o seu valor (a verba ou a meta) ao alternar. O modo é salvo com o funil: recarregar abre o funil no modo em que ele estava.
 - No modo meta, a verba dá lugar a "Meta em" (as etapas na ordem do funil, mais "Receita") e ao valor da meta: "Meta (quantidade)" ou, para receita, "Meta (R$)".
 - Na primeira entrada no modo meta, a meta vem na última etapa, com o volume que o funil mostra arredondado para cima (ou 1, se for 0).
 - A meta segue a etapa pela identidade: vai junto ao reordenar e, se a etapa for removida, passa para a última etapa com o mesmo valor.
@@ -79,6 +100,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Com o foco em algum campo de uma etapa (nome, unidade, custo de mídia, conversão, custo extra ou ticket), a faixa dela, com a conversão acima, fica destacada e as outras esmaecem. Os botões do cabeçalho da etapa e a verba não destacam nada. O destaque some quando o foco sai dos campos da etapa. Com o funil congelado, o destaque segue a etapa na faixa do último cálculo válido; uma etapa que não está nele não destaca nada.
 - Clicar numa faixa abre a barra de edição (se estiver fechada) e a etapa dela no painel (recolhendo a aberta), com o foco no Nome; clicar na conversão entre duas faixas abre a etapa de baixo, com o foco na Conversão (ou no Nome, se a etapa estiver em 1º lugar no painel). Faixas e conversões são botões ("Editar etapa <nome>", "Editar conversão de <nome>"). Se a etapa está fora da área visível, a barra rola suavemente até ela (sem animação com "reduzir movimento"). Com o funil congelado, o clique segue a etapa pela identidade, e a faixa de uma etapa já removida não faz nada.
 - Acima do funil, um bloco em destaque mostra o investimento: no modo orçamento, "Investimento total" (o custo total); no modo meta, "Investimento necessário". Embaixo, o detalhamento "mídia R$ Y + custos extras R$ Z". Com a meta impossível, o bloco mostra "Meta impossível com estes valores", sem número, e o funil e os resultados ficam no último cálculo válido.
+- Um funil aberto (ao carregar, trocar pela lista, duplicar ou importar) não tem último cálculo válido para mostrar. Se algum campo é inválido, o funil e os resultados dão lugar a "Corrija os campos marcados para ver o funil", com os campos marcados; se a meta é impossível, a "Meta impossível com estes valores". Passar para o modo meta nessa situação começa a meta em 1.
 - No modo meta, a faixa da etapa-alvo (ou a receita, nos resultados) ganha a etiqueta "Meta".
 - Abaixo do funil aparecem mídia, custos extras e custo total, separados. Receita, ROAS e ROI só aparecem com ticket médio.
 - Volumes aparecem inteiros e valores em R$ com 2 casas, com separador de milhar. ROAS aparece como multiplicador ("3,20x"); ROI em porcentagem com 1 casa ("45,0%"), podendo ser negativo.
@@ -91,6 +113,7 @@ Tudo fica no `localStorage` do navegador.
 | Chave | Valores | Uso |
 |---|---|---|
 | `simulador-de-funil:tema` | `dark` ou `light` | Tema escolhido. Ausente ou inválido equivale a `dark`. |
+| `simulador-de-funil:funis` | JSON: o funil ativo e a lista de funis (nome e o que foi digitado) | Funis salvos. Ausente ou inválido equivale à primeira visita. |
 | `simulador-de-funil:edicao` | `aberta` ou `fechada` | Barra de edição aberta ou fechada (só em tela larga). Ausente ou inválido equivale a `aberta`. |
 
 ## Decisões técnicas
@@ -102,11 +125,13 @@ Tudo fica no `localStorage` do navegador.
 - **Script no `index.html`** aplica o tema salvo antes do React carregar, para não piscar. Ele repete a chave de armazenamento, e um teste confere que ela é a mesma do código.
 - **Fontes do Google Fonts**, com fontes do sistema como reserva.
 - **Funil em módulos puros** (`src/funnel/`): `numbers.ts` lê e formata números, `form.ts` guarda o que foi digitado como texto e o valida (e faz as operações nas etapas), `calc.ts` calcula. Os componentes só mostram e repassam as mudanças, para que comparação e exportação reusem o mesmo cálculo.
+- **Funis salvos em módulos puros** (`src/funnels/`): nomes, modelos, leitura e gravação no navegador e o formato de arquivo ficam separados da tela. A leitura (do navegador ou de arquivo) valida tudo e dá novos ids às etapas, para nunca colidirem com as que já estão na tela.
+- **Salvar no momento da alteração**, não num efeito depois da renderização: assim o aviso de "não salvo" já aparece no mesmo passo.
 - **O formulário guarda texto, não números:** um campo inválido continua na tela como foi digitado, e o funil usa o último formulário válido.
 
 ## Limitações conhecidas
 
 - Só em português e em reais.
 - Os dados ficam presos ao navegador em que foram criados.
-- O funil ainda não é salvo: recarregar a página volta ao funil de exemplo.
+- Várias abas abertas não se sincronizam: cada uma salva o que tem, e vale a última gravação.
 - Sem internet, as fontes do produto não carregam e a aparência usa as fontes do sistema.
