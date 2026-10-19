@@ -26,6 +26,11 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
   - Exportação e importação em JSON. Importar sempre cria um funil novo; se o nome já existir, ganha "(2)". Nunca sobrescreve.
   - Apagar pede confirmação.
 
+### Escolher a ordenação da lista de funis
+- **Status:** Ideia
+- **Motivação:** não registrada
+- **Descrição:** A pessoa escolhe como a lista de funis é ordenada, em vez de ver sempre a ordem de criação.
+
 ## Comparação
 
 ### Comparar cenários
