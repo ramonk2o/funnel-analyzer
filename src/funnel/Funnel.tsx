@@ -25,7 +25,7 @@ interface Props {
 }
 
 export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }: Props) {
-  if (!calculated) return <p className="funnel-empty">{goalMode && impossible ? t.impossible : t.fixFields}</p>
+  if (!calculated) return <FunnelEmpty impossible={goalMode && impossible} />
   const { result } = calculated
   const target = goalMode ? calculated.goal?.target : undefined
 
@@ -142,4 +142,9 @@ export function FunnelBands({ calculated, goalMode, highlightId, onEdit }: Bands
       })}
     </ol>
   )
+}
+
+/** In place of a funnel with nothing calculated: fields to fix, or a goal that can't be reached. */
+export function FunnelEmpty({ impossible, className = '' }: { impossible: boolean; className?: string }) {
+  return <p className={`funnel-empty ${className}`}>{impossible ? t.impossible : t.fixFields}</p>
 }

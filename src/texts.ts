@@ -48,7 +48,6 @@ export const texts = {
     fileApp: 'simulador-de-funil',
   },
   compare: {
-    menuItem: 'Comparar',
     label: 'Comparação',
     title: 'Comparação',
     back: 'Voltar ao funil',

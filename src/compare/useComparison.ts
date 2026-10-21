@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { FunnelForm } from '../funnel/form'
+import { goalTargetOf } from '../funnel/form'
 import type { SavedFunnel } from '../funnels/storage'
 import type { CompareSettings } from './scenario'
 
@@ -12,14 +12,13 @@ export interface Comparison extends CompareSettings {
 
 // The comparison starts from the active funnel: marked, with its mode and its values.
 function start(active: SavedFunnel): Comparison {
-  const form: FunnelForm = active.form
-  const target = form.stages.findIndex((s) => s.id === form.goalTarget)
+  const { form } = active
   return {
     selected: [active.id],
     mode: form.mode,
     shared: true,
     budget: form.budget,
-    goalTarget: form.goalTarget === 'revenue' ? 'revenue' : target === -1 ? form.stages.length - 1 : target,
+    goalTarget: goalTargetOf(form),
     goal: form.goalTarget === '' ? '' : form.goal,
   }
 }

@@ -72,12 +72,15 @@ export function setMode(form: FunnelForm, mode: Mode, shown: number): FunnelForm
   if (mode === 'goal' && (form.goalTarget === '' || form.goal.trim() === '')) {
     // A goal must be above zero: with no volume yet, it starts at 1.
     const goal = String(Math.max(1, Math.ceil(Math.round(shown * 1e6) / 1e6)))
-    return { ...form, mode, goalTarget: form.goalTarget || form.stages[form.stages.length - 1].id, goal }
+    return { ...form, mode, goalTarget: goalTargetIdOf(form), goal }
   }
   return { ...form, mode }
 }
 
-/** The goal's target in this form: the chosen one, or the last stage if none was chosen yet. */
+/** The goal's target id (or 'revenue'): the chosen one, or the last stage if none was chosen yet. */
+export const goalTargetIdOf = (form: FunnelForm) => form.goalTarget || form.stages[form.stages.length - 1].id
+
+/** The goal's target as a position (or 'revenue'): the chosen one, or the last stage if none was chosen yet. */
 export function goalTargetOf(form: FunnelForm): GoalTarget {
   if (form.goalTarget === 'revenue') return 'revenue'
   const i = form.stages.findIndex((s) => s.id === form.goalTarget)
@@ -102,6 +105,9 @@ export function moveStage(form: FunnelForm, from: number, to: number): FunnelFor
 }
 
 export const stageField = (stageId: string, field: 'conversion' | 'extraCost') => `${stageId}.${field}`
+
+/** The element id of a stage's name or conversion field in the panel. */
+export const fieldId = (stageId: string, field: 'name' | 'conversion') => `${stageId}-${field}`
 
 export interface ReadResult {
   /** The funnel ready to calculate, or null while any field is invalid. In goal mode its budget is unused. */

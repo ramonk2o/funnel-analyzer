@@ -137,12 +137,7 @@
 
 .compare-table caption {
   padding-bottom: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   text-align: left;
-  color: var(--text-muted);
 }
 
 .compare-table th,
@@ -162,12 +157,4 @@
   color: var(--accent-strong);
   font-weight: 600;
   background: var(--accent-soft);
-}
-
-/* In a comparison, the sidebar says that stage changes reach every compared funnel. */
-.panel-notice {
-  padding: 6px 10px;
-  font-size: 13px;
-  color: var(--text-muted);
-  border-left: 3px solid var(--accent);
 }

@@ -1,7 +1,7 @@
 import { useId } from 'react'
-import { stageDisplayName, type FunnelForm } from '../funnel/form'
-import { FunnelBands } from '../funnel/Funnel'
-import { ModeSwitch } from '../funnel/ModeFields'
+import { stageDisplayName } from '../funnel/form'
+import { FunnelBands, FunnelEmpty } from '../funnel/Funnel'
+import { GoalFields, ModeSwitch } from '../funnel/ModeFields'
 import { NumberField } from '../funnel/NumberField'
 import type { EditorState } from '../funnel/useFunnelEditor'
 import type { SavedFunnel } from '../funnels/storage'
@@ -73,9 +73,7 @@ export function Comparison(props: Props) {
                       onEdit={(stageId, field) => onEdit(funnel.id, stageId, field)}
                     />
                   ) : (
-                    <p className="funnel-empty compare-empty">
-                      {state.impossible ? texts.funnel.impossible : texts.funnel.fixFields}
-                    </p>
+                    <FunnelEmpty impossible={state.impossible} className="compare-empty" />
                   )}
                 </section>
               ))}
@@ -149,7 +147,6 @@ interface SettingsProps {
 // The comparison's mode, and the shared budget or goal (on by default).
 function Settings({ comparison, reference, onChange }: SettingsProps) {
   const { mode, shared, goalTarget } = comparison
-  const stages: FunnelForm['stages'] = reference.funnel.form.stages
   // The shared value is invalid when the funnels, calculated with it, say so.
   const invalid = reference.state.invalid
 
@@ -169,29 +166,15 @@ function Settings({ comparison, reference, onChange }: SettingsProps) {
             onChange={(budget) => onChange({ budget })}
           />
         ) : (
-          <div className="field-row">
-            <label className="field">
-              <span className="field-label">{t.goalTarget}</span>
-              <select
-                className="input"
-                value={String(goalTarget)}
-                onChange={(e) => onChange({ goalTarget: e.target.value === 'revenue' ? 'revenue' : Number(e.target.value) })}
-              >
-                {stages.map((stage, i) => (
-                  <option key={stage.id} value={i}>
-                    {stageDisplayName(stage, i)}
-                  </option>
-                ))}
-                <option value="revenue">{t.revenueTarget}</option>
-              </select>
-            </label>
-            <NumberField
-              label={goalTarget === 'revenue' ? t.goalRevenue : t.goalQuantity}
-              value={comparison.goal}
-              invalid={invalid.has('goal')}
-              onChange={(goal) => onChange({ goal })}
-            />
-          </div>
+          // The shared goal's stage is a position, the same in every funnel.
+          <GoalFields
+            stages={reference.funnel.form.stages.map((stage, i) => ({ value: String(i), label: stageDisplayName(stage, i) }))}
+            target={String(goalTarget)}
+            onTarget={(target) => onChange({ goalTarget: target === 'revenue' ? 'revenue' : Number(target) })}
+            goal={comparison.goal}
+            invalid={invalid.has('goal')}
+            onGoal={(goal) => onChange({ goal })}
+          />
         ))}
     </div>
   )
@@ -205,7 +188,7 @@ function Table({ columns }: { columns: Column[] }) {
   )
   return (
     <table className="compare-table">
-      <caption>{c.tableLabel}</caption>
+      <caption className="card-title">{c.tableLabel}</caption>
       <thead>
         <tr>
           <td />

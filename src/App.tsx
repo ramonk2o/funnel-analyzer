@@ -4,7 +4,7 @@ import { Comparison, type Column } from './compare/Comparison'
 import { comparedForm, followTarget } from './compare/scenario'
 import { addStageToAll, moveStageInAll, removeStageFromAll, renameStageInAll } from './compare/structure'
 import { useComparison } from './compare/useComparison'
-import { MIN_STAGES } from './funnel/form'
+import { fieldId, MIN_STAGES } from './funnel/form'
 import { Funnel } from './funnel/Funnel'
 import { BUDGET_FIELD_ID, GOAL_FIELD_ID } from './funnel/ModeFields'
 import { StagesPanel, type EditRequest, type StructureEdits } from './funnel/StagesPanel'
@@ -29,42 +29,46 @@ function App() {
   // Clicking a band or conversion in the funnel opens that stage for editing.
   const [editRequest, setEditRequest] = useState<EditRequest | null>(null)
   const { comparison, ...compare } = useComparison()
-  // Opening the sidebar by its button focuses the value the mode starts from. In a comparison
-  // with a shared value (hidden in the sidebar), it focuses the open stage's name instead.
-  const valueMode = comparison?.shared === false ? comparison.mode : form.mode
-  const sidebar = useSidebar(
-    comparison?.shared
-      ? () =>
-          document.querySelector<HTMLElement>('.sidebar .stage-open .stage-body input') ??
-          document.getElementById(`${form.stages[0].id}-name`)
-      : valueMode === 'goal'
-        ? GOAL_FIELD_ID
-        : BUDGET_FIELD_ID,
-  )
-  const { buttonRef: sidebarButtonRef } = sidebar
+  // The stage open in the sidebar.
+  const [openStageId, setOpenStageId] = useState<string | null>(null)
 
   // The compared funnels, in the order they were marked, calculated with the comparison's values.
   const columns: Column[] = (comparison?.selected ?? []).flatMap((id) => {
     const funnel = funnels.funnels.find((f) => f.id === id)
     return funnel ? [{ funnel, state: editorState(comparedForm(funnel.form, comparison!)) }] : []
   })
-  const comparing = comparison !== null && columns.some((col) => col.funnel.id === active.id)
+  // The active funnel in the comparison (it is one of the compared, unless none is marked).
   const activeColumn = columns.find((col) => col.funnel.id === active.id)
 
-  // In a comparison, the stages' names, order and number change in every compared funnel.
-  const ids = columns.map((col) => col.funnel.id)
-  // The shared goal follows its stage, like each funnel's own goal.
+  // Opening the sidebar by its button focuses the value the mode starts from. In a comparison
+  // with a shared value (hidden in the sidebar), it focuses the open stage's name instead.
+  const shownMode = activeColumn ? activeColumn.state.form.mode : form.mode
+  const sidebar = useSidebar(
+    activeColumn && comparison!.shared
+      ? fieldId(openStageId ?? form.stages[0].id, 'name')
+      : shownMode === 'goal'
+        ? GOAL_FIELD_ID
+        : BUDGET_FIELD_ID,
+  )
+  const { buttonRef: sidebarButtonRef } = sidebar
+
+  // The stages' names, order and number change in the active funnel or, in a comparison, in every
+  // compared funnel; the shared goal follows its stage, like each funnel's own goal.
+  const ids = activeColumn ? columns.map((col) => col.funnel.id) : [active.id]
   const stageCount = form.stages.length
+  const followShared = (change: Parameters<typeof followTarget>[1], count: number) => {
+    if (activeColumn) compare.change({ goalTarget: followTarget(comparison!.goalTarget, change, count) })
+  }
   const structure: StructureEdits = {
     add: () => funnels.updateMany(ids, addStageToAll),
     remove(index) {
       if (stageCount <= MIN_STAGES) return
       funnels.updateMany(ids, (forms) => removeStageFromAll(forms, index))
-      compare.change({ goalTarget: followTarget(comparison!.goalTarget, { removed: index }, stageCount - 1) })
+      followShared({ removed: index }, stageCount - 1)
     },
     move(from, to) {
       funnels.updateMany(ids, (forms) => moveStageInAll(forms, from, to))
-      compare.change({ goalTarget: followTarget(comparison!.goalTarget, { from, to }, stageCount) })
+      followShared({ from, to }, stageCount)
     },
     rename: (index, name) => funnels.updateMany(ids, (forms) => renameStageInAll(forms, index, name)),
   }
@@ -170,13 +174,15 @@ function App() {
           <h2 className="card-title">{texts.panel.title}</h2>
           <StagesPanel
             key={active.id}
-            form={form}
-            invalid={comparing ? activeColumn!.state.invalid : invalid}
+            form={activeColumn?.state.form ?? form}
+            invalid={activeColumn?.state.invalid ?? invalid}
             update={update}
             onModeChange={changeMode}
             onEditingChange={setEditingId}
             editRequest={editRequest}
-            comparing={comparing ? { mode: comparison.mode, showValue: !comparison.shared, structure } : undefined}
+            structure={structure}
+            comparing={activeColumn && { showValue: !comparison!.shared }}
+            onOpenChange={setOpenStageId}
           />
         </aside>
       </Sidebar>

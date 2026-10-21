@@ -1,5 +1,5 @@
 import { texts } from '../texts'
-import { stageDisplayName, type FunnelForm, type Mode } from './form'
+import { goalTargetIdOf, stageDisplayName, type FunnelForm, type Mode } from './form'
 import { NumberField } from './NumberField'
 
 const t = texts.panel
@@ -12,21 +12,18 @@ interface Props {
   invalid: Set<string>
   setField: (changes: Partial<FunnelForm>) => void
   onModeChange: (mode: Mode) => void
-  /** Given (in a comparison), the mode is set elsewhere: no selector, only this mode's value. */
-  mode?: Mode
+  /** False in a comparison, where the mode is the comparison's. */
+  showSwitch?: boolean
 }
 
 // The mode selector and the value each mode starts from: the media budget, or the goal.
-export function ModeFields({ form, invalid, setField, onModeChange, mode }: Props) {
-  const shownMode = mode ?? form.mode
-  // A goal never set starts at the last stage.
-  const goalTarget = form.goalTarget || form.stages[form.stages.length - 1].id
-  const revenue = goalTarget === 'revenue'
+export function ModeFields({ form, invalid, setField, onModeChange, showSwitch = true }: Props) {
+  const goalTarget = goalTargetIdOf(form)
   return (
     <>
-      {!mode && <ModeSwitch name="mode" mode={form.mode} onChange={onModeChange} />}
+      {showSwitch && <ModeSwitch name="mode" mode={form.mode} onChange={onModeChange} />}
 
-      {shownMode === 'budget' ? (
+      {form.mode === 'budget' ? (
         <NumberField
           id={BUDGET_FIELD_ID}
           label={t.budget}
@@ -35,28 +32,56 @@ export function ModeFields({ form, invalid, setField, onModeChange, mode }: Prop
           onChange={(budget) => setField({ budget })}
         />
       ) : (
-        <div className="field-row">
-          <label className="field">
-            <span className="field-label">{t.goalTarget}</span>
-            <select className="input" value={goalTarget} onChange={(e) => setField({ goalTarget: e.target.value })}>
-              {form.stages.map((stage, i) => (
-                <option key={stage.id} value={stage.id}>
-                  {stageDisplayName(stage, i)}
-                </option>
-              ))}
-              <option value="revenue">{t.revenueTarget}</option>
-            </select>
-          </label>
-          <NumberField
-            id={GOAL_FIELD_ID}
-            label={revenue ? t.goalRevenue : t.goalQuantity}
-            value={form.goal}
-            invalid={invalid.has('goal')}
-            onChange={(goal) => setField({ goal, goalTarget })}
-          />
-        </div>
+        <GoalFields
+          id={GOAL_FIELD_ID}
+          stages={form.stages.map((stage, i) => ({ value: stage.id, label: stageDisplayName(stage, i) }))}
+          target={goalTarget}
+          onTarget={(target) => setField({ goalTarget: target })}
+          goal={form.goal}
+          invalid={invalid.has('goal')}
+          // Typing a goal also keeps its target, so a goal never set stays at the stage shown.
+          onGoal={(goal) => setField({ goal, goalTarget })}
+        />
       )}
     </>
+  )
+}
+
+interface GoalFieldsProps {
+  id?: string
+  /** The stages to aim at ("Receita" comes after them), each with its option value. */
+  stages: { value: string; label: string }[]
+  /** An option value, or 'revenue'. */
+  target: string
+  onTarget: (target: string) => void
+  goal: string
+  invalid: boolean
+  onGoal: (goal: string) => void
+}
+
+/** "Meta em" (a stage or the revenue) and the goal: a quantity, or R$ for revenue. */
+export function GoalFields({ id, stages, target, onTarget, goal, invalid, onGoal }: GoalFieldsProps) {
+  return (
+    <div className="field-row">
+      <label className="field">
+        <span className="field-label">{t.goalTarget}</span>
+        <select className="input" value={target} onChange={(e) => onTarget(e.target.value)}>
+          {stages.map((stage) => (
+            <option key={stage.value} value={stage.value}>
+              {stage.label}
+            </option>
+          ))}
+          <option value="revenue">{t.revenueTarget}</option>
+        </select>
+      </label>
+      <NumberField
+        id={id}
+        label={target === 'revenue' ? t.goalRevenue : t.goalQuantity}
+        value={goal}
+        invalid={invalid}
+        onChange={onGoal}
+      />
+    </div>
   )
 }
 

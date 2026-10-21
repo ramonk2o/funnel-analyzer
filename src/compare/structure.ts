@@ -1,4 +1,4 @@
-import { addStage, MAX_STAGES, MIN_STAGES, moveStage, newStage, removeStage, updateStage, type FunnelForm } from '../funnel/form'
+import { addStage, MAX_STAGES, moveStage, newStage, removeStage, updateStage, type FunnelForm } from '../funnel/form'
 
 // Changes to the stages' names, order and number apply to every compared funnel, by position;
 // each stage keeps its own numbers in each funnel.
@@ -10,10 +10,9 @@ export function addStageToAll(forms: FunnelForm[]): FunnelForm[] {
   return forms.map((form) => ({ ...form, stages: [...form.stages, newStage(name)] }))
 }
 
-export function removeStageFromAll(forms: FunnelForm[], index: number): FunnelForm[] {
-  if (forms[0].stages.length <= MIN_STAGES) return forms
-  return forms.map((form) => removeStage(form, form.stages[index].id))
-}
+// removeStage keeps the minimum of stages in each funnel.
+export const removeStageFromAll = (forms: FunnelForm[], index: number) =>
+  forms.map((form) => removeStage(form, form.stages[index].id))
 
 export const moveStageInAll = (forms: FunnelForm[], from: number, to: number) =>
   forms.map((form) => moveStage(form, from, to))

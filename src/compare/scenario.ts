@@ -1,4 +1,4 @@
-import type { FunnelForm, Mode } from '../funnel/form'
+import { goalTargetIdOf, type FunnelForm, type Mode } from '../funnel/form'
 
 export interface CompareSettings {
   mode: Mode
@@ -16,15 +16,14 @@ export interface CompareSettings {
  * value; a goal never set stays empty, at the last stage, and so is invalid.
  */
 export function comparedForm(form: FunnelForm, settings: CompareSettings): FunnelForm {
-  const last = form.stages[form.stages.length - 1].id
-  if (!settings.shared) return { ...form, mode: settings.mode, goalTarget: form.goalTarget || last }
+  if (!settings.shared) return { ...form, mode: settings.mode, goalTarget: goalTargetIdOf(form) }
   const { goalTarget } = settings
   return {
     ...form,
     mode: settings.mode,
     budget: settings.budget,
     goal: settings.goal,
-    goalTarget: goalTarget === 'revenue' ? 'revenue' : (form.stages[goalTarget]?.id ?? last),
+    goalTarget: goalTarget === 'revenue' ? 'revenue' : (form.stages[goalTarget] ?? form.stages.at(-1)!).id,
   }
 }
 

@@ -3,11 +3,9 @@ import { texts } from '../texts'
 import { COST_UNITS, type CostUnit } from './calc'
 import { formatConversion, formatMoney, parseDecimal } from './numbers'
 import {
-  addStage,
   MAX_STAGES,
   MIN_STAGES,
-  moveStage,
-  removeStage,
+  fieldId,
   stageDisplayName,
   stageField,
   updateStage,
@@ -24,6 +22,7 @@ import './panel.css'
 const t = texts.panel
 
 interface Props {
+  /** The form as shown: in a comparison, with the comparison's mode and values. */
   form: FunnelForm
   invalid: Set<string>
   update: (change: (form: FunnelForm) => FunnelForm) => void
@@ -32,9 +31,12 @@ interface Props {
   onEditingChange: (stageId: string | null) => void
   /** A request (from the funnel) to open a stage and focus one of its fields; each new object is handled once. */
   editRequest: EditRequest | null
-  /** In a comparison: the mode is the comparison's (the value shows only when each funnel uses its own),
-   *  and changes to the stages' names, order and number go through `structure`, to every compared funnel. */
-  comparing?: { mode: Mode; showValue: boolean; structure: StructureEdits }
+  /** Changes to the stages' names, order and number: in a comparison, to every compared funnel. */
+  structure: StructureEdits
+  /** In a comparison: no mode selector, and the value shows only when each funnel uses its own. */
+  comparing?: { showValue: boolean }
+  /** Called with the open stage (null when all are collapsed). */
+  onOpenChange?: (stageId: string | null) => void
 }
 
 /** Changes to the stages' names, order and number, by position. */
@@ -51,7 +53,7 @@ export interface EditRequest {
 }
 
 export function StagesPanel(props: Props) {
-  const { form, invalid, update, onModeChange, onEditingChange, editRequest, comparing } = props
+  const { form, invalid, update, onModeChange, onEditingChange, editRequest, structure, comparing, onOpenChange } = props
   // Accordion: at most one stage open at a time (null = all collapsed). Opened for a request, its stage starts open.
   const [openId, setOpenId] = useState<string | null>(() => editRequest?.stageId ?? form.stages[0].id)
   const [knownIds, setKnownIds] = useState(() => form.stages.map((s) => s.id))
@@ -71,6 +73,8 @@ export function StagesPanel(props: Props) {
     if (editRequest) setOpenId(editRequest.stageId)
   }
 
+  useEffect(() => onOpenChange?.(openId), [openId, onOpenChange])
+
   // Once the requested stage is open, focus the field and bring the stage into view if needed.
   useEffect(() => {
     if (!editRequest) return
@@ -83,13 +87,6 @@ export function StagesPanel(props: Props) {
   }, [editRequest])
 
   const listRef = useRef<HTMLDivElement>(null)
-  const structure: StructureEdits = comparing?.structure ?? {
-    add: () => update(addStage),
-    remove: (index) => update((f) => removeStage(f, f.stages[index].id)),
-    move: (from, to) => update((f) => moveStage(f, from, to)),
-    rename: (index, name) => update((f) => updateStage(f, f.stages[index].id, { name })),
-  }
-
   const { drag, start: startDrag } = useStageDrag(listRef, ids, (id, to) => {
     structure.move(
       form.stages.findIndex((s) => s.id === id),
@@ -114,7 +111,7 @@ export function StagesPanel(props: Props) {
           invalid={invalid}
           setField={setField}
           onModeChange={onModeChange}
-          mode={comparing?.mode}
+          showSwitch={!comparing}
         />
       )}
 
@@ -236,7 +233,6 @@ export function StagesPanel(props: Props) {
   )
 }
 
-const fieldId = (stageId: string, field: EditRequest['field']) => `${stageId}-${field}`
 
 // While the stages open and close, scrolls the page so the clicked header stays under the pointer
 // (when the page can scroll that far).
