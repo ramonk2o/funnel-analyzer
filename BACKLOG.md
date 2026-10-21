@@ -25,13 +25,44 @@ Status: **Ideia** → **Em andamento** (uma por vez) → concluída (sai do arqu
 ### Comparar cenários
 - **Status:** Ideia
 - **Motivação:** Responder perguntas como "com R$ 10 mil, qual destes cenários rende mais?", comparando variações de um mesmo funil.
-- **Descrição:** A pessoa escolhe de 2 a 4 funis com as mesmas etapas e os vê lado a lado. Embaixo vem uma tabela comparativa.
+- **Descrição:** No menu de funis, "Comparar" troca a área do funil por uma comparação de 2 a 3 funis com as mesmas etapas, lado a lado. Embaixo vem uma tabela comparativa. Os funis continuam editáveis pela barra lateral.
 - **Decisões:**
-  - Mesmas etapas: mesma quantidade e mesmos nomes na mesma ordem, sem diferenciar maiúsculas nem espaços sobrando. A unidade de custo da primeira etapa pode ser diferente.
-  - Na escolha, depois do primeiro funil marcado, só os compatíveis ficam habilitados. Os outros ficam acinzentados, com o motivo. Se não houver nenhum compatível, aparece a dica para duplicar o funil.
-  - Cada funil aparece como na tela principal, com faixas de largura fixa. As faixas da mesma etapa ficam alinhadas na mesma altura.
-  - A tabela tem volume e custo por resultado de cada etapa, depois mídia, custo total, receita, ROAS e ROI. O melhor valor de cada linha fica destacado.
-  - A opção "usar o mesmo orçamento (ou meta) para todos" vem ligada por padrão. Desligada, cada funil usa o seu valor.
+  - **Entrar e sair:** "Comparar" fica no menu de funis. "Voltar ao funil" volta ao funil ativo.
+  - **Escolha dos funis:**
+    - Aparece a lista de funis com caixas de marcar, e o funil ativo já vem marcado.
+    - "Mesmas etapas" quer dizer mesma quantidade e mesmos nomes na mesma ordem, sem diferenciar maiúsculas nem espaços sobrando. A unidade de custo da primeira etapa pode ser diferente.
+    - Depois do primeiro marcado, só os compatíveis ficam habilitados. Os outros ficam acinzentados, com o motivo. Sem nenhum compatível, aparece a dica para duplicar o funil.
+    - O máximo é 3 funis. Com 3 marcados, os outros ficam desabilitados com o motivo "Máximo de 3 funis".
+    - A comparação aparece assim que houver 2 marcados, e a seleção pode mudar a qualquer momento, numa barra acima dela.
+  - **Exibição:**
+    - Cada funil aparece como na tela principal, com faixas de largura fixa e o nome do funil no topo, sem o bloco de investimento.
+    - As faixas da mesma etapa ficam alinhadas na mesma altura.
+    - A coluna do funil ativo tem borda na cor de destaque, e o destaque da etapa em edição funciona nela.
+    - Em tela estreita, as colunas ficam lado a lado, com rolagem horizontal só na área da comparação.
+  - **Modo e valor:**
+    - A comparação tem o próprio seletor de modo, que vale para todos os funis. Ele começa no modo do funil ativo.
+    - "Usar o mesmo orçamento (ou meta) para todos" vem ligada por padrão. Ligada, há um só campo (no modo meta, com "Meta em": as etapas em comum, por posição, mais "Receita"). Esse valor começa com o do funil ativo nesse modo (vazio se ele não tiver) e não muda nenhum funil salvo.
+    - Desligada, cada funil usa a própria verba, ou a própria meta e etapa-alvo. Uma meta nunca definida fica vazia e conta como campo inválido.
+  - **Editar durante a comparação:**
+    - Clicar numa faixa ou conversão faz daquele funil o ativo (o nome dele vai para o cabeçalho) e abre a barra na etapa clicada. O botão da barra abre o funil ativo.
+    - A barra esconde o seletor de modo. Com o valor comum ligado, esconde também a verba e a meta. Desligado, mostra a verba (ou a meta, com "Meta em") do próprio funil, no modo da comparação.
+    - Nome, ordem e quantidade de etapas mudam em todos os funis comparados, e a barra avisa isso no topo:
+      - Adicionar: a etapa nova entra no fim de todos, com o mesmo nome "Etapa N" e 10% em cada um.
+      - Remover: tira a etapa da mesma posição em todos; a confirmação é "Remover de todos?".
+      - Reordenar: move a mesma posição em todos; cada etapa leva os próprios números.
+      - Renomear: o nome vai igual para a mesma posição em todos.
+    - Conversões, custos extras, unidade e custo de mídia e ticket continuam de cada funil. Todos os funis afetados são salvos, e a meta de cada um segue a própria etapa.
+    - Desmarcar o funil ativo torna ativo o primeiro marcado.
+  - **Menu de funis durante a comparação:**
+    - Trocar para um funil comparado o torna ativo.
+    - Trocar para outro funil, Novo, Duplicar e Importar saem da comparação.
+    - Renomear e Exportar mantêm a comparação.
+    - Apagar o ativo tira ele da comparação; com só 1 marcado, volta a escolha.
+  - **Tabela:**
+    - Linhas: volume e custo por resultado de cada etapa, depois mídia, custo total, receita, ROAS e ROI.
+    - O melhor valor de cada linha fica destacado: o maior em volume, receita, ROAS e ROI; o menor em custo por resultado, mídia e custo total. Empatados ficam todos destacados, e uma linha toda igual fica sem destaque. "—" não conta.
+  - **Funil inválido ou com meta impossível:** pode ser comparado. A coluna mostra "Corrija os campos marcados para ver o funil" ou "Meta impossível com estes valores", e as células dele na tabela ficam com "—".
+  - **Não é lembrada:** recarregar volta ao funil ativo, sem comparação.
 - **Fora do escopo:** comparar funis com etapas diferentes.
 
 ## Exportação
