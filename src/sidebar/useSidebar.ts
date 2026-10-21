@@ -4,16 +4,20 @@ import { isNarrowScreen, loadSidebarOpen, saveSidebarOpen } from './sidebarState
 
 /**
  * Whether the editing sidebar is open, remembered between visits (narrow screens always start
- * closed and don't change what is remembered). `focusOnOpen` is the id of the element that gets focus when opened by the button.
+ * closed and don't change what is remembered). `focusOnOpen` is the id of the element that gets focus
+ * when opened by the button, or a function that finds it.
  */
-export function useSidebar(focusOnOpen: string) {
+export function useSidebar(focusOnOpen: string | (() => HTMLElement | null)) {
   const [open, setOpenState] = useState(() => !isNarrowScreen() && loadSidebarOpen(browserStorage()))
   const buttonRef = useRef<HTMLButtonElement>(null)
   const focusPending = useRef(false)
 
   // Runs once the sidebar is no longer inert, so its fields can take focus.
   useEffect(() => {
-    if (open && focusPending.current) document.getElementById(focusOnOpen)?.focus()
+    if (open && focusPending.current) {
+      const target = typeof focusOnOpen === 'string' ? document.getElementById(focusOnOpen) : focusOnOpen()
+      target?.focus()
+    }
     focusPending.current = false
   }, [open, focusOnOpen])
 

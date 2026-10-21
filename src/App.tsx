@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import './App.css'
+import { Comparison, type Column } from './compare/Comparison'
+import { comparedForm, followTarget } from './compare/scenario'
+import { addStageToAll, moveStageInAll, removeStageFromAll, renameStageInAll } from './compare/structure'
+import { useComparison } from './compare/useComparison'
+import { MIN_STAGES } from './funnel/form'
 import { Funnel } from './funnel/Funnel'
 import { BUDGET_FIELD_ID, GOAL_FIELD_ID } from './funnel/ModeFields'
-import { StagesPanel, type EditRequest } from './funnel/StagesPanel'
+import { StagesPanel, type EditRequest, type StructureEdits } from './funnel/StagesPanel'
+import { editorState } from './funnel/useFunnelEditor'
 import { exportFileName, funnelToFile } from './funnels/file'
 import { FunnelMenu } from './funnels/FunnelMenu'
 import { useFunnels } from './funnels/useFunnels'
@@ -22,15 +28,74 @@ function App() {
   const [editingId, setEditingId] = useState<string | null>(null)
   // Clicking a band or conversion in the funnel opens that stage for editing.
   const [editRequest, setEditRequest] = useState<EditRequest | null>(null)
-  // Opening the sidebar by its button focuses the value the current mode starts from.
-  const sidebar = useSidebar(form.mode === 'goal' ? GOAL_FIELD_ID : BUDGET_FIELD_ID)
+  const { comparison, ...compare } = useComparison()
+  // Opening the sidebar by its button focuses the value the mode starts from. In a comparison
+  // with a shared value (hidden in the sidebar), it focuses the open stage's name instead.
+  const valueMode = comparison?.shared === false ? comparison.mode : form.mode
+  const sidebar = useSidebar(
+    comparison?.shared
+      ? () =>
+          document.querySelector<HTMLElement>('.sidebar .stage-open .stage-body input') ??
+          document.getElementById(`${form.stages[0].id}-name`)
+      : valueMode === 'goal'
+        ? GOAL_FIELD_ID
+        : BUDGET_FIELD_ID,
+  )
   const { buttonRef: sidebarButtonRef } = sidebar
+
+  // The compared funnels, in the order they were marked, calculated with the comparison's values.
+  const columns: Column[] = (comparison?.selected ?? []).flatMap((id) => {
+    const funnel = funnels.funnels.find((f) => f.id === id)
+    return funnel ? [{ funnel, state: editorState(comparedForm(funnel.form, comparison!)) }] : []
+  })
+  const comparing = comparison !== null && columns.some((col) => col.funnel.id === active.id)
+  const activeColumn = columns.find((col) => col.funnel.id === active.id)
+
+  // In a comparison, the stages' names, order and number change in every compared funnel.
+  const ids = columns.map((col) => col.funnel.id)
+  // The shared goal follows its stage, like each funnel's own goal.
+  const stageCount = form.stages.length
+  const structure: StructureEdits = {
+    add: () => funnels.updateMany(ids, addStageToAll),
+    remove(index) {
+      if (stageCount <= MIN_STAGES) return
+      funnels.updateMany(ids, (forms) => removeStageFromAll(forms, index))
+      compare.change({ goalTarget: followTarget(comparison!.goalTarget, { removed: index }, stageCount - 1) })
+    },
+    move(from, to) {
+      funnels.updateMany(ids, (forms) => moveStageInAll(forms, from, to))
+      compare.change({ goalTarget: followTarget(comparison!.goalTarget, { from, to }, stageCount) })
+    },
+    rename: (index, name) => funnels.updateMany(ids, (forms) => renameStageInAll(forms, index, name)),
+  }
 
   function edit(stageId: string, field: EditRequest['field']) {
     // The frozen funnel may still show a stage that was removed meanwhile: nothing to open.
     if (!form.stages.some((s) => s.id === stageId)) return
     sidebar.show()
     setEditRequest({ stageId, field })
+  }
+
+  // Clicking a compared funnel makes it the active one and opens the clicked stage.
+  function editCompared(funnelId: string, stageId: string, field: EditRequest['field']) {
+    if (funnelId !== active.id) switching(() => funnels.select(funnelId))
+    sidebar.show()
+    setEditRequest({ stageId, field })
+  }
+
+  function toggleCompared(id: string) {
+    const selected = comparison!.selected
+    const next = selected.includes(id) ? selected.filter((s) => s !== id) : [...selected, id]
+    compare.change({ selected: next })
+    // The active funnel is always one of the marked: unmarking it makes the first marked one active,
+    // and with none marked, the one marked becomes active.
+    if (!next.includes(active.id) && next.length > 0) switching(() => funnels.select(next[0]))
+  }
+
+  // Opening another funnel from the menu leaves the comparison, unless it is one of the compared.
+  function leaving(action: () => void) {
+    compare.stop()
+    switching(action)
   }
 
   // Another funnel opens: nothing of the previous one stays highlighted or requested.
@@ -60,15 +125,26 @@ function App() {
           <FunnelMenu
             funnels={funnels.funnels}
             active={active}
-            onSelect={(id) => switching(() => funnels.select(id))}
-            onCreate={(template) => switching(() => funnels.create(template))}
+            onSelect={(id) =>
+              comparison?.selected.includes(id)
+                ? switching(() => funnels.select(id))
+                : leaving(() => funnels.select(id))
+            }
+            onCreate={(template) => leaving(() => funnels.create(template))}
             onRename={funnels.rename}
-            onDuplicate={() => switching(funnels.duplicate)}
-            onRemove={() => switching(funnels.remove)}
+            onDuplicate={() => leaving(funnels.duplicate)}
+            onRemove={() => {
+              // A compared funnel leaves the comparison; the first one still marked opens next.
+              const selected = comparison?.selected.filter((id) => id !== active.id)
+              if (selected) compare.change({ selected })
+              switching(() => funnels.remove(selected?.[0]))
+            }}
             onExport={exportActive}
+            comparing={comparison !== null}
+            onCompare={() => compare.start(active)}
             onImport={(text) => {
               const imported = funnels.importFile(text)
-              if (imported) switching(() => {})
+              if (imported) leaving(() => {})
               setImportFailed(!imported)
             }}
           />
@@ -95,27 +171,42 @@ function App() {
           <StagesPanel
             key={active.id}
             form={form}
-            invalid={invalid}
+            invalid={comparing ? activeColumn!.state.invalid : invalid}
             update={update}
             onModeChange={changeMode}
             onEditingChange={setEditingId}
             editRequest={editRequest}
+            comparing={comparing ? { mode: comparison.mode, showValue: !comparison.shared, structure } : undefined}
           />
         </aside>
       </Sidebar>
       <main className="app-main">
-        <section className="card app-funnel" aria-label={texts.funnel.label}>
-          <div className="card-header">
-            <h2 className="card-title">{texts.funnel.title}</h2>
-          </div>
-          <Funnel
-            calculated={calculated}
-            goalMode={form.mode === 'goal'}
-            impossible={impossible}
+        {comparison ? (
+          <Comparison
+            funnels={funnels.funnels}
+            activeId={active.id}
+            comparison={comparison}
+            columns={columns}
             highlightId={editingId}
-            onEdit={edit}
+            onToggle={toggleCompared}
+            onChange={compare.change}
+            onEdit={editCompared}
+            onBack={compare.stop}
           />
-        </section>
+        ) : (
+          <section className="card app-funnel" aria-label={texts.funnel.label}>
+            <div className="card-header">
+              <h2 className="card-title">{texts.funnel.title}</h2>
+            </div>
+            <Funnel
+              calculated={calculated}
+              goalMode={form.mode === 'goal'}
+              impossible={impossible}
+              highlightId={editingId}
+              onEdit={edit}
+            />
+          </section>
+        )}
       </main>
     </div>
   )

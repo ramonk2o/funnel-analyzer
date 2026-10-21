@@ -1,5 +1,5 @@
 import { calculateBudget, calculateGoal, type BudgetResult, type FunnelInput, type GoalTarget } from './calc'
-import { readForm, setMode, type FunnelForm, type Mode } from './form'
+import { goalTargetOf, readForm, setMode, type FunnelForm, type Mode } from './form'
 
 // What the funnel shows: the last form that was fully valid (and, in goal mode, reachable), with its result.
 export interface Calculated {
@@ -44,6 +44,11 @@ export const editForm = (state: EditorState, change: (form: FunnelForm) => Funne
   editorState(change(state.form), state.calculated)
 
 export function changeMode(state: EditorState, mode: Mode) {
-  const stages = state.calculated?.result.stages
-  return editForm(state, (form) => setMode(form, mode, stages ? stages[stages.length - 1].volume : 0))
+  // What the funnel shows now at the goal's target: an empty goal starts from it.
+  const result = state.calculated?.result
+  return editForm(state, (form) => {
+    const target = goalTargetOf(form)
+    const shown = !result ? 0 : target === 'revenue' ? (result.revenue ?? 0) : (result.stages[target]?.volume ?? 0)
+    return setMode(form, mode, shown)
+  })
 }

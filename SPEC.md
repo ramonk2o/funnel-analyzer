@@ -28,6 +28,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
   - a lista de funis, em ordem de criação, com o ativo marcado; clicar em outro troca para ele;
   - "Novo funil", que mostra os modelos (e "Voltar");
   - "Renomear", "Duplicar", "Apagar" e "Exportar", que valem para o funil ativo;
+  - "Comparar", que abre a comparação (desabilitado durante ela; veja Comparação);
   - "Importar", que abre a escolha de arquivo.
 - Criar, duplicar ou importar torna ativo o funil resultante, no fim da lista. Apagar torna ativo o primeiro da lista. Trocar de funil abre a 1ª etapa no painel e desfaz qualquer destaque.
 - Renomear transforma o nome no cabeçalho num campo de texto já selecionado: Enter ou clicar fora confirma, Esc cancela. Espaços nas pontas são removidos; vazio volta ao nome anterior. Dois funis podem ter o mesmo nome.
@@ -42,6 +43,23 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Importar sempre cria um funil novo, nunca sobrescreve. Um arquivo que não é JSON, que não vem do app, que tem campos faltando, que tem o nome vazio ou que é de uma versão mais nova do formato não importa nada, e aparece "Este arquivo não é um funil válido" abaixo do cabeçalho (some na próxima troca de funil ou importação que der certo).
 - Com o armazenamento bloqueado ou se salvar falhar (modo privado, espaço cheio), o app funciona na sessão e mostra abaixo do cabeçalho o aviso "Seus funis não estão sendo salvos neste navegador". O aviso some quando uma gravação seguinte dá certo.
 
+### Comparação
+- "Comparar", no menu de funis, troca a área do funil pela comparação; "Voltar ao funil" volta ao funil ativo. A comparação não é lembrada: recarregar volta ao funil ativo.
+- No topo, a lista de funis com caixas de marcar, com o funil ativo já marcado. Compara de 2 a 3 funis; a comparação aparece assim que houver 2 marcados, e a seleção muda a qualquer momento.
+  - Só são compatíveis os funis com as mesmas etapas que o primeiro marcado: mesma quantidade e mesmos nomes na mesma ordem, sem diferenciar maiúsculas nem espaços sobrando (nas pontas ou repetidos no meio; um nome só com espaços conta como vazio). Uma etapa sem nome só bate com outra sem nome na mesma posição. Números e unidade de custo podem ser diferentes.
+  - Os outros ficam desabilitados com o motivo ("Outra quantidade de etapas" ou "Outros nomes ou outra ordem de etapas"); com 3 marcados, os compatíveis restantes mostram "Máximo de 3 funis". Sem nenhum compatível, aparece a dica para duplicar o funil.
+  - O funil ativo é sempre um dos marcados: desmarcar o ativo torna ativo o primeiro marcado; com nenhum marcado, o funil que for marcado vira o ativo.
+- A comparação tem o próprio seletor de modo, que vale para todos e começa no modo do funil ativo. "Usar o mesmo orçamento (ou meta) para todos" vem ligada:
+  - Ligada, um só campo vale para todos: a verba ou, no modo meta, "Meta em" (as etapas por posição, mais "Receita") e a meta. Começa com o valor do funil ativo nesse modo (vazio se ele não tiver) e não muda nenhum funil salvo. "Meta em" segue a etapa quando ela é reordenada ou sai uma etapa antes dela; se a própria etapa sai, vai para a última.
+  - Desligada, cada funil usa a própria verba, ou a própria meta e etapa-alvo; uma meta nunca definida fica vazia e conta como inválida.
+- Cada funil aparece numa coluna, em ordem de marcação, com o nome no topo e as faixas como na tela principal, sem o bloco de investimento; as faixas da mesma etapa ficam na mesma altura. A coluna do funil ativo tem borda na cor de destaque, e o destaque da etapa em edição vale só nela. Um funil inválido ou com meta impossível mostra "Corrija os campos marcados para ver o funil" ou "Meta impossível com estes valores". Em tela estreita, só a área da comparação rola para os lados.
+- Embaixo, a tabela comparativa: volume e custo por resultado de cada etapa, depois mídia, custo total, receita, ROAS e ROI. O melhor valor de cada linha fica destacado: o maior em volume, receita, ROAS e ROI; o menor em custo por resultado, mídia e custo total. Valores iguais na tela empatam, e todos os empatados ficam destacados; uma linha toda igual, ou com um valor sozinho entre "—", fica sem destaque. Um funil inválido ou com meta impossível tem "—" em todas as células.
+- Os funis continuam editáveis pela barra:
+  - Clicar numa faixa ou conversão de uma coluna faz daquele funil o ativo e abre a barra na etapa clicada. Abrir a barra pelo botão põe o foco no nome da etapa aberta (a 1ª, se nenhuma) com o valor comum ligado, ou no valor que a barra mostra com ele desligado.
+  - A barra esconde o seletor de modo e, com o valor comum ligado, a verba e a meta; desligado, mostra a verba (ou a meta, com "Meta em") do próprio funil, no modo da comparação. No topo, avisa "Nome, ordem e quantidade de etapas mudam em todos os funis comparados".
+  - Nome, ordem e quantidade de etapas mudam, por posição, em todos os comparados: a etapa nova entra no fim de todos, com o mesmo nome e 10% em cada um; remover pede "Remover de todos?"; reordenar move a mesma posição em todos, e cada etapa leva os próprios números. Conversões, custos, unidade e ticket continuam de cada funil. Todos os funis afetados são salvos, e a meta de cada um segue a própria etapa.
+- O menu de funis durante a comparação: trocar para um funil comparado o torna ativo; trocar para outro, Novo, Duplicar e Importar (quando o arquivo é válido) saem da comparação; Renomear e Exportar a mantêm. Apagar o ativo tira ele da comparação e torna ativo o primeiro que continua marcado; com só 1 marcado, volta a escolha.
+
 ### Barra de edição
 - O painel de edição (verba, etapas e "Adicionar etapa") fica numa barra lateral colada à esquerda, abaixo do cabeçalho, que cobre o funil sem mudar a largura dele. O fundo da barra é levemente translúcido (90%), e ela rola por conta própria.
 - O botão do cabeçalho ("Abrir edição" / "Fechar edição") abre e fecha a barra. Abrir pelo botão põe o foco na verba (no modo meta, no valor da meta). Esc com o foco dentro da barra também fecha. Ao fechar, o foco vai para o botão.
@@ -55,7 +73,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 ### Modos
 - No topo da barra, um seletor alterna entre "Tenho um orçamento" (padrão) e "Tenho uma meta". As etapas, taxas e custos são os mesmos nos dois modos; cada modo guarda o seu valor (a verba ou a meta) ao alternar. O modo é salvo com o funil: recarregar abre o funil no modo em que ele estava.
 - No modo meta, a verba dá lugar a "Meta em" (as etapas na ordem do funil, mais "Receita") e ao valor da meta: "Meta (quantidade)" ou, para receita, "Meta (R$)".
-- Na primeira entrada no modo meta, a meta vem na última etapa, com o volume que o funil mostra arredondado para cima (ou 1, se for 0).
+- Ao entrar no modo meta com a meta vazia, ela é preenchida com o que o funil mostra na etapa escolhida (na última, se nenhuma foi escolhida; na receita, a receita), arredondado para cima (ou 1, se for 0).
 - A meta segue a etapa pela identidade: vai junto ao reordenar e, se a etapa for removida, passa para a última etapa com o mesmo valor.
 
 ### Editor do funil
@@ -125,6 +143,8 @@ Tudo fica no `localStorage` do navegador.
 - **Script no `index.html`** aplica o tema salvo antes do React carregar, para não piscar. Ele repete a chave de armazenamento, e um teste confere que ela é a mesma do código.
 - **Fontes do Google Fonts**, com fontes do sistema como reserva.
 - **Funil em módulos puros** (`src/funnel/`): `numbers.ts` lê e formata números, `form.ts` guarda o que foi digitado como texto e o valida (e faz as operações nas etapas), `calc.ts` calcula. Os componentes só mostram e repassam as mudanças, para que comparação e exportação reusem o mesmo cálculo.
+- **Comparação em módulos puros** (`src/compare/`): compatibilidade, o formulário de cada funil com os valores da comparação, as mudanças de etapas em vários funis e as linhas da tabela, testados sem tela. A comparação fica só na memória da sessão.
+- **Colunas com CSS subgrid:** as colunas da comparação dividem as mesmas linhas de grade, para as faixas da mesma etapa ficarem na mesma altura mesmo quando um nome quebra linha.
 - **Funis salvos em módulos puros** (`src/funnels/`): nomes, modelos, leitura e gravação no navegador e o formato de arquivo ficam separados da tela. A leitura (do navegador ou de arquivo) valida tudo e dá novos ids às etapas, para nunca colidirem com as que já estão na tela.
 - **Salvar no momento da alteração**, não num efeito depois da renderização: assim o aviso de "não salvo" já aparece no mesmo passo.
 - **O formulário guarda texto, não números:** um campo inválido continua na tela como foi digitado, e o funil usa o último formulário válido.

@@ -84,12 +84,24 @@ export function useFunnels() {
         return { library: { ...library, funnels }, editor }
       })
     },
-    remove() {
+    /** Edits several funnels at once (`ids` in the order `change` receives and returns their forms). */
+    updateMany(ids: string[], change: (forms: FunnelForm[]) => FunnelForm[]) {
+      setState(({ library, editor }) => {
+        const changed = change(ids.map((id) => library.funnels.find((f) => f.id === id)!.form))
+        const formOf = new Map(ids.map((id, i) => [id, changed[i]]))
+        const funnels = library.funnels.map((f) => (formOf.has(f.id) ? { ...f, form: formOf.get(f.id)! } : f))
+        const activeForm = formOf.get(library.activeId)
+        return { library: { ...library, funnels }, editor: activeForm ? editForm(editor, () => activeForm) : editor }
+      })
+    },
+    /** Deletes the active funnel; `nextId` opens next, or else the first in the list. */
+    remove(nextId?: string) {
       setState(({ library }) => {
         // At least one funnel always remains.
         if (library.funnels.length <= 1) return { library, editor }
         const funnels = library.funnels.filter((f) => f.id !== library.activeId)
-        return opened({ activeId: funnels[0].id, funnels })
+        const next = funnels.some((f) => f.id === nextId) ? nextId! : funnels[0].id
+        return opened({ activeId: next, funnels })
       })
     },
     /** Imports a funnel file as a new funnel; false if the file isn't a valid funnel. */

@@ -15,6 +15,9 @@ interface Props {
   onDuplicate: () => void
   onRemove: () => void
   onExport: () => void
+  onCompare: () => void
+  /** "Compare" is disabled while comparing. */
+  comparing: boolean
   /** Called with the chosen file's text. */
   onImport: (text: string) => void
 }
@@ -23,7 +26,7 @@ type View = 'main' | 'templates' | 'confirmRemove'
 
 /** The active funnel's name in the header; clicking it opens the menu with the funnels and their actions. */
 export function FunnelMenu(props: Props) {
-  const { funnels, active, onSelect, onCreate, onRename, onDuplicate, onRemove, onExport, onImport } = props
+  const { funnels, active, onSelect, onCreate, onRename, onDuplicate, onRemove, onExport, onCompare, comparing, onImport } = props
   const [view, setView] = useState<View | null>(null)
   const [renaming, setRenaming] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -160,6 +163,14 @@ export function FunnelMenu(props: Props) {
                     onClick={() => setView('confirmRemove')}
                   >
                     {fx.remove}
+                  </button>
+                  <button
+                    type="button"
+                    className="funnel-menu-item"
+                    disabled={comparing}
+                    onClick={() => done(onCompare)}
+                  >
+                    {fx.compare}
                   </button>
                   <button type="button" className="funnel-menu-item" onClick={() => done(onExport)}>
                     {fx.export}

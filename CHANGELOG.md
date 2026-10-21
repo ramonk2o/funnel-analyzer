@@ -5,6 +5,7 @@ Todas as mudanças relevantes deste projeto ficam registradas aqui. O formato se
 ## [Unreleased]
 
 ### Adicionado
+- **Comparar cenários**: pelo menu de funis, dá para comparar de 2 a 3 funis com as mesmas etapas, lado a lado, com uma tabela que destaca o melhor valor de cada linha. Por padrão todos usam o mesmo orçamento (ou meta), e os funis continuam editáveis: nome, ordem e quantidade de etapas mudam em todos os comparados. Junto, entrar no modo meta com a meta vazia passa a preenchê-la com o que o funil mostra na etapa escolhida, e não só na primeira vez.
 - **Funis salvos**: os funis ficam salvos no navegador a cada alteração. Pelo nome do funil no cabeçalho dá para ter vários funis, trocar entre eles, criar um novo em branco ou de um modelo (Tráfego pago, E-commerce, B2B), renomear, duplicar, apagar, e exportar e importar como arquivo. Recarregar a página abre o último funil, no modo em que ele estava.
 - **Editor do funil e modo orçamento**: o painel monta o funil (criar, nomear, remover e reordenar etapas, com setas ou arrastando) e, a partir da verba de mídia, o app calcula volumes, custo por resultado, custos extras e custo total e, com ticket médio, receita, ROAS e ROI. Tudo recalcula a cada tecla.
 - **Modo meta**: além de partir de um orçamento, dá para partir de uma meta (quantidade numa etapa ou receita) e ver o investimento necessário, com mídia e custos extras. Um bloco acima do funil passa a mostrar o investimento nos dois modos.

@@ -12,29 +12,21 @@ interface Props {
   invalid: Set<string>
   setField: (changes: Partial<FunnelForm>) => void
   onModeChange: (mode: Mode) => void
+  /** Given (in a comparison), the mode is set elsewhere: no selector, only this mode's value. */
+  mode?: Mode
 }
 
 // The mode selector and the value each mode starts from: the media budget, or the goal.
-export function ModeFields({ form, invalid, setField, onModeChange }: Props) {
-  const revenue = form.goalTarget === 'revenue'
+export function ModeFields({ form, invalid, setField, onModeChange, mode }: Props) {
+  const shownMode = mode ?? form.mode
+  // A goal never set starts at the last stage.
+  const goalTarget = form.goalTarget || form.stages[form.stages.length - 1].id
+  const revenue = goalTarget === 'revenue'
   return (
     <>
-      <div className="mode-switch" role="radiogroup" aria-label={texts.mode.label}>
-        {(['budget', 'goal'] as const).map((mode) => (
-          <label key={mode} className="mode-option">
-            <input
-              type="radio"
-              name="mode"
-              value={mode}
-              checked={form.mode === mode}
-              onChange={() => onModeChange(mode)}
-            />
-            <span>{texts.mode[mode]}</span>
-          </label>
-        ))}
-      </div>
+      {!mode && <ModeSwitch name="mode" mode={form.mode} onChange={onModeChange} />}
 
-      {form.mode === 'budget' ? (
+      {shownMode === 'budget' ? (
         <NumberField
           id={BUDGET_FIELD_ID}
           label={t.budget}
@@ -46,11 +38,7 @@ export function ModeFields({ form, invalid, setField, onModeChange }: Props) {
         <div className="field-row">
           <label className="field">
             <span className="field-label">{t.goalTarget}</span>
-            <select
-              className="input"
-              value={form.goalTarget}
-              onChange={(e) => setField({ goalTarget: e.target.value })}
-            >
+            <select className="input" value={goalTarget} onChange={(e) => setField({ goalTarget: e.target.value })}>
               {form.stages.map((stage, i) => (
                 <option key={stage.id} value={stage.id}>
                   {stageDisplayName(stage, i)}
@@ -64,10 +52,30 @@ export function ModeFields({ form, invalid, setField, onModeChange }: Props) {
             label={revenue ? t.goalRevenue : t.goalQuantity}
             value={form.goal}
             invalid={invalid.has('goal')}
-            onChange={(goal) => setField({ goal })}
+            onChange={(goal) => setField({ goal, goalTarget })}
           />
         </div>
       )}
     </>
+  )
+}
+
+/** "Tenho um orçamento / Tenho uma meta". */
+export function ModeSwitch({ name, mode, onChange }: { name: string; mode: Mode; onChange: (mode: Mode) => void }) {
+  return (
+    <div className="mode-switch" role="radiogroup" aria-label={texts.mode.label}>
+      {(['budget', 'goal'] as const).map((option) => (
+        <label key={option} className="mode-option">
+          <input
+            type="radio"
+            name={name}
+            value={option}
+            checked={mode === option}
+            onChange={() => onChange(option)}
+          />
+          <span>{texts.mode[option]}</span>
+        </label>
+      ))}
+    </div>
   )
 }

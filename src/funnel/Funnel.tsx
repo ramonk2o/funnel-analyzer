@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { texts } from '../texts'
 import { stageDisplayName } from './form'
 import { formatConversion, formatMoney, formatRoas, formatRoi, formatVolume } from './numbers'
@@ -25,9 +26,7 @@ interface Props {
 
 export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }: Props) {
   if (!calculated) return <p className="funnel-empty">{goalMode && impossible ? t.impossible : t.fixFields}</p>
-  const { form, input, result } = calculated
-  const count = form.stages.length
-  const highlighting = form.stages.some((s) => s.id === highlightId)
+  const { result } = calculated
   const target = goalMode ? calculated.goal?.target : undefined
 
   return (
@@ -50,52 +49,7 @@ export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }
         )}
       </section>
 
-      <ol className={`funnel${highlighting ? ' funnel-highlighting' : ''}`} aria-label={t.listLabel}>
-        {form.stages.map((stage, i) => {
-          const { volume, costPerResult } = result.stages[i]
-          const name = stageDisplayName(stage, i)
-          const cost =
-            i === 0
-              ? `${formatMoney(input.unitCost)} ${t.firstStageCost[input.costUnit]}`
-              : costPerResult === null
-                ? t.noValue
-                : `${formatMoney(costPerResult)} ${t.perResult}`
-          return (
-            <li key={stage.id} className="funnel-step" aria-current={stage.id === highlightId || undefined}>
-              {i > 0 && (
-                <button
-                  type="button"
-                  className="funnel-conversion"
-                  aria-label={t.editConversion(name)}
-                  onClick={() => onEdit(stage.id, 'conversion')}
-                >
-                  <span className="funnel-conversion-line" aria-hidden="true" />
-                  <span className="num">{formatConversion(input.stages[i].conversion)}</span>
-                </button>
-              )}
-              <button
-                type="button"
-                className="funnel-band"
-                style={{ width: `${width(i, count)}%` }}
-                aria-label={t.editStage(name)}
-                aria-describedby={`${stage.id}-band-volume ${stage.id}-band-cost`}
-                onClick={() => onEdit(stage.id, 'name')}
-              >
-                <span className="funnel-band-title">
-                  <span className="funnel-band-name">{name}</span>
-                  {target === i && <GoalTag />}
-                </span>
-                <span id={`${stage.id}-band-volume`} className="funnel-band-volume num">
-                  {formatVolume(volume)}
-                </span>
-                <span id={`${stage.id}-band-cost`} className="funnel-band-cost num">
-                  {cost}
-                </span>
-              </button>
-            </li>
-          )
-        })}
-      </ol>
+      <FunnelBands calculated={calculated} goalMode={goalMode} highlightId={highlightId} onEdit={onEdit} />
 
       <dl className="totals" aria-label={t.totals.label}>
         <Total label={t.totals.media} value={formatMoney(result.media)} />
@@ -127,4 +81,65 @@ function Total({ label, value, tagged = false }: { label: string; value: string;
 
 function GoalTag() {
   return <span className="goal-tag">{t.goalTag}</span>
+}
+
+type BandsProps = Pick<Props, 'goalMode' | 'highlightId' | 'onEdit'> & { calculated: Calculated }
+
+/** The funnel's bands, with the conversions between them. */
+export function FunnelBands({ calculated, goalMode, highlightId, onEdit }: BandsProps) {
+  const { form, input, result } = calculated
+  const count = form.stages.length
+  const highlighting = form.stages.some((s) => s.id === highlightId)
+  const target = goalMode ? calculated.goal?.target : undefined
+  // Compared funnels can share stage ids (a duplicate keeps them), so element ids get a prefix.
+  const uid = useId()
+
+  return (
+    <ol className={`funnel${highlighting ? ' funnel-highlighting' : ''}`} aria-label={t.listLabel}>
+      {form.stages.map((stage, i) => {
+        const { volume, costPerResult } = result.stages[i]
+        const name = stageDisplayName(stage, i)
+        const cost =
+          i === 0
+            ? `${formatMoney(input.unitCost)} ${t.firstStageCost[input.costUnit]}`
+            : costPerResult === null
+              ? t.noValue
+              : `${formatMoney(costPerResult)} ${t.perResult}`
+        return (
+          <li key={stage.id} className="funnel-step" aria-current={stage.id === highlightId || undefined}>
+            {i > 0 && (
+              <button
+                type="button"
+                className="funnel-conversion"
+                aria-label={t.editConversion(name)}
+                onClick={() => onEdit(stage.id, 'conversion')}
+              >
+                <span className="funnel-conversion-line" aria-hidden="true" />
+                <span className="num">{formatConversion(input.stages[i].conversion)}</span>
+              </button>
+            )}
+            <button
+              type="button"
+              className="funnel-band"
+              style={{ width: `${width(i, count)}%` }}
+              aria-label={t.editStage(name)}
+              aria-describedby={`${uid}-${stage.id}-volume ${uid}-${stage.id}-cost`}
+              onClick={() => onEdit(stage.id, 'name')}
+            >
+              <span className="funnel-band-title">
+                <span className="funnel-band-name">{name}</span>
+                {target === i && <GoalTag />}
+              </span>
+              <span id={`${uid}-${stage.id}-volume`} className="funnel-band-volume num">
+                {formatVolume(volume)}
+              </span>
+              <span id={`${uid}-${stage.id}-cost`} className="funnel-band-cost num">
+                {cost}
+              </span>
+            </button>
+          </li>
+        )
+      })}
+    </ol>
+  )
 }

@@ -32,6 +32,17 @@ interface Props {
   onEditingChange: (stageId: string | null) => void
   /** A request (from the funnel) to open a stage and focus one of its fields; each new object is handled once. */
   editRequest: EditRequest | null
+  /** In a comparison: the mode is the comparison's (the value shows only when each funnel uses its own),
+   *  and changes to the stages' names, order and number go through `structure`, to every compared funnel. */
+  comparing?: { mode: Mode; showValue: boolean; structure: StructureEdits }
+}
+
+/** Changes to the stages' names, order and number, by position. */
+export interface StructureEdits {
+  add: () => void
+  remove: (index: number) => void
+  move: (from: number, to: number) => void
+  rename: (index: number, name: string) => void
 }
 
 export interface EditRequest {
@@ -39,9 +50,10 @@ export interface EditRequest {
   field: 'name' | 'conversion'
 }
 
-export function StagesPanel({ form, invalid, update, onModeChange, onEditingChange, editRequest }: Props) {
-  // Accordion: at most one stage open at a time (null = all collapsed).
-  const [openId, setOpenId] = useState<string | null>(form.stages[0].id)
+export function StagesPanel(props: Props) {
+  const { form, invalid, update, onModeChange, onEditingChange, editRequest, comparing } = props
+  // Accordion: at most one stage open at a time (null = all collapsed). Opened for a request, its stage starts open.
+  const [openId, setOpenId] = useState<string | null>(() => editRequest?.stageId ?? form.stages[0].id)
   const [knownIds, setKnownIds] = useState(() => form.stages.map((s) => s.id))
   const count = form.stages.length
 
@@ -71,13 +83,17 @@ export function StagesPanel({ form, invalid, update, onModeChange, onEditingChan
   }, [editRequest])
 
   const listRef = useRef<HTMLDivElement>(null)
+  const structure: StructureEdits = comparing?.structure ?? {
+    add: () => update(addStage),
+    remove: (index) => update((f) => removeStage(f, f.stages[index].id)),
+    move: (from, to) => update((f) => moveStage(f, from, to)),
+    rename: (index, name) => update((f) => updateStage(f, f.stages[index].id, { name })),
+  }
+
   const { drag, start: startDrag } = useStageDrag(listRef, ids, (id, to) => {
-    update((f) =>
-      moveStage(
-        f,
-        f.stages.findIndex((s) => s.id === id),
-        to,
-      ),
+    structure.move(
+      form.stages.findIndex((s) => s.id === id),
+      to,
     )
     setOpenId(id)
   })
@@ -91,7 +107,16 @@ export function StagesPanel({ form, invalid, update, onModeChange, onEditingChan
 
   return (
     <div className="stages-panel">
-      <ModeFields form={form} invalid={invalid} setField={setField} onModeChange={onModeChange} />
+      {comparing && <p className="panel-notice">{texts.compare.structureNotice}</p>}
+      {(!comparing || comparing.showValue) && (
+        <ModeFields
+          form={form}
+          invalid={invalid}
+          setField={setField}
+          onModeChange={onModeChange}
+          mode={comparing?.mode}
+        />
+      )}
 
       <div className="stages" ref={listRef}>
         {view.stages.map((stage, i) => {
@@ -119,11 +144,12 @@ export function StagesPanel({ form, invalid, update, onModeChange, onEditingChan
                   keepInPlace(header)
                   setOpenId(open ? null : stage.id)
                 }}
+                confirmRemove={comparing ? texts.compare.confirmRemoveAll : t.confirmRemove}
                 onMove={(to) => {
-                  update((f) => moveStage(f, i, to))
+                  structure.move(i, to)
                   setOpenId(stage.id)
                 }}
-                onRemove={() => update((f) => removeStage(f, stage.id))}
+                onRemove={() => structure.remove(i)}
                 onDragStart={(e) => startDrag(e, stage.id)}
               />
 
@@ -141,7 +167,7 @@ export function StagesPanel({ form, invalid, update, onModeChange, onEditingChan
                       id={fieldId(stage.id, 'name')}
                       className="input"
                       value={stage.name}
-                      onChange={(e) => setStage(stage.id, { name: e.target.value })}
+                      onChange={(e) => structure.rename(i, e.target.value)}
                     />
                   </label>
 
@@ -202,7 +228,7 @@ export function StagesPanel({ form, invalid, update, onModeChange, onEditingChan
 
       {drag && <DragGhost view={view} invalid={invalid} id={drag.id} position={drag.ghost} />}
 
-      <button type="button" className="btn" disabled={count >= MAX_STAGES} onClick={() => update(addStage)}>
+      <button type="button" className="btn" disabled={count >= MAX_STAGES} onClick={structure.add}>
         <span aria-hidden="true">{t.icons.add}</span>
         {t.addStage}
       </button>
@@ -284,6 +310,7 @@ interface HeaderProps {
   name: string
   summary: string
   invalid: boolean
+  confirmRemove: string
   onToggle: (header: HTMLElement) => void
   onMove: (to: number) => void
   onRemove: () => void
@@ -291,7 +318,7 @@ interface HeaderProps {
 }
 
 function StageHeader(props: HeaderProps) {
-  const { titleId, bodyId, index, count, open, name, summary, invalid, onToggle } = props
+  const { titleId, bodyId, index, count, open, name, summary, invalid, confirmRemove, onToggle } = props
   const { onMove, onRemove, onDragStart } = props
   const [confirming, setConfirming] = useState(false)
   // Down to the minimum while open (another stage was removed): close it.
@@ -329,7 +356,7 @@ function StageHeader(props: HeaderProps) {
       </button>
       {confirming ? (
         <div className="stage-actions">
-          <span className="stage-confirm">{t.confirmRemove}</span>
+          <span className="stage-confirm">{confirmRemove}</span>
           <button type="button" className="btn btn-small btn-danger" onClick={onRemove}>
             {t.yes}
           </button>
