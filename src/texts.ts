@@ -3,9 +3,18 @@ import type { CostUnit } from './funnel/calc'
 // Every user-facing text lives here (PT-BR only for now).
 export const texts = {
   appName: 'Analisador de Funil',
-  theme: {
-    switchToLight: 'Mudar para tema claro',
-    switchToDark: 'Mudar para tema escuro',
+  settings: {
+    open: 'Configurações',
+    title: 'Configurações',
+    theme: 'Tema',
+    dark: 'Escuro',
+    light: 'Claro',
+    separator: 'Separador decimal',
+    comma: 'Vírgula (1,50)',
+    dot: 'Ponto (1.50)',
+    close: 'Fechar',
+    // Where the decimal separator choice is remembered in the browser.
+    storageKey: 'analisador-de-funil:separador',
   },
   sidebar: {
     open: 'Abrir edição',

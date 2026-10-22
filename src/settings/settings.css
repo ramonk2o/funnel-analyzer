@@ -1,0 +1,42 @@
+/* Settings modal: centered over a dimmed page, above the header and the sidebar. */
+.settings-backdrop {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.settings-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Focused only so a click on a spot with no control keeps Esc and Tab in the modal. */
+.settings-dialog:focus {
+  outline: none;
+}
+
+.settings-title {
+  font-size: 18px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+}

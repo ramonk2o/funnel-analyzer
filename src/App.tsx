@@ -15,12 +15,15 @@ import { useFunnels } from './funnels/useFunnels'
 import { Sidebar } from './sidebar/Sidebar'
 import { SidebarToggle } from './sidebar/SidebarToggle'
 import { useSidebar } from './sidebar/useSidebar'
+import { SeparatorContext } from './settings/separator'
+import { Settings } from './settings/Settings'
+import { useSeparatorSetting } from './settings/useSeparatorSetting'
 import { texts } from './texts'
-import { ThemeToggle } from './theme/ThemeToggle'
 import { useTheme } from './theme/useTheme'
 
 function App() {
-  const [theme, toggleTheme] = useTheme()
+  const [theme, setTheme] = useTheme()
+  const [separator, setSeparator] = useSeparatorSetting()
   const funnels = useFunnels()
   const { form, invalid, impossible, calculated, update, changeMode, active } = funnels
   const [importFailed, setImportFailed] = useState(false)
@@ -120,101 +123,105 @@ function App() {
   }
 
   return (
-    <div className={`app${sidebar.open ? '' : ' app-sidebar-closed'}`}>
-      <header className="app-header">
-        <div className="app-brand">
-          <SidebarToggle ref={sidebarButtonRef} open={sidebar.open} onToggle={sidebar.toggle} />
-          <span className="app-logo" aria-hidden="true" />
-          <h1>{texts.appName}</h1>
-          <FunnelMenu
-            funnels={funnels.funnels}
-            active={active}
-            onSelect={(id) =>
-              comparison?.selected.includes(id)
-                ? switching(() => funnels.select(id))
-                : leaving(() => funnels.select(id))
-            }
-            onCreate={(template) => leaving(() => funnels.create(template))}
-            onRename={funnels.rename}
-            onDuplicate={() => leaving(funnels.duplicate)}
-            onRemove={() => {
-              // A compared funnel leaves the comparison; the first one still marked opens next.
-              const selected = comparison?.selected.filter((id) => id !== active.id)
-              if (selected) compare.change({ selected })
-              switching(() => funnels.remove(selected?.[0]))
-            }}
-            onExport={exportActive}
-            comparing={comparison !== null}
-            onCompare={() => compare.start(active)}
-            onImport={(text) => {
-              const imported = funnels.importFile(text)
-              if (imported) leaving(() => {})
-              setImportFailed(!imported)
-            }}
-          />
-        </div>
-        <ThemeToggle theme={theme} onToggle={toggleTheme} />
-      </header>
-      {(!funnels.saved || importFailed) && (
-        <div className="app-notices">
-          {!funnels.saved && (
-            <p className="app-notice" role="status">
-              {texts.funnels.notSaved}
-            </p>
-          )}
-          {importFailed && (
-            <p className="app-notice" role="alert">
-              {texts.funnels.invalidFile}
-            </p>
-          )}
-        </div>
-      )}
-      <Sidebar open={sidebar.open} onClose={sidebar.close} buttonRef={sidebarButtonRef}>
-        <aside className="card app-panel" aria-label={texts.panel.label}>
-          <h2 className="card-title">{texts.panel.title}</h2>
-          <StagesPanel
-            key={active.id}
-            form={activeColumn?.state.form ?? form}
-            invalid={activeColumn?.state.invalid ?? invalid}
-            update={update}
-            onModeChange={changeMode}
-            onEditingChange={setEditingId}
-            editRequest={editRequest}
-            structure={structure}
-            comparing={activeColumn && { showValue: !comparison!.shared }}
-            onOpenChange={setOpenStageId}
-          />
-        </aside>
-      </Sidebar>
-      <main className="app-main">
-        {comparison ? (
-          <Comparison
-            funnels={funnels.funnels}
-            activeId={active.id}
-            comparison={comparison}
-            columns={columns}
-            highlightId={editingId}
-            onToggle={toggleCompared}
-            onChange={compare.change}
-            onEdit={editCompared}
-            onBack={compare.stop}
-          />
-        ) : (
-          <section className="card app-funnel" aria-label={texts.funnel.label}>
-            <div className="card-header">
-              <h2 className="card-title">{texts.funnel.title}</h2>
-            </div>
-            <Funnel
-              calculated={calculated}
-              goalMode={form.mode === 'goal'}
-              impossible={impossible}
-              highlightId={editingId}
-              onEdit={edit}
+    <SeparatorContext.Provider value={separator}>
+      <div className={`app${sidebar.open ? '' : ' app-sidebar-closed'}`}>
+        <header className="app-header">
+          <div className="app-brand">
+            <SidebarToggle ref={sidebarButtonRef} open={sidebar.open} onToggle={sidebar.toggle} />
+            <span className="app-logo" aria-hidden="true" />
+            <h1>{texts.appName}</h1>
+            <FunnelMenu
+              funnels={funnels.funnels}
+              active={active}
+              onSelect={(id) =>
+                comparison?.selected.includes(id)
+                  ? switching(() => funnels.select(id))
+                  : leaving(() => funnels.select(id))
+              }
+              onCreate={(template) => leaving(() => funnels.create(template))}
+              onRename={funnels.rename}
+              onDuplicate={() => leaving(funnels.duplicate)}
+              onRemove={() => {
+                // A compared funnel leaves the comparison; the first one still marked opens next.
+                const selected = comparison?.selected.filter((id) => id !== active.id)
+                if (selected) compare.change({ selected })
+                switching(() => funnels.remove(selected?.[0]))
+              }}
+              onExport={exportActive}
+              comparing={comparison !== null}
+              onCompare={() => compare.start(active)}
+              onImport={(text) => {
+                const imported = funnels.importFile(text)
+                if (imported) leaving(() => {})
+                setImportFailed(!imported)
+              }}
             />
-          </section>
+          </div>
+          <div className="app-actions">
+            <Settings theme={theme} onThemeChange={setTheme} separator={separator} onSeparatorChange={setSeparator} />
+          </div>
+        </header>
+        {(!funnels.saved || importFailed) && (
+          <div className="app-notices">
+            {!funnels.saved && (
+              <p className="app-notice" role="status">
+                {texts.funnels.notSaved}
+              </p>
+            )}
+            {importFailed && (
+              <p className="app-notice" role="alert">
+                {texts.funnels.invalidFile}
+              </p>
+            )}
+          </div>
         )}
-      </main>
-    </div>
+        <Sidebar open={sidebar.open} onClose={sidebar.close} buttonRef={sidebarButtonRef}>
+          <aside className="card app-panel" aria-label={texts.panel.label}>
+            <h2 className="card-title">{texts.panel.title}</h2>
+            <StagesPanel
+              key={active.id}
+              form={activeColumn?.state.form ?? form}
+              invalid={activeColumn?.state.invalid ?? invalid}
+              update={update}
+              onModeChange={changeMode}
+              onEditingChange={setEditingId}
+              editRequest={editRequest}
+              structure={structure}
+              comparing={activeColumn && { showValue: !comparison!.shared }}
+              onOpenChange={setOpenStageId}
+            />
+          </aside>
+        </Sidebar>
+        <main className="app-main">
+          {comparison ? (
+            <Comparison
+              funnels={funnels.funnels}
+              activeId={active.id}
+              comparison={comparison}
+              columns={columns}
+              highlightId={editingId}
+              onToggle={toggleCompared}
+              onChange={compare.change}
+              onEdit={editCompared}
+              onBack={compare.stop}
+            />
+          ) : (
+            <section className="card app-funnel" aria-label={texts.funnel.label}>
+              <div className="card-header">
+                <h2 className="card-title">{texts.funnel.title}</h2>
+              </div>
+              <Funnel
+                calculated={calculated}
+                goalMode={form.mode === 'goal'}
+                impossible={impossible}
+                highlightId={editingId}
+                onEdit={edit}
+              />
+            </section>
+          )}
+        </main>
+      </div>
+    </SeparatorContext.Provider>
   )
 }
 

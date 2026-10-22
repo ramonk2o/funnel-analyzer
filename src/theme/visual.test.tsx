@@ -36,9 +36,10 @@ test('existem estilos de base para botão, campo e cartão', () => {
   }
 })
 
-test('o botão de tema fica no cabeçalho, junto do nome', () => {
+test('o cabeçalho tem o nome e a engrenagem das configurações, sem botão de tema', () => {
   render(<App />)
   const header = screen.getByRole('banner')
   expect(within(header).getByRole('heading', { level: 1, name: texts.appName })).toBeInTheDocument()
-  expect(within(header).getByRole('button', { name: texts.theme.switchToLight })).toBeInTheDocument()
+  expect(within(header).getByRole('button', { name: texts.settings.open })).toBeInTheDocument()
+  expect(within(header).queryByRole('button', { name: /tema/i })).toBeNull()
 })

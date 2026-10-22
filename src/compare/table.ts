@@ -1,5 +1,5 @@
 import type { BudgetResult } from '../funnel/calc'
-import { formatMoney, formatRoas, formatRoi, formatVolume } from '../funnel/numbers'
+import { formatMoney, formatRoas, formatRoi, formatVolume, type Separator } from '../funnel/numbers'
 import { texts } from '../texts'
 
 export interface Row {
@@ -23,7 +23,7 @@ export function bestOf(values: (number | null)[], better: 'higher' | 'lower'): b
 interface RowSpec {
   label: string
   value: (r: BudgetResult) => number | null
-  format: (n: number) => string
+  format: (n: number, sep: Separator) => string
   /** Rounds like the display does, so values that look equal tie. */
   round: (n: number) => number
   better: 'higher' | 'lower'
@@ -32,7 +32,7 @@ interface RowSpec {
 const roundTo = (places: number) => (n: number) => Math.round(n * 10 ** places) / 10 ** places
 
 /** The comparison table's rows; a null result (invalid or impossible funnel) shows "—" throughout. */
-export function comparisonRows(stageNames: string[], results: (BudgetResult | null)[]): Row[] {
+export function comparisonRows(stageNames: string[], results: (BudgetResult | null)[], sep: Separator = 'comma'): Row[] {
   const t = texts.funnel.totals
   const money = { format: formatMoney, round: roundTo(2) }
   const specs: RowSpec[] = [
@@ -59,7 +59,7 @@ export function comparisonRows(stageNames: string[], results: (BudgetResult | nu
     })
     return {
       label,
-      values: numbers.map((n) => (n === null ? texts.funnel.noValue : format(n))),
+      values: numbers.map((n) => (n === null ? texts.funnel.noValue : format(n, sep))),
       best: bestOf(numbers, better),
     }
   })

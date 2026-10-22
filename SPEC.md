@@ -10,16 +10,25 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 
 ### Aparência e temas
 - O app tem tema escuro e tema claro. Na primeira visita, abre no escuro.
-- O botão de tema alterna entre os dois, e a escolha fica salva no navegador para as próximas visitas.
-- Se o navegador não deixar ler ou salvar (modo privado, armazenamento bloqueado), o app abre no escuro e o botão continua funcionando, só sem lembrar a escolha. Um valor salvo diferente de "claro" ou "escuro" é ignorado.
+- O tema é escolhido nas configurações (veja Configurações), e a escolha fica salva no navegador para as próximas visitas.
+- Se o navegador não deixar ler ou salvar (modo privado, armazenamento bloqueado), o app abre no escuro e a troca continua funcionando, só sem lembrar a escolha. Um valor salvo diferente de "claro" ou "escuro" é ignorado.
 - O tema salvo é aplicado antes de a página aparecer, então o tema claro não pisca em escuro ao carregar.
-- O nome acessível do botão diz para qual tema ele muda ("Mudar para tema claro" / "Mudar para tema escuro").
 - A cor de destaque é violeta: `#A78BFA` no escuro; no claro, um violeta (matiz entre 250° e 290°) mais escuro que o do escuro.
 - Toda cor de texto, incluindo o destaque e o violeta forte dos volumes, tem contraste de pelo menos 4,5:1 com todo fundo (página, cartão e botão), nos dois temas.
 - Textos em Space Grotesk e números em JetBrains Mono, carregadas do Google Fonts. Sem internet, a página funciona com as fontes do sistema.
 
 ### Tela principal
-- O cabeçalho ocupa a largura toda da janela: à esquerda, o botão da barra de edição, o nome "Analisador de Funil" e o nome do funil ativo; à direita, o botão de tema. Abaixo, o funil e os resultados ficam centralizados (até 1280 px).
+- O cabeçalho ocupa a largura toda da janela: à esquerda, o botão da barra de edição, o nome "Analisador de Funil" e o nome do funil ativo; à direita, o botão "Configurações" (engrenagem). Abaixo, o funil e os resultados ficam centralizados (até 1280 px).
+- Em tela de até 420 px, o nome "Analisador de Funil" sai da tela (continua para leitores de tela), para caberem o nome do funil e a engrenagem sem a página rolar para os lados. O nome do funil é cortado com "…" quando não cabe.
+
+### Configurações
+- A engrenagem abre o modal "Configurações", com dois grupos: "Tema" ("Escuro" / "Claro") e, abaixo, "Separador decimal" ("Vírgula (1,50)" / "Ponto (1.50)"). Cada escolha vale assim que é marcada; o modal só tem o botão "Fechar".
+- O fundo fica escurecido e o foco fica preso no modal (Tab e Shift+Tab dão a volta nos controles dele, inclusive com a barra de edição aberta em tela estreita). Ao abrir, o foco vai para a opção marcada do tema.
+- Esc, "Fechar" ou um clique no fundo fecham o modal, com o foco de volta na engrenagem. Só fecha o clique que começa e termina no fundo: arrastar de dentro do modal até o fundo, ou do fundo para dentro, não fecha. Clicar numa parte do modal sem controle mantém Esc e Tab funcionando.
+- O modal funciona igual na tela principal e durante a comparação.
+- O separador decimal vale para digitar (veja Números digitados e validação) e para mostrar os números (veja Funil e resultados). Trocar o separador muda na hora tudo que foi digitado, em todos os funis salvos e no valor comum da comparação: cada vírgula vira ponto e cada ponto vira vírgula, inclusive em campos inválidos, que continuam inválidos ("1.234,5" vira "1,234.5"). Nomes de funis e de etapas não mudam. Voltar ao separador anterior desfaz a troca.
+- Os modelos entram com o separador escolhido (com ponto, CPC "1.50").
+- Na primeira visita, o separador é a vírgula. A escolha fica salva no navegador; com o armazenamento bloqueado, a troca funciona na sessão, só sem ser lembrada. Um valor salvo diferente de "virgula" ou "ponto" equivale à vírgula.
 
 ### Funis salvos
 - Todos os funis ficam salvos no navegador, automaticamente a cada alteração, sem botão de salvar. Cada funil guarda o texto como foi digitado (inclusive campos inválidos), o modo, a verba, a meta e a etapa-alvo.
@@ -39,7 +48,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
   - *Tráfego pago → Lead → Venda:* Cliques (CPC R$ 1,50) → Leads 10% → Vendas 5%; verba R$ 3.000; ticket R$ 500.
   - *E-commerce:* Impressões (CPM R$ 15) → Cliques 1,5% → Carrinho 8% → Compra 30%; verba R$ 5.000; ticket R$ 150.
   - *B2B:* Leads (R$ 80 por unidade) → MQL 40% → SQL 30% → Venda 20%; verba R$ 10.000; ticket R$ 10.000.
-- Exportar baixa um JSON chamado "<nome do funil>.json" (caracteres que não podem ir num nome de arquivo viram "-"), com o funil como foi digitado, a marca do app e a versão do formato (1).
+- Exportar baixa um JSON chamado "<nome do funil>.json" (caracteres que não podem ir num nome de arquivo viram "-"), com o funil como foi digitado, a marca do app e a versão do formato (1). Os números vão sempre com vírgula, qualquer que seja o separador escolhido; ao importar, aparecem com o separador escolhido. Um campo inválido vai com os sinais trocados como os outros (com ponto, "1,5" vai como "1.5"), então continua inválido em qualquer separador.
 - Importar sempre cria um funil novo, nunca sobrescreve. Um arquivo que não é JSON, que não vem do app, que tem campos faltando, que tem o nome vazio ou que é de uma versão mais nova do formato não importa nada, e aparece "Este arquivo não é um funil válido" abaixo do cabeçalho (some na próxima troca de funil ou importação que der certo).
 - Com o armazenamento bloqueado ou se salvar falhar (modo privado, espaço cheio), o app funciona na sessão e mostra abaixo do cabeçalho o aviso "Seus funis não estão sendo salvos neste navegador". O aviso some quando uma gravação seguinte dá certo.
 
@@ -93,7 +102,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Tudo recalcula a cada tecla.
 
 ### Números digitados e validação
-- Vírgula é o separador decimal ("1,50"). Pode faltar dígito de um lado da vírgula (",5" = 0,5; "1," = 1), e espaços nas pontas são ignorados. Separador de milhar não é aceito: qualquer ponto ("2.000", "1.5") deixa o campo inválido, assim como sinal, expoente ou texto.
+- O separador decimal é o escolhido nas configurações: vírgula ("1,50", o padrão) ou ponto ("1.50"). Pode faltar dígito de um lado do separador (",5" ou ".5" = 0,5; "1," ou "1." = 1), e espaços nas pontas são ignorados. Separador de milhar não é aceito: o outro sinal deixa o campo inválido (com vírgula, "2.000" e "1.5"; com ponto, "2,000" e "1,5"), assim como sinal, expoente ou texto.
 - Conversão: de 0% a 100%. Verba, custos extras e ticket: ≥ 0. Custo de mídia da primeira etapa: > 0.
 - Meta: > 0, com as mesmas regras de escrita (fração aceita). Só o valor do modo atual é validado.
 - Verba, meta, custo de mídia e conversão são obrigatórios; vazios são inválidos. Custo extra e ticket vazios significam "não informado".
@@ -122,6 +131,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - No modo meta, a faixa da etapa-alvo (ou a receita, nos resultados) ganha a etiqueta "Meta".
 - Abaixo do funil aparecem mídia, custos extras e custo total, separados. Receita, ROAS e ROI só aparecem com ticket médio.
 - Volumes aparecem inteiros e valores em R$ com 2 casas, com separador de milhar. ROAS aparece como multiplicador ("3,20x"); ROI em porcentagem com 1 casa ("45,0%"), podendo ser negativo.
+- Os números na tela (funil, resultados, resumo da etapa recolhida e tabela da comparação) seguem o separador decimal escolhido, e o milhar usa o outro sinal: com ponto, "R$ 2,000.00", "3.20x", "45.0%", "2.5%".
 - Sem valor possível, aparece "—": custo por resultado com volume 0, ROAS com mídia 0, ROI com custo total 0.
 
 ## Dados guardados
@@ -133,6 +143,9 @@ Tudo fica no `localStorage` do navegador.
 | `analisador-de-funil:tema` | `dark` ou `light` | Tema escolhido. Ausente ou inválido equivale a `dark`. |
 | `analisador-de-funil:funis` | JSON: o funil ativo e a lista de funis (nome e o que foi digitado) | Funis salvos. Ausente ou inválido equivale à primeira visita. |
 | `analisador-de-funil:edicao` | `aberta` ou `fechada` | Barra de edição aberta ou fechada (só em tela larga). Ausente ou inválido equivale a `aberta`. |
+| `analisador-de-funil:separador` | `virgula` ou `ponto` | Separador decimal escolhido. Ausente ou inválido equivale a `virgula`. |
+
+Os números digitados ficam guardados sempre com vírgula, qualquer que seja o separador escolhido.
 
 ## Decisões técnicas
 
@@ -147,6 +160,7 @@ Tudo fica no `localStorage` do navegador.
 - **Colunas com CSS subgrid:** as colunas da comparação dividem as mesmas linhas de grade, para as faixas da mesma etapa ficarem na mesma altura mesmo quando um nome quebra linha.
 - **Funis salvos em módulos puros** (`src/funnels/`): nomes, modelos, leitura e gravação no navegador e o formato de arquivo ficam separados da tela. A leitura (do navegador ou de arquivo) valida tudo e dá novos ids às etapas, para nunca colidirem com as que já estão na tela.
 - **Salvar no momento da alteração**, não num efeito depois da renderização: assim o aviso de "não salvo" já aparece no mesmo passo.
+- **Separador decimal só na tela** (`src/settings/`): o que foi digitado é guardado sempre com vírgula (no navegador, nos arquivos, nos modelos e na comparação). Os campos de número mostram o texto com vírgula e ponto trocados quando o separador é o ponto, e trocam de volta ao digitar; a troca desfaz a si mesma, então nada precisa ser convertido ao mudar o separador, e arquivos de quem usa outro separador continuam compatíveis. A formatação dos números recebe o separador, que chega aos componentes por um contexto do React.
 - **O formulário guarda texto, não números:** um campo inválido continua na tela como foi digitado, e o funil usa o último formulário válido.
 
 ## Limitações conhecidas

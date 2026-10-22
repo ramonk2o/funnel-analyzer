@@ -6,11 +6,12 @@ test('valor salvo inválido: abre no escuro, sem erro', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('analisador-de-funil:tema', '{quebrado'))
   await page.goto('/')
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
-  await expect(page.getByRole('button', { name: 'Mudar para tema claro' })).toBeVisible()
+  await page.getByRole('button', { name: 'Configurações' }).click()
+  await expect(page.getByRole('radio', { name: 'Escuro' })).toBeChecked()
   expect(errors).toEqual([])
 })
 
-test('sem armazenamento: abre no escuro, sem erro, e o botão funciona', async ({ page }) => {
+test('sem armazenamento: abre no escuro, sem erro, e a troca de tema funciona', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
   await page.addInitScript(() => {
@@ -23,7 +24,8 @@ test('sem armazenamento: abre no escuro, sem erro, e o botão funciona', async (
   await page.goto('/')
   const html = page.locator('html')
   await expect(html).toHaveAttribute('data-theme', 'dark')
-  await page.getByRole('button', { name: 'Mudar para tema claro' }).click()
+  await page.getByRole('button', { name: 'Configurações' }).click()
+  await page.getByRole('dialog', { name: 'Configurações' }).getByText('Claro').click()
   await expect(html).toHaveAttribute('data-theme', 'light')
   expect(errors).toEqual([])
 })

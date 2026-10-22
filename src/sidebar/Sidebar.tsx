@@ -19,6 +19,9 @@ export function Sidebar({ open, onClose, buttonRef, children }: Props) {
     if (!open) return
     function trapTab(e: globalThis.KeyboardEvent) {
       if (!isNarrowScreen() || !buttonRef.current || !ref.current) return
+      // Keys pressed elsewhere (a modal over the page) aren't the sidebar's; with nothing focused, Tab enters the cycle.
+      const target = e.target as Node
+      if (target !== document.body && target !== buttonRef.current && !ref.current.contains(target)) return
       // Esc inside the sidebar is handled below; the header button is part of the cycle too.
       if (e.key === 'Escape' && document.activeElement === buttonRef.current) return onClose()
       if (e.key !== 'Tab') return

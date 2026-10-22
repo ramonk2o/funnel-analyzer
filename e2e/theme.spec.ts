@@ -5,10 +5,12 @@ test('a escolha do tema continua depois de recarregar', async ({ page }) => {
   const html = page.locator('html')
   await expect(html).toHaveAttribute('data-theme', 'dark')
 
-  await page.getByRole('button', { name: 'Mudar para tema claro' }).click()
+  await page.getByRole('button', { name: 'Configurações' }).click()
+  await page.getByRole('dialog', { name: 'Configurações' }).getByText('Claro').click()
   await expect(html).toHaveAttribute('data-theme', 'light')
 
   await page.reload()
   await expect(html).toHaveAttribute('data-theme', 'light')
-  await expect(page.getByRole('button', { name: 'Mudar para tema escuro' })).toBeVisible()
+  await page.getByRole('button', { name: 'Configurações' }).click()
+  await expect(page.getByRole('radio', { name: 'Claro' })).toBeChecked()
 })

@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   height: var(--header-height);
   margin-bottom: 24px;
   padding: 0 var(--gutter);
@@ -26,6 +27,24 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  /* Narrow screens: the brand side shrinks (the funnel's name gets cut), so the buttons on the right stay in place. */
+  min-width: 0;
+}
+
+.app-brand > :not(.funnel-menu-root) {
+  flex-shrink: 0;
+}
+
+/* The funnel's name keeps room to be read and clicked; it is cut with "…" when it doesn't fit. */
+.app-brand .funnel-menu-root {
+  min-width: 72px;
+}
+
+.app-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
 }
 
 .app-brand h1 {
@@ -101,6 +120,19 @@
     z-index: 10;
     inset: var(--header-height) 0 0;
     background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Phones: no room for the app's name next to the funnel's name and the buttons; the logo stays, and
+   screen readers still read the name (the same recipe as .visually-hidden, in base.css). */
+@media (max-width: 420px) {
+  .app-brand h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }
 

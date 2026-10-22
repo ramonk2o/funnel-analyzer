@@ -22,13 +22,13 @@ test('tela larga: a barra cobre o funil, colada à esquerda, sem mudar a largura
   expect(closed).toEqual(open)
 })
 
-test('cabeçalho de ponta a ponta: botão da barra à esquerda e tema à direita', async ({ page }) => {
+test('cabeçalho de ponta a ponta: botão da barra à esquerda e configurações à direita', async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 800 })
   await page.goto('/')
   const button = (await toggle(page).boundingBox())!
-  const theme = (await page.getByRole('button', { name: /tema/ }).boundingBox())!
+  const settings = (await page.getByRole('button', { name: 'Configurações' }).boundingBox())!
   expect(button.x).toBe(24)
-  expect(theme.x + theme.width).toBe(1600 - 24)
+  expect(settings.x + settings.width).toBe(1600 - 24)
 })
 
 test('tela larga: a barra rola por conta própria e a página fica parada', async ({ page }) => {

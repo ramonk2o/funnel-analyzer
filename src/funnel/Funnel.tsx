@@ -2,6 +2,7 @@ import { useId } from 'react'
 import { texts } from '../texts'
 import { stageDisplayName } from './form'
 import { formatConversion, formatMoney, formatRoas, formatRoi, formatVolume } from './numbers'
+import { useSeparator } from '../settings/separator'
 import type { Calculated } from './useFunnelEditor'
 import './funnel.css'
 
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }: Props) {
+  const sep = useSeparator()
   if (!calculated) return <FunnelEmpty impossible={goalMode && impossible} />
   const { result } = calculated
   const target = goalMode ? calculated.goal?.target : undefined
@@ -40,10 +42,10 @@ export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }
         ) : (
           <>
             <span className="investment-value num">
-              {formatMoney(goalMode ? calculated.goal!.investment : result.totalCost)}
+              {formatMoney(goalMode ? calculated.goal!.investment : result.totalCost, sep)}
             </span>
             <span className="investment-detail num">
-              {t.investmentDetail(formatMoney(result.media), formatMoney(result.extraCosts))}
+              {t.investmentDetail(formatMoney(result.media, sep), formatMoney(result.extraCosts, sep))}
             </span>
           </>
         )}
@@ -52,14 +54,14 @@ export function Funnel({ calculated, goalMode, impossible, highlightId, onEdit }
       <FunnelBands calculated={calculated} goalMode={goalMode} highlightId={highlightId} onEdit={onEdit} />
 
       <dl className="totals" aria-label={t.totals.label}>
-        <Total label={t.totals.media} value={formatMoney(result.media)} />
-        <Total label={t.totals.extraCosts} value={formatMoney(result.extraCosts)} />
-        <Total label={t.totals.totalCost} value={formatMoney(result.totalCost)} />
+        <Total label={t.totals.media} value={formatMoney(result.media, sep)} />
+        <Total label={t.totals.extraCosts} value={formatMoney(result.extraCosts, sep)} />
+        <Total label={t.totals.totalCost} value={formatMoney(result.totalCost, sep)} />
         {result.revenue !== null && (
           <>
-            <Total label={t.totals.revenue} value={formatMoney(result.revenue)} tagged={target === 'revenue'} />
-            <Total label={t.totals.roas} value={result.roas === null ? t.noValue : formatRoas(result.roas)} />
-            <Total label={t.totals.roi} value={result.roi === null ? t.noValue : formatRoi(result.roi)} />
+            <Total label={t.totals.revenue} value={formatMoney(result.revenue, sep)} tagged={target === 'revenue'} />
+            <Total label={t.totals.roas} value={result.roas === null ? t.noValue : formatRoas(result.roas, sep)} />
+            <Total label={t.totals.roi} value={result.roi === null ? t.noValue : formatRoi(result.roi, sep)} />
           </>
         )}
       </dl>
@@ -93,6 +95,7 @@ export function FunnelBands({ calculated, goalMode, highlightId, onEdit }: Bands
   const target = goalMode ? calculated.goal?.target : undefined
   // Compared funnels can share stage ids (a duplicate keeps them), so element ids get a prefix.
   const uid = useId()
+  const sep = useSeparator()
 
   return (
     <ol className={`funnel${highlighting ? ' funnel-highlighting' : ''}`} aria-label={t.listLabel}>
@@ -101,10 +104,10 @@ export function FunnelBands({ calculated, goalMode, highlightId, onEdit }: Bands
         const name = stageDisplayName(stage, i)
         const cost =
           i === 0
-            ? `${formatMoney(input.unitCost)} ${t.firstStageCost[input.costUnit]}`
+            ? `${formatMoney(input.unitCost, sep)} ${t.firstStageCost[input.costUnit]}`
             : costPerResult === null
               ? t.noValue
-              : `${formatMoney(costPerResult)} ${t.perResult}`
+              : `${formatMoney(costPerResult, sep)} ${t.perResult}`
         return (
           <li key={stage.id} className="funnel-step" aria-current={stage.id === highlightId || undefined}>
             {i > 0 && (
@@ -115,7 +118,7 @@ export function FunnelBands({ calculated, goalMode, highlightId, onEdit }: Bands
                 onClick={() => onEdit(stage.id, 'conversion')}
               >
                 <span className="funnel-conversion-line" aria-hidden="true" />
-                <span className="num">{formatConversion(input.stages[i].conversion)}</span>
+                <span className="num">{formatConversion(input.stages[i].conversion, sep)}</span>
               </button>
             )}
             <button
@@ -131,7 +134,7 @@ export function FunnelBands({ calculated, goalMode, highlightId, onEdit }: Bands
                 {target === i && <GoalTag />}
               </span>
               <span id={`${uid}-${stage.id}-volume`} className="funnel-band-volume num">
-                {formatVolume(volume)}
+                {formatVolume(volume, sep)}
               </span>
               <span id={`${uid}-${stage.id}-cost`} className="funnel-band-cost num">
                 {cost}

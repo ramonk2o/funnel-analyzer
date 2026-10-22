@@ -7,6 +7,7 @@ import type { EditorState } from '../funnel/useFunnelEditor'
 import type { SavedFunnel } from '../funnels/storage'
 import { texts } from '../texts'
 import { incompatibility } from './compatible'
+import { useSeparator } from '../settings/separator'
 import { comparisonRows } from './table'
 import { MAX_COMPARED, type Comparison as ComparisonState } from './useComparison'
 import './compare.css'
@@ -185,6 +186,7 @@ function Table({ columns }: { columns: Column[] }) {
   const rows = comparisonRows(
     reference.stages.map((s, i) => stageDisplayName(s, i)),
     columns.map(({ state }) => (state.calculated ? state.calculated.result : null)),
+    useSeparator(),
   )
   return (
     <table className="compare-table">

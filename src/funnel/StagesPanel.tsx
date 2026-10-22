@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { texts } from '../texts'
+import { useSeparator } from '../settings/separator'
 import { COST_UNITS, type CostUnit } from './calc'
-import { formatConversion, formatMoney, parseDecimal } from './numbers'
+import { formatConversion, formatMoney, parseDecimal, type Separator } from './numbers'
 import {
   MAX_STAGES,
   MIN_STAGES,
@@ -58,6 +59,7 @@ export function StagesPanel(props: Props) {
   const [openId, setOpenId] = useState<string | null>(() => editRequest?.stageId ?? form.stages[0].id)
   const [knownIds, setKnownIds] = useState(() => form.stages.map((s) => s.id))
   const count = form.stages.length
+  const sep = useSeparator()
 
   // A stage that just appeared (added) opens; a removed open stage leaves none open.
   const ids = form.stages.map((s) => s.id)
@@ -118,7 +120,7 @@ export function StagesPanel(props: Props) {
       <div className="stages" ref={listRef}>
         {view.stages.map((stage, i) => {
           const open = !drag && openId === stage.id
-          const { hasInvalid, summary } = collapsedView(view, invalid, i)
+          const { hasInvalid, summary } = collapsedView(view, invalid, i, sep)
 
           return (
             <div
@@ -248,7 +250,7 @@ function keepInPlace(el: HTMLElement) {
 }
 
 // What a collapsed stage shows: its main value, and whether any of its fields is invalid.
-function collapsedView(form: FunnelForm, invalid: Set<string>, i: number) {
+function collapsedView(form: FunnelForm, invalid: Set<string>, i: number, sep: Separator) {
   const stage = form.stages[i]
   const keys = [stageField(stage.id, 'conversion'), stageField(stage.id, 'extraCost')]
   if (i === 0) keys.push('unitCost')
@@ -261,10 +263,10 @@ function collapsedView(form: FunnelForm, invalid: Set<string>, i: number) {
     summary =
       invalid.has('unitCost') || cost === null
         ? texts.funnel.noValue
-        : `${formatMoney(cost)} ${texts.funnel.firstStageCost[form.costUnit]}`
+        : `${formatMoney(cost, sep)} ${texts.funnel.firstStageCost[form.costUnit]}`
   } else {
     const conversion = parseDecimal(stage.conversion)
-    summary = invalid.has(keys[0]) || conversion === null ? texts.funnel.noValue : formatConversion(conversion)
+    summary = invalid.has(keys[0]) || conversion === null ? texts.funnel.noValue : formatConversion(conversion, sep)
   }
   return { hasInvalid, summary }
 }
@@ -279,7 +281,7 @@ interface GhostProps {
 // The copy of the dragged stage's header that follows the pointer.
 function DragGhost({ view, invalid, id, position }: GhostProps) {
   const i = view.stages.findIndex((s) => s.id === id)
-  const { summary } = collapsedView(view, invalid, i)
+  const { summary } = collapsedView(view, invalid, i, useSeparator())
   return (
     <div className="stage stage-ghost" aria-hidden="true" style={position}>
       <div className="stage-header">
