@@ -13,8 +13,8 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - O tema é escolhido nas configurações (veja Configurações), e a escolha fica salva no navegador para as próximas visitas.
 - Se o navegador não deixar ler ou salvar (modo privado, armazenamento bloqueado), o app abre no escuro e a troca continua funcionando, só sem lembrar a escolha. Um valor salvo diferente de "claro" ou "escuro" é ignorado.
 - O tema salvo é aplicado antes de a página aparecer, então o tema claro não pisca em escuro ao carregar.
-- A cor de destaque é violeta: `#A78BFA` no escuro; no claro, um violeta (matiz entre 250° e 290°) mais escuro que o do escuro.
-- Toda cor de texto, incluindo o destaque e o violeta forte dos volumes, tem contraste de pelo menos 4,5:1 com todo fundo (página, cartão e botão), nos dois temas.
+- A cor de destaque é escolhida nas configurações (veja Cor de destaque); o padrão é violeta: `#A78BFA` no escuro; no claro, um violeta (matiz entre 250° e 290°) mais escuro que o do escuro.
+- Toda cor de texto, incluindo o destaque e o destaque forte dos volumes, tem contraste de pelo menos 4,5:1 com todo fundo (página, cartão e botão), nos dois temas, qualquer que seja a cor de destaque.
 - Textos em Space Grotesk e números em JetBrains Mono, carregadas do Google Fonts. Sem internet, a página funciona com as fontes do sistema.
 
 ### Tela principal
@@ -22,13 +22,21 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Em tela de até 420 px, o nome "Analisador de Funil" sai da tela (continua para leitores de tela), para caberem o nome do funil e a engrenagem sem a página rolar para os lados. O nome do funil é cortado com "…" quando não cabe.
 
 ### Configurações
-- A engrenagem abre o modal "Configurações", com dois grupos: "Tema" ("Escuro" / "Claro") e, abaixo, "Separador decimal" ("Vírgula (1,50)" / "Ponto (1.50)"). Cada escolha vale assim que é marcada; o modal só tem o botão "Fechar".
+- A engrenagem abre o modal "Configurações", com três grupos, nesta ordem: "Tema" ("Escuro" / "Claro"), "Cor de destaque" (veja abaixo) e "Separador decimal" ("Vírgula (1,50)" / "Ponto (1.50)"). Cada escolha vale assim que é marcada; o modal só tem o botão "Fechar".
 - O fundo fica escurecido e o foco fica preso no modal (Tab e Shift+Tab dão a volta nos controles dele, inclusive com a barra de edição aberta em tela estreita). Ao abrir, o foco vai para a opção marcada do tema.
 - Esc, "Fechar" ou um clique no fundo fecham o modal, com o foco de volta na engrenagem. Só fecha o clique que começa e termina no fundo: arrastar de dentro do modal até o fundo, ou do fundo para dentro, não fecha. Clicar numa parte do modal sem controle mantém Esc e Tab funcionando.
 - O modal funciona igual na tela principal e durante a comparação.
 - O separador decimal vale para digitar (veja Números digitados e validação) e para mostrar os números (veja Funil e resultados). Trocar o separador muda na hora tudo que foi digitado, em todos os funis salvos e no valor comum da comparação: cada vírgula vira ponto e cada ponto vira vírgula, inclusive em campos inválidos, que continuam inválidos ("1.234,5" vira "1,234.5"). Nomes de funis e de etapas não mudam. Voltar ao separador anterior desfaz a troca.
 - Os modelos entram com o separador escolhido (com ponto, CPC "1.50").
 - Na primeira visita, o separador é a vírgula. A escolha fica salva no navegador; com o armazenamento bloqueado, a troca funciona na sessão, só sem ser lembrada. Um valor salvo diferente de "virgula" ou "ponto" equivale à vírgula.
+
+### Cor de destaque
+- Cores prontas: Violeta (padrão), Azul, Verde, Laranja e Rosa, cada uma com uma versão por tema: no claro, mais escura que no escuro, no mesmo matiz (até 15° de diferença). Aparecem como bolinhas sem texto; o nome da cor é o nome acessível e a dica ao passar o mouse. Depois delas, "Personalizada".
+- "Personalizada" mostra um campo "Hexadecimal", um seletor de cor do navegador ligado a ele e uma amostra da cor em uso. O campo aceita "#7c3aed", "7c3aed" ou "#73e", com maiúsculas ou minúsculas e espaços nas pontas ignorados; outro valor (vazio inclusive) fica marcado em vermelho, e a cor continua a última válida. Como a cor vale na hora, digitar à mão passa pelas formas curtas válidas no caminho ("#7c3" antes de "#7c3aed").
+- Na primeira vez, o campo começa com o hexadecimal da cor que estava marcada, na versão do tema escuro. Voltar de uma cor pronta para "Personalizada" aplica de novo o último hexadecimal válido. Fechar o modal com o campo inválido descarta o texto: ao reabrir, aparece o último hexadecimal válido.
+- A cor personalizada mantém o matiz, e o brilho muda em cada tema (mais claro no escuro, mais escuro no claro) só o necessário para ter contraste de 4,5:1 com todos os fundos. Uma cor que já passa fica igual. Quando muda no tema atual, aparece "Ajustada para manter a leitura neste tema".
+- A partir da cor em uso de cada tema saem o destaque forte (mais claro no escuro, mais escuro no claro, também com 4,5:1; nos extremos, branco no escuro ou preto no claro, igual ao destaque), os fundos translúcidos, o brilho e a grade do fundo.
+- A escolha vale assim que é marcada, nos dois temas, e fica salva no navegador; é aplicada antes de a página aparecer, sem piscar o violeta. Com o armazenamento bloqueado, a troca funciona na sessão. Um valor salvo inválido (cor desconhecida, ou personalizada sem hexadecimal válido) equivale ao violeta, já na primeira pintura. As cores já calculadas que vêm salvas não são conferidas antes de o app carregar: um valor adulterado à mão aparece por um instante, e o app corrige ao carregar.
 
 ### Funis salvos
 - Todos os funis ficam salvos no navegador, automaticamente a cada alteração, sem botão de salvar. Cada funil guarda o texto como foi digitado (inclusive campos inválidos), o modo, a verba, a meta e a etapa-alvo.
@@ -144,6 +152,7 @@ Tudo fica no `localStorage` do navegador.
 | `analisador-de-funil:funis` | JSON: o funil ativo e a lista de funis (nome e o que foi digitado) | Funis salvos. Ausente ou inválido equivale à primeira visita. |
 | `analisador-de-funil:edicao` | `aberta` ou `fechada` | Barra de edição aberta ou fechada (só em tela larga). Ausente ou inválido equivale a `aberta`. |
 | `analisador-de-funil:separador` | `virgula` ou `ponto` | Separador decimal escolhido. Ausente ou inválido equivale a `virgula`. |
+| `analisador-de-funil:destaque` | JSON: a cor (`violeta`, `azul`, `verde`, `laranja`, `rosa` ou `personalizada`), o último hexadecimal personalizado e as variáveis de cor já calculadas para cada tema | Cor de destaque. Ausente ou inválido equivale ao violeta. |
 
 Os números digitados ficam guardados sempre com vírgula, qualquer que seja o separador escolhido.
 
@@ -153,7 +162,8 @@ Os números digitados ficam guardados sempre com vírgula, qualquer que seja o s
 - **Só no navegador:** sem conta, servidor nem hospedagem; os dados vivem no `localStorage`.
 - **Textos num módulo único** (`src/texts.ts`): facilita traduzir depois.
 - **Tokens de tema em CSS** (`src/styles/tokens.css`), um bloco por tema em `[data-theme]` no `<html>`. Um teste lê esse arquivo e verifica contraste e cor de destaque, então as cores de texto e de fundo ali precisam estar em `#rrggbb`.
-- **Script no `index.html`** aplica o tema salvo antes do React carregar, para não piscar. Ele repete a chave de armazenamento, e um teste confere que ela é a mesma do código.
+- **Script no `index.html`** aplica o tema e a cor de destaque salvos antes do React carregar, para não piscar. Ele repete as chaves de armazenamento e os nomes das cores, e testes conferem que são os mesmos do código.
+- **Cor de destaque calculada no app, aplicada pelo script** (`src/settings/accent.ts`): o ajuste de brilho e as variações são calculados em TypeScript e gravados junto com a escolha, já prontos para os dois temas; o script do `index.html` só aplica as variáveis de destaque de uma cor com nome conhecido, sem repetir o cálculo. O app aplica as mesmas variáveis no `<html>` a cada troca de cor ou de tema. Os fundos usados no ajuste repetem os de `tokens.css`, e um teste confere.
 - **Fontes do Google Fonts**, com fontes do sistema como reserva.
 - **Funil em módulos puros** (`src/funnel/`): `numbers.ts` lê e formata números, `form.ts` guarda o que foi digitado como texto e o valida (e faz as operações nas etapas), `calc.ts` calcula. Os componentes só mostram e repassam as mudanças, para que comparação e exportação reusem o mesmo cálculo.
 - **Comparação em módulos puros** (`src/compare/`): compatibilidade, o formulário de cada funil com os valores da comparação, as mudanças de etapas em vários funis e as linhas da tabela, testados sem tela. A comparação fica só na memória da sessão.

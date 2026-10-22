@@ -9,6 +9,17 @@ export const texts = {
     theme: 'Tema',
     dark: 'Escuro',
     light: 'Claro',
+    accent: {
+      label: 'Cor de destaque',
+      names: { violet: 'Violeta', blue: 'Azul', green: 'Verde', orange: 'Laranja', pink: 'Rosa' },
+      custom: 'Personalizada',
+      hex: 'Hexadecimal',
+      picker: 'Seletor de cor',
+      sample: 'Cor em uso',
+      adjusted: 'Ajustada para manter a leitura neste tema',
+      // Where the accent color is remembered in the browser (also read by index.html).
+      storageKey: 'analisador-de-funil:destaque',
+    },
     separator: 'Separador decimal',
     comma: 'Vírgula (1,50)',
     dot: 'Ponto (1.50)',

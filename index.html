@@ -18,6 +18,25 @@
       } catch {
         document.documentElement.dataset.theme = 'dark'
       }
+      // The saved accent color, already worked out for each theme (ACCENT_STORAGE_KEY and
+      // ACCENT_STORED_NAMES in src/settings/accent.ts). Only a known color, and only the accent
+      // variables; otherwise the violet in tokens.css stays.
+      try {
+        var saved = JSON.parse(localStorage.getItem('analisador-de-funil:destaque'))
+        var names = ['violeta', 'azul', 'verde', 'laranja', 'rosa', 'personalizada']
+        var vars = saved.vars[document.documentElement.dataset.theme]
+        // A custom color counts only with a valid hex, as the app reads it.
+        var valid =
+          saved.cor === 'personalizada'
+            ? typeof saved.personalizada === 'string' &&
+              /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(saved.personalizada.trim())
+            : names.indexOf(saved.cor) !== -1
+        if (valid) {
+          ;['--accent', '--accent-strong', '--accent-soft', '--glow', '--grid'].forEach(function (name) {
+            if (typeof vars[name] === 'string') document.documentElement.style.setProperty(name, vars[name])
+          })
+        }
+      } catch {}
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Analisador de Funil</title>

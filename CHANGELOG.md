@@ -5,6 +5,7 @@ Todas as mudanças relevantes deste projeto ficam registradas aqui. O formato se
 ## [Unreleased]
 
 ### Adicionado
+- **Cor de destaque**: nas configurações, dá para trocar o violeta por Azul, Verde, Laranja ou Rosa, ou digitar um hexadecimal próprio (com o seletor de cor do navegador). A cor personalizada é ajustada em cada tema, se preciso, para continuar legível, e a escolha fica lembrada.
 - **Configurações**: a engrenagem no cabeçalho abre as configurações do app, com o tema e o separador decimal. Com o ponto, os números são digitados e mostrados como "1.50" e "R$ 2,000.00"; trocar o separador muda na hora todos os funis salvos, e os arquivos exportados continuam compatíveis entre quem usa vírgula e quem usa ponto.
 - **Comparar cenários**: pelo menu de funis, dá para comparar de 2 a 3 funis com as mesmas etapas, lado a lado, com uma tabela que destaca o melhor valor de cada linha. Por padrão todos usam o mesmo orçamento (ou meta), e os funis continuam editáveis: nome, ordem e quantidade de etapas mudam em todos os comparados. Junto, entrar no modo meta com a meta vazia passa a preenchê-la com o que o funil mostra na etapa escolhida, e não só na primeira vez.
 - **Funis salvos**: os funis ficam salvos no navegador a cada alteração. Pelo nome do funil no cabeçalho dá para ter vários funis, trocar entre eles, criar um novo em branco ou de um modelo (Tráfego pago, E-commerce, B2B), renomear, duplicar, apagar, e exportar e importar como arquivo. Recarregar a página abre o último funil, no modo em que ele estava.

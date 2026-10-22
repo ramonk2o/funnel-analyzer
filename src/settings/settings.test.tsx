@@ -63,7 +63,7 @@ describe('modal de configurações', () => {
     await user().click(gear())
     expect(modal()).toHaveAttribute('aria-modal', 'true')
     const groups = within(modal()).getAllByRole('group')
-    expect(groups.map((g) => g.querySelector('legend')!.textContent)).toEqual([s.theme, s.separator])
+    expect(groups.map((g) => g.querySelector('legend')!.textContent)).toEqual([s.theme, s.accent.label, s.separator])
     const comma = within(modal()).getByRole('radio', { name: s.comma })
     expect(comma).toBeChecked()
     expect(within(modal()).getByRole('radio', { name: s.dot })).not.toBeChecked()

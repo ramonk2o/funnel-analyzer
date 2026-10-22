@@ -17,6 +17,7 @@ import { SidebarToggle } from './sidebar/SidebarToggle'
 import { useSidebar } from './sidebar/useSidebar'
 import { SeparatorContext } from './settings/separator'
 import { Settings } from './settings/Settings'
+import { useAccent } from './settings/useAccent'
 import { useSeparatorSetting } from './settings/useSeparatorSetting'
 import { texts } from './texts'
 import { useTheme } from './theme/useTheme'
@@ -24,6 +25,7 @@ import { useTheme } from './theme/useTheme'
 function App() {
   const [theme, setTheme] = useTheme()
   const [separator, setSeparator] = useSeparatorSetting()
+  const [accent, setAccent] = useAccent(theme)
   const funnels = useFunnels()
   const { form, invalid, impossible, calculated, update, changeMode, active } = funnels
   const [importFailed, setImportFailed] = useState(false)
@@ -158,7 +160,14 @@ function App() {
             />
           </div>
           <div className="app-actions">
-            <Settings theme={theme} onThemeChange={setTheme} separator={separator} onSeparatorChange={setSeparator} />
+            <Settings
+              theme={theme}
+              onThemeChange={setTheme}
+              accent={accent}
+              onAccentChange={setAccent}
+              separator={separator}
+              onSeparatorChange={setSeparator}
+            />
           </div>
         </header>
         {(!funnels.saved || importFailed) && (

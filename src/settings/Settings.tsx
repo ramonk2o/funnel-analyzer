@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { texts } from '../texts'
 import type { Theme } from '../theme/theme'
+import type { AccentChoice as Accent } from './accent'
+import { AccentChoice } from './AccentChoice'
 import type { Separator } from './separator'
 import './settings.css'
 
@@ -10,6 +12,8 @@ const s = texts.settings
 interface Props {
   theme: Theme
   onThemeChange: (theme: Theme) => void
+  accent: Accent
+  onAccentChange: (accent: Accent) => void
   separator: Separator
   onSeparatorChange: (separator: Separator) => void
 }
@@ -42,7 +46,8 @@ export function Settings(props: Props) {
   )
 }
 
-function Dialog({ theme, onThemeChange, separator, onSeparatorChange, onClose }: Props & { onClose: () => void }) {
+function Dialog(props: Props & { onClose: () => void }) {
+  const { theme, onThemeChange, accent, onAccentChange, separator, onSeparatorChange, onClose } = props
   const dialogRef = useRef<HTMLDivElement>(null)
   // Only a click that starts and ends on the dimmed background closes the modal, not a drag into or
   // out of it: the browser sends such a drag's click to the background, their common ancestor.
@@ -59,7 +64,7 @@ function Dialog({ theme, onThemeChange, separator, onSeparatorChange, onClose }:
     if (e.key === 'Escape') return onClose()
     if (e.key !== 'Tab') return
     // In a radio group, only the checked option is a Tab stop.
-    const stops = [...dialogRef.current!.querySelectorAll<HTMLElement>('input:checked, button')]
+    const stops = [...dialogRef.current!.querySelectorAll<HTMLElement>('input:checked, input:not([type="radio"]), button')]
     const first = stops[0]
     const last = stops[stops.length - 1]
     // Clicking a spot with no control leaves the focus on the modal itself, outside the stops.
@@ -94,6 +99,7 @@ function Dialog({ theme, onThemeChange, separator, onSeparatorChange, onClose }:
           {s.title}
         </h2>
         <Choice name="theme" legend={s.theme} options={['dark', 'light']} value={theme} onChange={onThemeChange} />
+        <AccentChoice theme={theme} choice={accent} onChange={onAccentChange} />
         <Choice
           name="separator"
           legend={s.separator}

@@ -40,3 +40,80 @@
   display: flex;
   justify-content: flex-end;
 }
+
+/* Accent color: one round swatch per ready color, then "Personalizada". */
+.accent-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.accent-swatch {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.accent-swatch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.accent-swatch:has(input:checked) {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--text);
+}
+
+.accent-swatch:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.accent-custom {
+  border: 1px solid var(--border);
+}
+
+.accent-custom-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.accent-custom-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.accent-hex {
+  flex: 1;
+  min-width: 0;
+}
+
+.accent-picker {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.accent-sample {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+}
+
+.accent-adjusted {
+  font-size: 13px;
+  color: var(--text-muted);
+}

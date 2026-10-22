@@ -61,7 +61,8 @@ describe('modal (testes extras)', () => {
   test('as setas trocam a opção pelo teclado, e a troca vale na hora', async () => {
     render(<App />)
     await user().click(gear())
-    // The focus starts on the theme; Tab goes to the separator's checked option.
+    // The focus starts on the theme; Tab goes through the accent color to the separator's checked option.
+    await user().tab()
     await user().tab()
     expect(within(modal()).getByRole('radio', { name: s.comma })).toHaveFocus()
     await user().keyboard('{ArrowRight}')
