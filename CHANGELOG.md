@@ -16,6 +16,9 @@ Todas as mudanças relevantes deste projeto ficam registradas aqui. O formato se
 - **Etapas colapsáveis**: as etapas do painel viram um acordeão, com uma aberta por vez; as recolhidas mostram o nome, o valor principal e um aviso quando têm campo inválido.
 - **Visual e temas**: interface com cara de painel de controle, em tema escuro (padrão) e claro, com a escolha lembrada entre visitas. A tela já mostra um funil de exemplo.
 
+### Alterado
+- O app passa a se chamar **Analisador de Funil** (antes, Simulador de Funil). Funis, tema e estado da barra salvos no navegador com o nome antigo não são carregados, e arquivos exportados antes da troca não são importados.
+
 ### Corrigido
 - Na etapa recolhida, o nome e o resumo ficam numa segunda linha, inteiros; antes, no painel em tela larga, o nome sumia e o resumo invadia os botões.
 - Abrir e recolher etapas agora é animado, e a etapa clicada fica no lugar, em vez de pular quando uma etapa acima dela fecha.

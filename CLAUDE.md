@@ -1,4 +1,4 @@
-# Simulador de Funil
+# Analisador de Funil
 
 Browser-only web app for marketers to build a sales funnel (stages, conversion rates, costs) and see results from a budget or the budget needed for a goal.
 - How it works today: `SPEC.md`. Ideas and the feature in progress: `BACKLOG.md`. What changed in each version: `CHANGELOG.md`.

@@ -2,7 +2,7 @@ import type { CostUnit } from './funnel/calc'
 
 // Every user-facing text lives here (PT-BR only for now).
 export const texts = {
-  appName: 'Simulador de Funil',
+  appName: 'Analisador de Funil',
   theme: {
     switchToLight: 'Mudar para tema claro',
     switchToDark: 'Mudar para tema escuro',
@@ -11,7 +11,7 @@ export const texts = {
     open: 'Abrir edição',
     close: 'Fechar edição',
     // Where the open/closed choice is remembered in the browser.
-    storageKey: 'simulador-de-funil:edicao',
+    storageKey: 'analisador-de-funil:edicao',
   },
   funnels: {
     menuButton: (name: string) => `Funis salvos: ${name}`,
@@ -44,8 +44,8 @@ export const texts = {
     invalidFile: 'Este arquivo não é um funil válido',
     notSaved: 'Seus funis não estão sendo salvos neste navegador',
     // Where the funnels are kept in the browser, and the mark that identifies an exported file.
-    storageKey: 'simulador-de-funil:funis',
-    fileApp: 'simulador-de-funil',
+    storageKey: 'analisador-de-funil:funis',
+    fileApp: 'analisador-de-funil',
   },
   compare: {
     label: 'Comparação',

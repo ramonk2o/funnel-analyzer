@@ -1,6 +1,6 @@
-# Simulador de Funil
+# Analisador de Funil
 
-Como o Simulador de Funil funciona hoje, em regras (não em detalhes visuais), mais seus dados e decisões técnicas. Gerenciado com a skill `document`: é atualizado quando uma funcionalidade é concluída, descrevendo o que foi construído. As ideias ficam no BACKLOG.md; o que mudou e quando, no CHANGELOG.md.
+Como o Analisador de Funil funciona hoje, em regras (não em detalhes visuais), mais seus dados e decisões técnicas. Gerenciado com a skill `document`: é atualizado quando uma funcionalidade é concluída, descrevendo o que foi construído. As ideias ficam no BACKLOG.md; o que mudou e quando, no CHANGELOG.md.
 
 ## Objetivo
 
@@ -19,7 +19,7 @@ Ferramenta visual para profissionais de marketing montarem um funil de vendas (e
 - Textos em Space Grotesk e números em JetBrains Mono, carregadas do Google Fonts. Sem internet, a página funciona com as fontes do sistema.
 
 ### Tela principal
-- O cabeçalho ocupa a largura toda da janela: à esquerda, o botão da barra de edição, o nome "Simulador de Funil" e o nome do funil ativo; à direita, o botão de tema. Abaixo, o funil e os resultados ficam centralizados (até 1280 px).
+- O cabeçalho ocupa a largura toda da janela: à esquerda, o botão da barra de edição, o nome "Analisador de Funil" e o nome do funil ativo; à direita, o botão de tema. Abaixo, o funil e os resultados ficam centralizados (até 1280 px).
 
 ### Funis salvos
 - Todos os funis ficam salvos no navegador, automaticamente a cada alteração, sem botão de salvar. Cada funil guarda o texto como foi digitado (inclusive campos inválidos), o modo, a verba, a meta e a etapa-alvo.
@@ -130,9 +130,9 @@ Tudo fica no `localStorage` do navegador.
 
 | Chave | Valores | Uso |
 |---|---|---|
-| `simulador-de-funil:tema` | `dark` ou `light` | Tema escolhido. Ausente ou inválido equivale a `dark`. |
-| `simulador-de-funil:funis` | JSON: o funil ativo e a lista de funis (nome e o que foi digitado) | Funis salvos. Ausente ou inválido equivale à primeira visita. |
-| `simulador-de-funil:edicao` | `aberta` ou `fechada` | Barra de edição aberta ou fechada (só em tela larga). Ausente ou inválido equivale a `aberta`. |
+| `analisador-de-funil:tema` | `dark` ou `light` | Tema escolhido. Ausente ou inválido equivale a `dark`. |
+| `analisador-de-funil:funis` | JSON: o funil ativo e a lista de funis (nome e o que foi digitado) | Funis salvos. Ausente ou inválido equivale à primeira visita. |
+| `analisador-de-funil:edicao` | `aberta` ou `fechada` | Barra de edição aberta ou fechada (só em tela larga). Ausente ou inválido equivale a `aberta`. |
 
 ## Decisões técnicas
 

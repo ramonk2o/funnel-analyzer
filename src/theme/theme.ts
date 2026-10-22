@@ -1,7 +1,7 @@
 export type Theme = 'dark' | 'light'
 
 // Also read by the inline script in index.html, which applies the theme before React loads.
-export const THEME_STORAGE_KEY = 'simulador-de-funil:tema'
+export const THEME_STORAGE_KEY = 'analisador-de-funil:tema'
 
 export function browserStorage(): Storage | null {
   try {

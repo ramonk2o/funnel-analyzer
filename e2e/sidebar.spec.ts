@@ -49,7 +49,7 @@ test('tela larga: a barra rola por conta própria e a página fica parada', asyn
 
 test('tela estreita: começa fechada mesmo com "aberta" salvo, e abre por cima do funil', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.addInitScript(() => localStorage.setItem('simulador-de-funil:edicao', 'aberta'))
+  await page.addInitScript(() => localStorage.setItem('analisador-de-funil:edicao', 'aberta'))
   await page.goto('/')
   await expect(panel(page)).toBeHidden()
   const before = (await funnel(page).boundingBox())!
