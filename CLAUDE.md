@@ -23,7 +23,7 @@ Browser-only web app for marketers to build a sales funnel (stages, conversion r
 - Calculation rules are tested as pure functions; behavior that changes state (editing stages, switching modes, saving, importing) is tested with Testing Library, as in `src/funnels/funnels.test.tsx`, or with Playwright when it depends on the real browser (local storage across reloads, file download and upload), as in `e2e/funnels.spec.ts`. Only what needs a real person looking at a real browser (visual style, funnel proportions and scale breaks, animations, drag to reorder, how the exported PNG/PDF looks) goes into "To check by hand".
 
 ## Development cycle
-Uses the `grilling`, `document` and `build` skills and the `tester` agent from the `mini-devkit` plugin. When a step needs one that isn't available, tell the user and stop; don't imitate it from memory.
+Uses the `grilling`, `document` and `build` skills and the `tester` agent from the `minidev` plugin. When a step needs one that isn't available, tell the user and stop; don't imitate it from memory.
 
 1. **Idea:** if the idea is clear, record it with `document`. If it leaves behavior open (decisions that would change what gets built), start a `grilling` interview; before its final summary, load `document` and write the summary as the backlog entry, so my OK approves the text that will be recorded. "Just note it" ("só anota", "apenas registra") always skips the interview.
 2. **Build:** `build`.
