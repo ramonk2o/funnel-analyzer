@@ -31,7 +31,7 @@ Cole no campo **Setup script** do ambiente:
 
 ```bash
 #!/bin/bash
-# Plugin do ciclo de desenvolvimento (grilling, document, build, tester)
+# Plugin do ciclo de desenvolvimento (grilling, document, build, fix, tester)
 claude plugin marketplace add ramonk2o/minidev || true
 claude plugin install minidev@minidev || true
 # Bibliotecas do sistema que o Chromium do Playwright precisa
@@ -44,7 +44,7 @@ O script roda antes do Claude Code abrir e o resultado fica em cache por cerca d
 
 Peça ao Claude, na primeira sessão:
 
-1. "Liste as skills e agentes disponíveis": precisam aparecer `build`, `document`, `grilling` e o agente `tester`.
+1. "Liste as skills e agentes disponíveis": precisam aparecer `build`, `document`, `fix`, `grilling` e o agente `tester`.
 2. "Rode `npm test` e `npm run test:e2e`": os dois precisam passar.
 
 Se algo falhar:
