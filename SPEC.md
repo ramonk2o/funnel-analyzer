@@ -1,6 +1,6 @@
 # Analisador de Funil
 
-Como o Analisador de Funil funciona hoje, em regras (não em detalhes visuais), mais seus dados e decisões técnicas. Gerenciado com a skill `document`: é atualizado quando uma funcionalidade é concluída, descrevendo o que foi construído. As ideias ficam no BACKLOG.md; o que mudou e quando, no CHANGELOG.md.
+Como o Analisador de Funil funciona hoje, em regras (não em detalhes visuais), mais seus dados e decisões técnicas. O que mudou e quando fica no CHANGELOG.md.
 
 ## Objetivo
 

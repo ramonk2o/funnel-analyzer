@@ -34,7 +34,7 @@ O app abre em http://localhost:5173.
 ## Documentação
 
 - [SPEC.md](SPEC.md): como o app funciona hoje, com regras, dados guardados e decisões técnicas.
-- [BACKLOG.md](BACKLOG.md): ideias e a funcionalidade em construção.
+- [Issues](https://github.com/ramonk2o/funnel-analyzer/issues): ideias, bugs e o que está em construção.
 - [CHANGELOG.md](CHANGELOG.md): o que mudou em cada versão.
 
 ## Tecnologia
