@@ -10,8 +10,6 @@ App web para profissionais de marketing montarem um funil de vendas (etapas, con
 - Ter vários funis salvos no navegador, criar a partir de modelos e exportar ou importar como arquivo.
 - Escolher o tema, a cor de destaque e o separador decimal (vírgula ou ponto) nas configurações.
 
-As regras de cada parte estão no [SPEC.md](SPEC.md).
-
 ## Rodando
 
 Precisa de Node.js.
@@ -33,8 +31,9 @@ O app abre em http://localhost:5173.
 
 ## Documentação
 
-- [SPEC.md](SPEC.md): como o app funciona hoje, com regras, dados guardados e decisões técnicas.
-- [BACKLOG.md](BACKLOG.md): ideias e a funcionalidade em construção.
+- [GLOSSARY.md](GLOSSARY.md): os termos do app (funil, etapa, meta…), com o nome usado no código.
+- [docs/adr/](docs/adr/): as decisões técnicas e por que foram tomadas.
+- [Issues](https://github.com/ramonk2o/funnel-analyzer/issues): ideias, bugs e o que está em construção.
 - [CHANGELOG.md](CHANGELOG.md): o que mudou em cada versão.
 
 ## Tecnologia

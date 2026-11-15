@@ -5,6 +5,7 @@
       "Bash(npm run test:*)",
       "Bash(npm run build:*)",
       "Bash(npm run lint:*)",
+      "Bash(npm run typecheck:*)",
       "Bash(npx vitest:*)",
       "Bash(npx playwright test:*)",
       "Bash(npx tsc:*)",
@@ -14,7 +15,7 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git switch:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge-base:*)"
     ]
   },
   "hooks": {
@@ -29,16 +30,5 @@
         ]
       }
     ]
-  },
-  "extraKnownMarketplaces": {
-    "minidev": {
-      "source": {
-        "source": "github",
-        "repo": "ramonk2o/minidev"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "minidev@minidev": true
   }
 }
