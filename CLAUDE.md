@@ -1,7 +1,7 @@
 # Analisador de Funil
 
 Browser-only web app for marketers to build a sales funnel (stages, conversion rates, costs) and see results from a budget or the budget needed for a goal.
-- How it works today: `SPEC.md`. What changed in each version: `CHANGELOG.md`. Ideas, bugs and work in progress: GitHub issues (see Agent skills below).
+- Domain terms: `GLOSSARY.md`. Decisions and their reasons: `docs/adr/`. What changed in each version: `CHANGELOG.md`. Ideas, bugs and work in progress: GitHub issues (see Agent skills below). How the app behaves is described by the test names.
 
 ## Commands
 - Install: `npm install`, then `npx playwright install chromium` once for the browser tests
